@@ -1,3 +1,3 @@
 # Capstone-Frontend
 
-Bethany, Nicki, Yulonda 🥰, & Kenneth
+Bethany, Nicki🤍, Yulonda 🥰, & Kenneth
