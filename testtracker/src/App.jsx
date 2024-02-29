@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import "./App.css";
 import YelpFetch from "./components/YelpFetch";
 import MapVgi from "./components/MapVgi";
