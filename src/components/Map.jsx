@@ -61,8 +61,10 @@ function Map() {
             }}
           />
         )}
+        <br />
       </GoogleMap>
-    </LoadScript>
+
+    </LoadScript> 
   );
 }
 
