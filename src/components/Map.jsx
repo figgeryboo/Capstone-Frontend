@@ -5,7 +5,7 @@ import {
   Marker,
   Polyline,
 } from "@react-google-maps/api";
-import LocationTracker from "./LocationTracker";
+// import FetchedLocations from "./FetchedLocations";
 
 const containerStyle = {
   width: "600px",
@@ -19,7 +19,6 @@ const center = {
 };
 
 const apiKey = import.meta.env.VITE_MAP_API_KEY;
-// const customMapStyle = import.meta.env.VITE_GOOGLE_MAPID;
 
 function Map() {
   const [userLocation, setUserLocation] = useState(null);
@@ -30,30 +29,31 @@ function Map() {
     setUserLocation(location);
   };
 
+  const handleLocationsFetched = (locations) => {
+    // Set the fetched locations as the path
+    const newPath = locations.map((location) => ({
+      lat: parseFloat(location.latitude),
+      lng: parseFloat(location.longitude),
+    }));
+    setPath(newPath);
+    console.log("New path:", newPath);
+  };
+
   return (
     <LoadScript googleMapsApiKey={apiKey}>
-      <LocationTracker
-        onLocationChange={(location) => {
-          handleLocationChange(location);
-          setPath((prevPath) => [...prevPath, location]);
-        }}
-      />
+      {/* <FetchedLocations onLocationsFetched={handleLocationsFetched} /> */}
       <GoogleMap
         mapContainerStyle={containerStyle}
         mapContainerClassName="map"
         center={userLocation ? userLocation : center}
         zoom={userLocation ? 15 : 10}
-        // mapId= {customMapStyle.mapId}
       >
         {userLocation && (
           <Marker position={{ lat: userLocation.lat, lng: userLocation.lng }} />
         )}
-        {showRoute && (
+        {showRoute && path.length > 0 && (
           <Polyline
-            path={path.map((location) => ({
-              lat: location.lat,
-              lng: location.lng,
-            }))}
+            path={path}
             options={{
               strokeColor: "#690aa0e6",
               strokeOpacity: 1.0,
@@ -63,8 +63,7 @@ function Map() {
         )}
         <br />
       </GoogleMap>
-
-    </LoadScript> 
+    </LoadScript>
   );
 }
 

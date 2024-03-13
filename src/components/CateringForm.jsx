@@ -5,6 +5,9 @@ import	 { Link } from 'react-router-dom';
 
 const CateringForm = () => {
 	const { currentUser } = useAuth();
+	const submitCateringForm = () =>{
+
+	}
 	return (
 		<>
         <Link to="/userdashboard">
