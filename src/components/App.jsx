@@ -8,7 +8,9 @@ import Landing from './Landing';
 import CateringForm from './CateringForm';
 import { AuthProvider } from '../contexts/authContext';
 import Error404 from '../pages/Error404';
-import Map from './Map'
+import Map from './Map';
+// import StaticLocations from './StaticLocations';
+
 
 function App() {
 	return (
@@ -21,7 +23,7 @@ function App() {
 					<AuthProvider>
 						<Routes>
 							<Route path="/" element={<Landing />} />
-							<Route exact path="/mapview" element={<Map />} />
+							<Route exact path="/mapview" element={<Map/>} />
 							<Route exact path="/userdashboard" element={<UserDashboard />} />
 							<Route path="/usersignup" element={<UserSignup />} />
 							<Route path="/userlogin" element={<UserLogin />} />
