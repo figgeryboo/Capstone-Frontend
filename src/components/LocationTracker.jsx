@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 
 
-function LocationTracker({ onLocationChange }) {
+function LocationTracker({onLocationChange}) {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [time, setTime] = useState(null);
