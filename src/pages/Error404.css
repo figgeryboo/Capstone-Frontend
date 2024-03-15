@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gloria+Hallelujah&display=swap');
+
+h1 { 
+    font-family: "Bagel Fat One", "Gloria Hallelujah", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}

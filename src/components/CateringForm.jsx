@@ -10,9 +10,6 @@ const CateringForm = () => {
 	}
 	return (
 		<>
-        <Link to="/userdashboard">
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</Link>
 			<Card>
 				<Card.Body>
 					<img src="/altcolors5.png" class="img-fluid" alt="WMIC Logo"></img>

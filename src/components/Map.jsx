@@ -88,6 +88,7 @@ function Map() {
   };
 
   return (
+    <>
     <LoadScript googleMapsApiKey={apiKey}>
       <GoogleMap
         mapContainerStyle={containerStyle}
