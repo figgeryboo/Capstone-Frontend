@@ -112,6 +112,7 @@ function Map() {
        ))} 
       </GoogleMap>
     </LoadScript>
+    </>
   );
 }
 
