@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import {
   GoogleMap,
+  InfoWindow,
   LoadScript,
   Marker,
-  Polyline
+  Polyline,
+  MarkerClusterer
 } from "@react-google-maps/api";
-import LocationTracker from "./LocationTracker";
 import truckIcon from "/truckIcon.png";
 import axios from "axios";
+import LocationTracker from "./LocationTracker";
 const containerStyle = {
   width: "75vw",
   height: "70vh",
@@ -19,7 +21,7 @@ const center = {
   lng: -73.910008,
 };
 const apiKey = import.meta.env.VITE_MAP_API_KEY;
-const url = import.meta.env.VITE_BACKEND_URL
+const url = import.meta.env.VITE_BACKEND_URL;
 const truckCos = {
   vendorA: {
     coordinates: [
@@ -47,8 +49,8 @@ const truckCos = {
       { lat: 40.846688, lng: -73.910008 },
     ],
     currentIndex: 0,
-    info: [],
-      menu: []
+    info: [{ hours: "00:06:30", payment_types: ["cash", "debit"] }],
+    menu: [],
   },
   vendorB: {
     coordinates: [
@@ -74,112 +76,155 @@ const truckCos = {
       { lat: 40.848009, lng: -73.904024 },
     ],
     currentIndex: 0,
-    info: [],
-    menu: []
+    info: [{ hours: "00:06:30", payment_types: ["cash", "debit"] }],
+    menu: [],
   },
 };
 
 function Map() {
   const [userLocation, setUserLocation] = useState(null);
   const [path, setPath] = useState([]);
-  const [truckImage, setTruckImage] = useState(true);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [truckMarker, setTruckMarker] = useState(true);
+  const [selectedTruck, setSelectedTruck] = useState(null);
   const [clusters, setClusters] = useState([]);
   const truckMarkerRef = useRef(null);
-
-  useEffect(() => {
-    if (window.google && window.google.maps) {
-      setIsScriptLoaded(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isScriptLoaded) {
-      const trucksIcon = {
-        url: truckIcon,
-        scaledSize: new window.google.maps.Size(25, 25),
-        origin: new window.google.maps.Point(0, 0),
-        anchor: new window.google.maps.Point(12.5, 12.5),
-      };
-
-      setTruckImage(trucksIcon);
-    }
-  }, [isScriptLoaded]);
 
   useEffect(() => {
     const fetchTruckLocations = async () => {
       try {
         const response = await axios.get(`${url}/locations`);
-        setPath(response.data);
-      
+        // Filter out duplicate locations
+        const uniqueLocations = response.data.filter(
+          (location, index, self) =>
+            index ===
+            self.findIndex(
+              (t) =>
+                t.latitude === location.latitude &&
+                t.longitude === location.longitude
+            )
+        );
+        setPath(uniqueLocations);
       } catch (error) {
         console.error("Error fetching truck locations:", error);
       }
     };
-
-    const interval = setInterval(() => {
-      fetchTruckLocations();
-    }, 4000);
-
-    return () => clearInterval(interval);
+    fetchTruckLocations();
   }, []);
+
+  // useEffect(() => {
+  //   if (path.length > 0) {
+  //     animateTruck(path);
+  //   }
+  // }, [path]);
+
   useEffect(() => {
-    if (path.length > 0) {
-      const createClusters = (locations, radius) => {
-        const clusters = [];
-        const visited = new Set();
+    const createClusters = (locations, radius) => {
+      const clusters = [];
+      const visited = new Set();
 
-        locations.forEach(location => {
-          if (visited.has(location)) {
-            return;
+      locations.forEach((location) => {
+        if (visited.has(location)) {
+          return;
+        }
+
+        const cluster = [location];
+        visited.add(location);
+
+        locations.forEach((otherLocation) => {
+          if (
+            !visited.has(otherLocation) &&
+            calculateDistance(location, otherLocation) <= radius
+          ) {
+            cluster.push(otherLocation);
+            visited.add(otherLocation);
           }
-
-          const cluster = [location];
-          visited.add(location);
-
-          locations.forEach(otherLocation => {
-            if (!visited.has(otherLocation) && calculateDistance(location, otherLocation) <= radius) {
-              cluster.push(otherLocation);
-              visited.add(otherLocation);
-            }
-          });
-
-          clusters.push(cluster);
         });
 
-        return clusters;
-      };
+        clusters.push(cluster);
+      });
 
-      const calculateDistance = (location1, location2) => {
-        const lat1 = location1.latitude;
-        const lng1 = location1.longitude;
-        const lat2 = location2.latitude;
-        const lng2 = location2.longitude;
+      return clusters;
+    };
 
-        // Using a simple distance formula here, you can use a more accurate method for production
-        return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lng2 - lng1, 2));
-      };
+    const calculateDistance = (location1, location2) => {
+      const lat1 = location1.latitude;
+      const lng1 = location1.longitude;
+      const lat2 = location2.latitude;
+      const lng2 = location2.longitude;
 
-      const radius = 0.003; // Adjust this value based on your needs
-      const clusters = createClusters(path, radius);
-      setClusters(clusters);
-    }
+      return Math.sqrt(Math.pow(lat2 - lat1, 2) + Math.pow(lng2 - lng1, 2));
+    };
+
+    const radius = 0.003;
+    const clusters = createClusters(path, radius);
+    setClusters(clusters);
   }, [path]);
 
-  useEffect(() => {
-    if (truckMarkerRef.current && clusters.length > 0) {
-      let currentIndex = 0;
-      const interval = setInterval(() => {
-        truckMarkerRef.current.setPosition({
-          lat: clusters[currentIndex][0].latitude,
-          lng: clusters[currentIndex][0].longitude
-        });
-        currentIndex = (currentIndex + 1) % clusters.length;
-      }, 1000); // Adjust the interval based on your needs
+  const animateTruck = (path, index = 0) => {
+  console.log(Object.values(truckMarkerRef))
 
-      return () => clearInterval(interval);
+    if (!truckMarkerRef.current) {
+      console.error("Truck marker ref is not set.");
+      return;
     }
-  }, [clusters]);
+  
+    const marker = truckMarkerRef.current;
+    if ( marker === null) {
+      console.error("setPosition method is not available on truck marker ref.");
+      return;
+    }
+  
+    if (index < path.length) {
+      const newPosition = path[index];
+      if (newPosition && newPosition.latitude && newPosition.longitude) {
+        console.log("Moving truck to:", newPosition);
+        setTimeout(() => {
+          marker.setPosition(newPosition);
+          animateTruck(path, index + 1);
+        }, 2000); // Delay between position updates (2 seconds in this example)
+      } else {
+        console.error("Invalid newPosition:", newPosition);
+      }
+    } else {
+      console.log("Animation completed.");
+    }
+  };
+  
+
+  const handleMarkerClick = (vendorInfo, cluster) => {
+    console.log("Clicked truck info:", vendorInfo);
+    // the abov eis undefined
+    // animateTruck(
+    //   cluster.map((location) => ({ lat: location.lat, lng: location.lng }))
+    // );
+  };
+
+  const handleInfoWindowClose = () => {
+    console.log("Info window closed");
+    setSelectedTruck(null);
+  };
+
+  // const handleLocationChange = (location) => {
+  //   setUserLocation(location);
+  // };
+
+  /* ws connection
+  useEffect(() => {
+    // initializ connection
+    const ws = new WebSocket("ws://localhost:4444");
+    //listen for server messages 
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      // Update path or clusters based on the message received
+      setPath(message.locations); // updated locations message
+    };
+    // Cleanup WebSocket connection when component unmounts
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+*/
 
   return (
     <LoadScript googleMapsApiKey={apiKey}>
@@ -189,10 +234,19 @@ function Map() {
         center={userLocation ? userLocation : center}
         zoom={13}
       >
-         {clusters.map((cluster, index) => (
+        {/* <LocationTracker
+        onLocationChange={(location) => {
+          handleLocationChange(location);
+          setPath((prevPath) => [...prevPath, location]);
+        }}
+      /> */}
+        {clusters.map((cluster, index) => (
           <Polyline
             key={`polyline-${index}`}
-            path={cluster.map(location => ({ lat: location.latitude, lng: location.longitude }))}
+            path={cluster.map((location) => ({
+              lat: location.latitude,
+              lng: location.longitude,
+            }))}
             options={{
               strokeColor: "#5c0fa4",
               strokeOpacity: 1,
@@ -200,22 +254,41 @@ function Map() {
             }}
           />
         ))}
+        {clusters.map((cluster, clusterIndex) => {
+          const clusterStart = cluster[0];
+          return (
+            <Marker
+              key={`marker-${clusterIndex}`}
+              position={{
+                lat: clusterStart.latitude,
+                lng: clusterStart.longitude,
+              }}
+              icon={truckIcon}
+              onClick={() => handleMarkerClick(clusterStart.info)}
+              ref={(marker) => {
+                if (marker) {
+                  truckMarkerRef.current = marker;
+                }
+              }}
+            />
+          
+          )
+        })}
 
-        {path.map((location, index) => (
-          <Marker
-            key={`marker-${index}`}
-            position={{ lat: location.latitude, lng: location.longitude }}
-            
-          />
-        ))}
-{/* {clusters.map((cluster, index) => (
-  <Marker
-    key={`truck-${index}`}
-    position={{ lat: cluster[0].latitude, lng: cluster[0].longitude }}
-    
-    ref={(ref) => (truckMarkerRef.current[index] = ref)}
-  />
-))} */}
+        {selectedTruck && (
+          <InfoWindow
+            position={{
+              lat: selectedTruck.coordinates[0].lat,
+              lng: selectedTruck.coordinates[0].lng,
+            }}
+            onCloseClick={handleInfoWindowClose}
+          >
+            <div>
+              <h2> {selectedTruck.vendorName}</h2>
+              <p> there is info here</p>
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </LoadScript>
   );
@@ -223,3 +296,45 @@ function Map() {
 
 export default Map;
 
+
+
+
+
+/**
+ * 
+ * 
+  return (
+        {path.map((location, index) => (
+          <Marker
+            key={`marker-${index}`}
+            position={{ lat: location.latitude, lng: location.longitude }}
+            icon={truckIcon}
+            onClick={() => setSelectedTruck(location)}
+          />
+        ))}
+
+        {selectedTruck && (
+          <InfoWindow
+            position={{ lat: selectedTruck.latitude, lng: selectedTruck.longitude }}
+            onCloseClick={() => setSelectedTruck(null)}
+          >
+            <div>
+              <h2>Truck Info</h2>
+              <p>Details about the truck</p>
+            </div>
+          </InfoWindow>
+        )}
+
+        <Polyline
+          path={path.map((location) => ({ lat: location.latitude, lng: location.longitude }))}
+          options={{
+            strokeColor: "#5c0fa4",
+            strokeOpacity: 1,
+            strokeWeight: 2,
+          }}
+        />
+ 
+  );
+}
+
+ */

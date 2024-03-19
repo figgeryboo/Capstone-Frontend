@@ -9,7 +9,8 @@ import CateringForm from './CateringForm';
 import { AuthProvider } from '../contexts/authContext';
 import Error404 from '../pages/Error404';
 import Map from './Map';
-import StaticLocations from './StaticLocations';
+import Reviews from './Reviews';
+import LocationTracker from './LocationTracker';
 
 
 function App() {
