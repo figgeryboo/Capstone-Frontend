@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './NavigationFooter.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const NavigationFooter = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const location = useLocation();
 
   const handleItemClick = (index, e) => {
     e.preventDefault();
     setActiveIndex(index);
+    localStorage.setItem('activeIndex', index); 
   };
+
+  useEffect(() => {
+    const storedActiveIndex = localStorage.getItem('activeIndex');
+    if (storedActiveIndex !== null) {
+      setActiveIndex(parseInt(storedActiveIndex));
+    }
+
+    const pathname = location.pathname;
+    if (pathname === '/usercatering') {
+      setActiveIndex(0);
+    } else if (pathname === '/mapview') {
+      setActiveIndex(1);
+    } else if (pathname === '/userratings') {
+      setActiveIndex(2);
+    } else if (pathname === '/userdashboard') {
+      setActiveIndex(3);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="navigation">
@@ -24,9 +44,9 @@ const NavigationFooter = () => {
         <li className={`list ${activeIndex === 1 ? 'active' : ''}`} onClick={(e) => handleItemClick(1, e)}>
           <Link to="/mapview">
             <span className="icon">
-              <i className="bi bi-map"></i>
+              <i className="fa-solid fa-ice-cream"></i>
             </span>
-            <span className="text">Ice Cream</span>
+            <span className="text">Find Me</span>
           </Link>
         </li>
         <li className={`list ${activeIndex === 2 ? 'active' : ''}`} onClick={(e) => handleItemClick(2, e)}>
@@ -46,7 +66,15 @@ const NavigationFooter = () => {
           </Link>
         </li>
       </ul>
-      <div className={`indicator ${activeIndex === 0 ? 'active-indicator-1' : activeIndex === 1 ? 'active-indicator-2' : activeIndex === 2 ? 'active-indicator-3' : activeIndex === 3 ? 'active-indicator-4' : 'active-indicator-5'}`}></div>
+      <div className={`indicator ${
+        activeIndex === 0
+          ? 'active-indicator-1'
+          : activeIndex === 1
+          ? 'active-indicator-2'
+          : activeIndex === 2
+          ? 'active-indicator-3'
+          : 'active-indicator-4'
+      }`}></div>
     </div>
   );
 };

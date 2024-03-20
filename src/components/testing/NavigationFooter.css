@@ -68,13 +68,13 @@
   
   .indicator {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: calc(100% / 4); /* Adjust width based on number of icons */
-    height: 5px; /* Adjust height of the indicator */
+    bottom: 10px;
+    left: calc((100% - 285px) / 2); /* Adjust this value to center the indicator */
+    width: 70px;
+    height: 70px;
     background: #5ae0c8;
-    border-radius: 0 0 10px 10px;
-    transition: transform 0.5s;
+    border-radius: 50%;
+    transition: transform 0.5s 0.1s;
   }
   
   .active-indicator-1 {
@@ -93,7 +93,4 @@
     transform: translateX(300%);
   }
   
-  .active-indicator-5 {
-    transform: translateX(400%);
-  }
   
