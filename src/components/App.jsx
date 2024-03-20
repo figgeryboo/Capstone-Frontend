@@ -13,6 +13,7 @@ import VendorDashboard from './vendor/VendorDashboard';
 import VendorSignup from './vendor/VendorSignup';
 import VendorLogin from './vendor/VendorLogin';
 import NavigationFooter from './testing/NavigationFooter';
+import StaticLocations from './StaticLocations';
 
 function App() {
   return (
