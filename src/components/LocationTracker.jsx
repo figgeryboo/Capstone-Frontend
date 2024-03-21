@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from 'react-bootstrap'
 import { Link } from "react-router-dom";
-
+// import { WebSocket } from "ws";
 
 function LocationTracker({onLocationChange}) {
   const [latitude, setLatitude] = useState(null);
@@ -10,6 +10,40 @@ function LocationTracker({onLocationChange}) {
   const [time, setTime] = useState(null);
   const [duration, setDuration] = useState(0);
   const [initialLocation, setInitialLocation] = useState(null);
+  const [socket, setSocket] = useState(null);
+
+
+  // useEffect(() => {
+  //   const ws = new WebSocket("ws://https://testtrackback.onrender.com/locations");
+
+  //   ws.onopen = () => {
+  //     console.log("WebSocket connected");
+// ws.send(https://testtrackback.onrender.com/locations");
+
+  //   };
+
+  //   ws.onmessage = (event) => {
+  //     console.log("Received message from server:", event.data);
+  //   };
+
+  //   ws.onclose = () => {
+  //     console.log("WebSocket disconnected");
+  //   };
+
+  //   return () => {
+  //     ws.close();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   if (socket && latitude !== null && longitude !== null) {
+  //     const data = { latitude, longitude };
+  //     socket.send(JSON.stringify(data));
+  //   }
+  // }, [socket, latitude, longitude]);
+
+
+
 
   useEffect(() => {
     if ("geolocation" in navigator) {
