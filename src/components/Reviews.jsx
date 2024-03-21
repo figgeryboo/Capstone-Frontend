@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const VendorRatings = () => {
+const Reviews = ({reviews}) => {
   const [vendorId, setVendorId] = useState(null);
   const [ratings, setRatings] = useState([]);
 
@@ -43,4 +43,4 @@ const VendorRatings = () => {
   );
 };
 
-export default VendorRatings;
+export default Reviews;
