@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const VendorRatings = () => {
+const Reviews = ({reviews}) => {
   const [vendorId, setVendorId] = useState(null);
   const [ratings, setRatings] = useState([]);
 
@@ -29,7 +29,6 @@ const VendorRatings = () => {
         <option value="1">Vendor 1</option>
         <option value="2">Vendor 2</option>
         <option value="3">Vendor 3</option>
-        {/* Add more options as needed */}
       </select>
 
       <h2>Ratings for Vendor {vendorId}</h2>
@@ -44,4 +43,4 @@ const VendorRatings = () => {
   );
 };
 
-export default VendorRatings;
+export default Reviews;

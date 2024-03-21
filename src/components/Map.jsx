@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "../App.css";
+import Reviews from "./Reviews";
 
 const center = {
   lat: 40.846688,
@@ -8,11 +9,14 @@ const center = {
 };
 
 function Map() {
+  const url = import.meta.env.VITE_LOCAL_HOST;
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [showReviews, setShowReviews] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4444/vendors`);
+        const response = await axios.get(`${url}/vendors`);
         const vendors = response.data;
 
         const map = new google.maps.Map(
@@ -20,9 +24,10 @@ function Map() {
           {
             zoom: 13,
             center: center,
+            mapId: import.meta.env.VITE_GOOGLE_MAPID,
           }
         );
-// set vendor cordinates here 
+
         vendors.forEach((vendor) => {
           const pathCoordinates = vendor.coordinates.map((coord) => ({
             lat: coord.lat,
@@ -32,9 +37,9 @@ function Map() {
           const polyline = new google.maps.Polyline({
             path: pathCoordinates,
             geodesic: true,
-            strokeColor: "#1b8f81e6",
+            strokeColor: "#a048f8e6",
             strokeOpacity: 1.0,
-            strokeWeight: 3,
+            strokeWeight: 2.8,
           });
 
           polyline.setMap(map);
@@ -58,20 +63,40 @@ function Map() {
                 <p>Dietary Offering: ${vendor.dietary_offering}</p>
                 <p>Rating: ${vendor.rating_average}</p>
                 <p>Menu: ${vendor.menu}</p>
+                <p><a href="#" onclick="setSelectedVendor(${vendor.id}); setShowReviews(true);">Click here to see reviews</a></p>
               </div>
             `,
-            maxWidth: 180, 
-        
+            maxWidth: 180,
+            anchor: marker,
+            ariaLabel: "vendor details",
           });
 
           marker.addListener("click", () => {
+            if (map.openInfoWindow) {
+              map.openInfoWindow.close();
+            }
             infoWindow.open(map, marker);
+            map.openInfoWindow = infoWindow;
           });
 
+          let traveledPath = [];
+
           const animateMarker = () => {
+            if (index > 0) {
+              traveledPath.push(pathCoordinates[index - 1]);
+              const traveledPolyline = new google.maps.Polyline({
+                path: traveledPath,
+                geodesic: true,
+                strokeColor: "#e8340ce6",
+                strokeOpacity: 1.0,
+                strokeWeight: 3,
+              });
+              traveledPolyline.setMap(map);
+            }
             marker.setPosition(pathCoordinates[index]);
             index = (index + 1) % pathCoordinates.length;
-            setTimeout(animateMarker, 3730); 
+
+            setTimeout(animateMarker, 3730);
           };
 
           animateMarker();
@@ -91,6 +116,9 @@ function Map() {
         id="map-container"
         style={{ width: "75vw", height: "70vh", border: "2px solid teal" }}
       ></div>
+      {selectedVendor && showReviews && (
+        <Reviews vendorId={selectedVendor.id} />
+      )}
     </div>
   );
 }
