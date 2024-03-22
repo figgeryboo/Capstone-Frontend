@@ -39,7 +39,7 @@ function App() {
               <Route path="/vendorsignup" element={<VendorSignup />} />
               <Route path="/vendorlogin" element={<VendorLogin />} />
               <Route path="/usercatering" element={<CateringForm />} />
-              <Route path="/userreviews" element={<UserReviewsFeed />} />
+              <Route path="/userratings" element={<UserReviewsFeed />} />
               <Route path="*" element={<Error404 />} />
             </Routes>
           </div>

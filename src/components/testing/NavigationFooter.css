@@ -52,7 +52,7 @@
   
   .navigation ul li a .text {
     position: absolute;
-    color: var(--clr);
+    color: #64649C;
     font-weight: 400;
     font-size: 0.75em;
     letter-spacing: 0.05em;
@@ -69,7 +69,7 @@
   .indicator {
     position: absolute;
     bottom: 10px;
-    left: calc((100% - 285px) / 2); /* Adjust this value to center the indicator */
+    left: calc((100% - 275px) / 2); /* Adjust this value to center the indicator */
     width: 70px;
     height: 70px;
     background: #5ae0c8;
