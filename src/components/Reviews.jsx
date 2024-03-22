@@ -55,6 +55,7 @@ const Reviews = ({reviews}) => {
             </Card.Body>
         </Card>
     );
+}
 };
 
-export default Reviews;
+export default VendorRatings;
