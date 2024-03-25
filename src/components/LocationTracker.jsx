@@ -1,141 +1,95 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Button } from 'react-bootstrap'
-import { Link } from "react-router-dom";
-// import { WebSocket } from "ws";
-
-function LocationTracker({onLocationChange}) {
+import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import '../App.css'
+function LocationTracker() {
+  const [ws, setWs] = useState(null);
+  const [wsState, setWsState] = useState("disconnected");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [time, setTime] = useState(null);
-  const [duration, setDuration] = useState(0);
-  const [initialLocation, setInitialLocation] = useState(null);
-  const [socket, setSocket] = useState(null);
-
-
-  // useEffect(() => {
-  //   const ws = new WebSocket("ws://https://testtrackback.onrender.com/locations");
-
-  //   ws.onopen = () => {
-  //     console.log("WebSocket connected");
-// ws.send(https://testtrackback.onrender.com/locations");
-
-  //   };
-
-  //   ws.onmessage = (event) => {
-  //     console.log("Received message from server:", event.data);
-  //   };
-
-  //   ws.onclose = () => {
-  //     console.log("WebSocket disconnected");
-  //   };
-
-  //   return () => {
-  //     ws.close();
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   if (socket && latitude !== null && longitude !== null) {
-  //     const data = { latitude, longitude };
-  //     socket.send(JSON.stringify(data));
-  //   }
-  // }, [socket, latitude, longitude]);
-
-
-
+  const [receivedLocations, setReceivedLocations] = useState([]);
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
+    const newWs = new WebSocket("ws://localhost:4444");
 
-        setLatitude(lat);
-        setLongitude(lng);
+    newWs.onopen = () => {
+      console.log("WebSocket connected");
+      setWsState("connected");
+    };
 
-        if (!initialLocation) {
-          setInitialLocation({ latitude: lat, longitude: lng });
-        }
-      });
-    } else {
-      console.log("This browser does not support geolocation.");
-    }
-  }, [initialLocation]);
+    newWs.onclose = () => {
+      console.log("WebSocket disconnected");
+      setWsState("disconnected");
+    };
 
-  useEffect(() => {
-    if (latitude && longitude && !time) {
-      setTime(new Date()); // set time when user logs location
-    }
-  }, [latitude, longitude, time]);
-
-  useEffect(() => {
-    const watchId = navigator.geolocation.watchPosition(function (position) {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-
-      setLatitude(lat);
-      setLongitude(lng);
-      if (!time) {
-        setTime(new Date()); // set time when user logs location
+    newWs.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("parsed", data);
+        setReceivedLocations((prevLocations) => [...prevLocations, data]);
+      } catch (error) {
+        console.error("Error parsing message:", error);
       }
-      onLocationChange({ lat, lng }); // set new coord
-      // send to server
-      sendLocationData(lat, lng);
-    });
+    };
+
+    setWs(newWs);
 
     return () => {
-      navigator.geolocation.clearWatch(watchId); // Stop watching the location when component unmounts
+      newWs.close();
     };
-  }, [onLocationChange, time]);
-// how often to send location
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (time) {
-  //       setDuration(Math.round((new Date() - time) / 10000)); 
-  //     }
-  //   }, 10000);
-  //   return () => clearInterval(interval); // cleanup interval on unmount
-  // }, [time]);
+  }, []);
 
-  const sendLocationData = (lat, lng) => {
-    const url = import.meta.env.VITE_BASE_URL;
-
-    const data = {
-      latitude: lat,
-      longitude: lng,
-      duration: duration,
-    };
-
-    // axios.post(`${url}/location`, data)
-    //   .then((res) => {
-    //     console.log("Location data sent successfully!", res.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error sending location data:", error);
-    //   });
+  const sendLocation = () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setLatitude(latitude); // Update the latitude state
+        setLongitude(longitude);
+        const data = { latitude, longitude };
+        ws.send(JSON.stringify(data));
+      });
+    } else {
+      console.error("WebSocket connection not open.");
+    }
   };
 
-  return (
-  <>
-      <div>
-      {latitude && longitude ? (
-        <p>
-          Your exact location: <span>Latitude: {latitude}, Longitude: {longitude}</span>
-          <br />
-          Starting location: <span>Latitude: {initialLocation?.latitude}, Longitude: {initialLocation?.longitude}</span>
-          <br />
-          Time at location: {duration} seconds
-        </p>
-      ) : (
-        <p>Loading location...</p>
-    
-      )}
-    </div>
-  <br />
+  // Create a map instance
+  let map;
 
-    </>
-   
+  useEffect(() => {
+    map = new google.maps.Map(document.getElementById("vendormap"), {
+      center: { lat: 40.8571627, lng: -73.9015161 },
+      zoom: 12,
+    });
+
+    receivedLocations.forEach((location, index) => {
+      new google.maps.Marker({
+        position: { lat: location.latitude, lng: location.longitude },
+        map,
+        title: `Location ${index + 1}`,
+      });
+    });
+  }, [receivedLocations]);
+
+  return (
+    <div className="vendormap_container">
+      <h1>Location Tracker</h1>
+      <p>WebSocket state: {wsState}</p>
+      <p>
+        Your current location: Latitude {latitude}, Longitude {longitude}
+      </p>
+      <Button onClick={sendLocation}>Start Route</Button>
+
+      <h2>Received Locations:</h2>
+      <ul>
+        {receivedLocations.map((location, index) => (
+          <li key={index}>
+            {console.log(location.latitude)}
+            Latitude: {location.latitude}, Longitude {location.longitude}
+          </li>
+        ))}
+      </ul>
+      <div id="vendormap" style={{ height: "80vh", width: "75vw" }}></div>
+    </div>
   );
 }
 
