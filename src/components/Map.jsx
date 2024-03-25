@@ -12,6 +12,8 @@ function Map() {
   const url = import.meta.env.VITE_LOCAL_HOST;
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [showReviews, setShowReviews] = useState(false);
+  const [infoWindows, setInfoWindows] = useState({});
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +24,7 @@ function Map() {
         const map = new google.maps.Map(
           document.getElementById("map-container"),
           {
-            zoom: 13,
+            zoom: 14,
             center: center,
             mapId: import.meta.env.VITE_GOOGLE_MAPID,
           }
@@ -63,20 +65,22 @@ function Map() {
                 <p>Dietary Offering: ${vendor.dietary_offering}</p>
                 <p>Rating: ${vendor.rating_average}</p>
                 <p>Menu: ${vendor.menu}</p>
-                <p><a href="#" onclick="setSelectedVendor(${vendor.id}); setShowReviews(true);">Click here to see reviews</a></p>
+                <p>
+                <a href="#" onclick="setSelectedVendor(${vendor.vendor_id}); setShowReviews(true);">Click here to see reviews</a></p>
               </div>
             `,
             maxWidth: 180,
-            anchor: marker,
-            ariaLabel: "vendor details",
+            ariaLabel: 'vendor details in black text on white background'
           });
 
+          infoWindows[vendor.vendor_id] = infoWindow;
+
           marker.addListener("click", () => {
-            if (map.openInfoWindow) {
-              map.openInfoWindow.close();
-            }
-            infoWindow.open(map, marker);
-            map.openInfoWindow = infoWindow;
+            // Close any previously open info windows
+            Object.values(infoWindows).forEach((iw) => iw.close());
+
+            // Open the info window for the clicked marker
+             infoWindow.open(map, marker);
           });
 
           let traveledPath = [];
@@ -101,9 +105,11 @@ function Map() {
 
           animateMarker();
         });
+
+        setInfoWindows(infoWindows);
       } catch (error) {
         console.error("Error fetching vendor data:", error);
-        alert("No vendor data available");
+        alert("Vendor data currently available. Refresh to try again");
       }
     };
 
@@ -114,10 +120,10 @@ function Map() {
     <div className="locations_container">
       <div
         id="map-container"
-        style={{ width: "75vw", height: "70vh", border: "2px solid teal" }}
+        style={{ width: "70vw", height: "70vh", border: "2px solid #E62C7C", borderRadius: '10px'}}
       ></div>
       {selectedVendor && showReviews && (
-        <Reviews vendorId={selectedVendor.id} />
+        <Reviews vendorId={selectedVendor.vendor_id} />
       )}
     </div>
   );
