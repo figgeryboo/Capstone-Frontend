@@ -21,7 +21,7 @@ export default function Landing() {
 						User Login
 					</Button>
 				</Link>
-				<Link to="/usersignup">
+				<Link to="/vendorlogin">
 					<Button
 						variant="primary"
 						type="link"
@@ -29,7 +29,7 @@ export default function Landing() {
 						className="text-white font-medium rounded-lg mt-3 ms-4 me-3"
 						active
 					>
-						New User
+						Vendor Login
 					</Button>
 				</Link>
 			</div>
