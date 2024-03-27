@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import '../App.css'
+import vendorMarker from "/truckIcon.png";
+import "../App.css";
+
 function LocationTracker() {
   const [ws, setWs] = useState(null);
   const [wsState, setWsState] = useState("disconnected");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [receivedLocations, setReceivedLocations] = useState([]);
+  const [watchingLocation, setWatchingLocation] = useState(false);
+  const [polyline, setPolyline] = useState(null);
 
   useEffect(() => {
     const newWs = new WebSocket("ws://localhost:4444");
@@ -38,20 +42,6 @@ function LocationTracker() {
     };
   }, []);
 
-  const sendLocation = () => {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setLatitude(latitude); // Update the latitude state
-        setLongitude(longitude);
-        const data = { latitude, longitude };
-        ws.send(JSON.stringify(data));
-      });
-    } else {
-      console.error("WebSocket connection not open.");
-    }
-  };
-
   // Create a map instance
   let map;
 
@@ -66,19 +56,71 @@ function LocationTracker() {
         position: { lat: location.latitude, lng: location.longitude },
         map,
         title: `Location ${index + 1}`,
+        icon: {
+          url: vendorMarker,
+          scaledSize: new google.maps.Size(45, 45),
+        },
       });
     });
+
+    const path = receivedLocations.map((location) => ({
+      lat: location.latitude,
+      lng: location.longitude,
+    }));
+
+    // Create a Polyline and set it on the map
+    const newPolyline = new google.maps.Polyline({
+      path,
+      geodesic: true,
+      strokeColor: "#75E3C7",
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+    });
+    newPolyline.setMap(map);
+    setPolyline(newPolyline);
   }, [receivedLocations]);
+
+  useEffect(() => {
+    if (watchingLocation) {
+      const watchId = navigator.geolocation.watchPosition(function (position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        setLatitude(lat);
+        setLongitude(lng);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const data = { latitude: lat, longitude: lng };
+          ws.send(JSON.stringify(data));
+        } else {
+          console.error("WebSocket connection not open.");
+        }
+      });
+
+      return () => {
+        navigator.geolocation.clearWatch(watchId);
+      };
+    }
+  }, [watchingLocation, ws]);
+
+  const toggleWatchLocation = () => {
+    setWatchingLocation((prev) => !prev);
+  };
 
   return (
     <div className="vendormap_container">
-      <h1>Location Tracker</h1>
+      <h1>
+      <Button onClick={toggleWatchLocation}>
+        {watchingLocation
+          ? "Stop Watching Location"
+          : "Start Watching Location"}
+      </Button>
+      </h1>
+      <div id="vendormap" style={{ height: "80vh", width: "75vw" }}></div>
       <p>WebSocket state: {wsState}</p>
       <p>
         Your current location: Latitude {latitude}, Longitude {longitude}
       </p>
-      <Button onClick={sendLocation}>Start Route</Button>
-
+  
       <h2>Received Locations:</h2>
       <ul>
         {receivedLocations.map((location, index) => (
@@ -88,7 +130,6 @@ function LocationTracker() {
           </li>
         ))}
       </ul>
-      <div id="vendormap" style={{ height: "80vh", width: "75vw" }}></div>
     </div>
   );
 }
