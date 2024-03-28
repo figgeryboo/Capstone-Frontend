@@ -13,6 +13,7 @@ import VendorDashboard from './vendor/VendorDashboard';
 import VendorSignup from './vendor/VendorSignup';
 import VendorLogin from './vendor/VendorLogin';
 import NavigationFooter from './testing/NavigationFooter';
+import VendorNavFooter from './testing/VendorNavFooter';
 import UserReviewsFeed from './testing/UserReviewsFeed';
 import LocationTracker from './LocationTracker';
 
@@ -30,7 +31,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route exact path="/vendormapview" element={<LocationTracker />} />
-              <Route exact path="/mapview" element={<Map />} />
+              <Route exact path="/usermapview" element={<Map />} />
               <Route exact path="/userdashboard" element={<UserDashboard />} />
               <Route path="/usersignup" element={<UserSignup />} />
               <Route path="/userlogin" element={<UserLogin />} />
@@ -52,23 +53,36 @@ function App() {
 function FooterWithConditionalRendering() {
   const location = useLocation();
 
-  // Check if the current location matches any of the specified paths
-  const shouldRenderFooter =
-    ![
-      '/',
-      '/userlogin',
-      '/usersignup',
-      '/vendorlogin',
-      '/vendorsignup'
-    ].includes(location.pathname);
+  // Define paths that should render the VendorNavFooter
+  const vendorPaths = [
+    '/vendormapview',
+    '/vendordashboard',
+    '/vendorcatering',
+    '/analytics',
+    // Add other vendor-specific paths here if needed
+  ];
 
-  // If the current location matches any of the paths, don't render the footer
-  if (!shouldRenderFooter) {
+  // Check if the current location is a vendor path
+  const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));
+
+  // Check if the current location is one of the specified pages where footer should not be rendered
+  const excludeFooterPaths = ['/', '/userlogin', '/usersignup', '/vendorlogin', '/vendorsignup'];
+  const shouldRenderFooter = !excludeFooterPaths.includes(location.pathname);
+
+  // If the current location is a vendor path and should render the footer, render the VendorNavFooter
+  if (isVendorPath && shouldRenderFooter) {
+    return <VendorNavFooter />;
+  }
+
+  // If the current location is one of the specified pages, do not render any footer
+  if (excludeFooterPaths.includes(location.pathname)) {
     return null;
   }
 
-  // Otherwise, render the NavigationFooter component
+  // Render the NavigationFooter component for all other pages
   return <NavigationFooter />;
 }
+
+
 
 export default App;

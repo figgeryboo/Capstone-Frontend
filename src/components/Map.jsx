@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../App.css";
-import Reviews from "./Reviews";
+//import { Button } from 'react-bootstrap';
 
 const center = {
   lat: 40.846688,
   lng: -73.910008,
 };
 
-function Map() {
+const Map = () => {
   const url = import.meta.env.VITE_LOCAL_HOST;
   const [selectedVendor, setSelectedVendor] = useState(null);
-  const [showReviews, setShowReviews] = useState(false);
+  const [showExpandedDetails, setShowExpandedDetails] = useState(false);
+  const [selectedVendorDetails, setSelectedVendorDetails] = useState(null);
   const [infoWindows, setInfoWindows] = useState({});
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,18 +56,18 @@ function Map() {
             },
           });
 
+          const infoWindowContent = `
+            <div>
+              <h3>${vendor.vendor_name}</h3>
+              <h4><b>Rating: ${vendor.rating_average}</b></h4>
+              <p>${vendor.payment_types}</p>
+              <p>${vendor.dietary_offering}</p>
+              <Button variant="primary" size="small" onclick="handleVendorClick(${vendor.vendor_id})">See more about vendor</Button>
+            </div>
+          `;
+
           const infoWindow = new google.maps.InfoWindow({
-            content: `
-              <div>
-                <h4>${vendor.vendor_name}</h4>
-                <p>Contact Info: ${vendor.contact_info}</p>
-                <p>Dietary Offering: ${vendor.dietary_offering}</p>
-                <p>Rating: ${vendor.rating_average}</p>
-                <p>Menu: ${vendor.menu}</p>
-                <p>
-                <a href="#" onclick="setSelectedVendor(${vendor.vendor_id}); setShowReviews(true);">Click here to see reviews</a></p>
-              </div>
-            `,
+            content: infoWindowContent,
             maxWidth: 180,
             ariaLabel: 'vendor details in black text on white background'
           });
@@ -76,11 +75,14 @@ function Map() {
           infoWindows[vendor.vendor_id] = infoWindow;
 
           marker.addListener("click", () => {
-            // Close any previously open info windows
             Object.values(infoWindows).forEach((iw) => iw.close());
+            infoWindow.open(map, marker);
+          });
 
-            // Open the info window for the clicked marker
-             infoWindow.open(map, marker);
+          google.maps.event.addListener(infoWindow, 'closeclick', () => {
+            setShowExpandedDetails(false);
+            setSelectedVendor(null);
+            setSelectedVendorDetails(null);
           });
 
           let traveledPath = [];
@@ -109,24 +111,48 @@ function Map() {
         setInfoWindows(infoWindows);
       } catch (error) {
         console.error("Error fetching vendor data:", error);
-        alert("Vendor data currently available. Refresh to try again");
+        alert("Vendor data currently unavailable. Refresh to try again.");
       }
     };
 
     fetchData();
   }, []);
 
+  window.handleVendorClick = async (vendorId) => {
+    setSelectedVendor(vendorId);
+    const response = await axios.get(`${url}/vendors/${vendorId}`);
+    setSelectedVendorDetails(response.data);
+    setShowExpandedDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setShowExpandedDetails(false);
+    setSelectedVendor(null);
+    setSelectedVendorDetails(null);
+  };
+
   return (
-    <div className="locations_container">
+    <div style={{ display: "flex", position: 'relative'}}>
       <div
         id="map-container"
-        style={{ width: "70vw", height: "70vh", border: "2px solid #E62C7C", borderRadius: '10px'}}
+        style={{ width: "100vw", height: "80vh", border: "2px solid #59E0C8", borderRadius: '10px'}}
       ></div>
-      {selectedVendor && showReviews && (
-        <Reviews vendorId={selectedVendor.vendor_id} />
+      {showExpandedDetails && selectedVendor && selectedVendorDetails && (
+        <div style={{ position: 'absolute', width: "100%", height: "20vh", background: "#ffffff", padding: "15px", border: "2px solid #59E0C8", borderRadius: '10px', overflowY: "auto", bottom: '0'}}>
+          <div>
+            <h4>{selectedVendorDetails.vendor_name}'s Menu</h4>
+            <ul>
+              {selectedVendorDetails.menu.map((item, index) => (
+                <li key={index}>
+                  <sub>{item.name} - ${item.price}</sub>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       )}
     </div>
   );
-}
+};
 
 export default Map;

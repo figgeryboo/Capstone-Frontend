@@ -35,7 +35,7 @@ const UserLogin = () => {
 
 	return (
 		<>
-			{userLoggedIn && <Navigate to={'/mapview'} replace={true} />}
+			{userLoggedIn && <Navigate to={'/usermapview'} replace={true} />}
 			<Link to="/">
 				<button type="button" class="btn-close" aria-label="Close"></button>
 			</Link>

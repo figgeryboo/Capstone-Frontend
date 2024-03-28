@@ -36,11 +36,11 @@ const VendorLogin = () => {
 		<>
 			{userLoggedIn && <Navigate to={'/vendordashboard'} replace={true} />}
 			<Link to="/">
-				<button type="button" class="btn-close" aria-label="Close"></button>
+			<button type="button" class="btn-close " aria-label="Close" style={{ color: "#FFFF", marginLeft: '22em', backgroundColor:'#5ae0c8', borderRadius:'15px', padding: '8px', marginBottom: '5px'}}></button>
 			</Link>
 			<Card>
 				<Card.Body>
-					<h2 className="text-center mb-4">Vendor Log In</h2>
+					<h2 className="text-center mb-2">Vendor Log In</h2>
 					<Form onSubmit={handleSubmit}>
 						<Form.Group id="email">
 							<Form.Label>Email</Form.Label>
