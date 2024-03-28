@@ -26,20 +26,18 @@ const VendorSignup = () => {
 
 	const handleNextStep = () => {
 		setCurrentStep((prevStep) => prevStep + 1);
-		setErrorMessage(''); // Reset error message when moving to the next step
+		setErrorMessage(''); 
 	};
 
 	const handlePrevStep = () => {
 		setCurrentStep((prevStep) => prevStep - 1);
-		setErrorMessage(''); // Reset error message when moving to the previous step
+		setErrorMessage('');
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		// Validate form fields for each step
 		if (currentStep === 1) {
-			// Validation for Step 1 fields
 			if (
 				!formData.vendorName ||
 				!formData.email ||
@@ -54,10 +52,8 @@ const VendorSignup = () => {
 				setErrorMessage('Passwords do not match.');
 				return;
 			}
-			// Move to Step 2 if validation passes
 			handleNextStep();
 		} else if (currentStep === 2) {
-			// Validation for Step 2 fields
 			if (
 				!formData.foodVendorId ||
 				!formData.licenseId ||
@@ -67,29 +63,23 @@ const VendorSignup = () => {
 				setErrorMessage('All fields are required.');
 				return;
 			}
-			// Move to Step 3 if validation passes
 			handleNextStep();
 		} else if (currentStep === 3) {
-			// Validation for Step 3 fields
 			if (!formData.locationPermission) {
 				setErrorMessage('Location permission is required.');
 				return;
 			}
-			// Proceed with form submission
 			if (!isRegistering) {
 				setIsRegistering(true);
 				try {
-					// Call the authentication function
 					await doCreateVendorWithEmailAndPassword(
 						formData.email,
 						formData.password,
 						formData
 					);
 
-					// Redirect to vendor dashboard on successful registration
 					navigate('/vendordashboard');
 				} catch (error) {
-					// Handle registration error
 					console.error(error);
 					setErrorMessage(error.message);
 					setIsRegistering(false);
@@ -121,7 +111,6 @@ const VendorSignup = () => {
 				<Card.Body>
 					<h2 className="text-center mb-2">Vendor Sign Up</h2>
 					<Form onSubmit={handleSubmit}>
-						{/* Step 1: Vendor Information */}
 						{currentStep === 1 && (
 							<>
 								<Form.Group id="vendorName">
@@ -191,7 +180,6 @@ const VendorSignup = () => {
 								</Button>
 							</>
 						)}
-						{/* Step 2: Additional Information */}
 						{currentStep === 2 && (
 							<>
 								<Form.Group id="foodVendorId">
@@ -258,7 +246,6 @@ const VendorSignup = () => {
 								</Button>
 							</>
 						)}
-						{/* Step 3: App Permissions */}
 						{currentStep === 3 && (
 							<>
               <h4 className='ml-5 mt-4'>Location Permissions</h4>
@@ -300,7 +287,6 @@ const VendorSignup = () => {
 								</Button>
 							</>
 						)}
-						{/* Error message */}
 						{errorMessage && (
 							<span className="text-red-600 font-bold">{errorMessage}</span>
 						)}

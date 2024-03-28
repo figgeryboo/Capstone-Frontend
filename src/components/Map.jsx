@@ -79,7 +79,6 @@ const Map = () => {
             infoWindow.open(map, marker);
           });
 
-          // Close expanded details when info window is closed
           google.maps.event.addListener(infoWindow, 'closeclick', () => {
             setShowExpandedDetails(false);
             setSelectedVendor(null);
