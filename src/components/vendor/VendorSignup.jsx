@@ -5,196 +5,313 @@ import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { doCreateVendorWithEmailAndPassword } from '../../firebase/auth';
 
 const VendorSignup = () => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+	const { userLoggedIn } = useAuth();
 
-  const [vendorName, setVendorName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [dob, setDob] = useState('');
-  const [foodVendorId, setFoodVendorId] = useState('');
-  const [licenseId, setLicenseId] = useState('');
-  const [licensePlate, setLicensePlate] = useState('');
-  const [iceCreamCompany, setIceCreamCompany] = useState('');
-  const [locationPermission, setLocationPermission] = useState(false);
+	const [currentStep, setCurrentStep] = useState(1);
+	const [formData, setFormData] = useState({
+		vendorName: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+		dob: '',
+		foodVendorId: '',
+		licenseId: '',
+		licensePlate: '',
+		iceCreamCompany: '',
+		locationPermission: false,
+	});
+	const [isRegistering, setIsRegistering] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+	const handleNextStep = () => {
+		setCurrentStep((prevStep) => prevStep + 1);
+		setErrorMessage(''); // Reset error message when moving to the next step
+	};
 
-  const { userLoggedIn } = useAuth();
+	const handlePrevStep = () => {
+		setCurrentStep((prevStep) => prevStep - 1);
+		setErrorMessage(''); // Reset error message when moving to the previous step
+	};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isRegistering) {
-      setIsRegistering(true);
-      try {
-        // Perform validation and check for missing fields
-        if (
-          !vendorName ||
-          !email ||
-          !password ||
-          !confirmPassword ||
-          !dob ||
-          !foodVendorId ||
-          !licenseId ||
-          !licensePlate
-        ) {
-          throw new Error('All fields are required.');
-        }
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 
-        // Perform additional validation if needed
+		// Validate form fields for each step
+		if (currentStep === 1) {
+			// Validation for Step 1 fields
+			if (
+				!formData.vendorName ||
+				!formData.email ||
+				!formData.password ||
+				!formData.confirmPassword ||
+				!formData.dob
+			) {
+				setErrorMessage('All fields are required.');
+				return;
+			}
+			if (formData.password !== formData.confirmPassword) {
+				setErrorMessage('Passwords do not match.');
+				return;
+			}
+			// Move to Step 2 if validation passes
+			handleNextStep();
+		} else if (currentStep === 2) {
+			// Validation for Step 2 fields
+			if (
+				!formData.foodVendorId ||
+				!formData.licenseId ||
+				!formData.licensePlate ||
+				!formData.iceCreamCompany
+			) {
+				setErrorMessage('All fields are required.');
+				return;
+			}
+			// Move to Step 3 if validation passes
+			handleNextStep();
+		} else if (currentStep === 3) {
+			// Validation for Step 3 fields
+			if (!formData.locationPermission) {
+				setErrorMessage('Location permission is required.');
+				return;
+			}
+			// Proceed with form submission
+			if (!isRegistering) {
+				setIsRegistering(true);
+				try {
+					// Call the authentication function
+					await doCreateVendorWithEmailAndPassword(
+						formData.email,
+						formData.password,
+						formData
+					);
 
-        // Call the authentication function
-        await doCreateVendorWithEmailAndPassword(email, password, {
-          vendorName,
-          dob,
-          foodVendorId,
-          licenseId,
-          licensePlate,
-          locationPermission,
-        });
+					// Redirect to vendor dashboard on successful registration
+					navigate('/vendordashboard');
+				} catch (error) {
+					// Handle registration error
+					console.error(error);
+					setErrorMessage(error.message);
+					setIsRegistering(false);
+				}
+			}
+		}
+	};
 
-        // Redirect to vendor dashboard on successful registration
-        navigate('/vendordashboard');
-      } catch (error) {
-        setErrorMessage(error.message);
-        setIsRegistering(false);
-      }
-    }
-  };
+	return (
+		<>
+			{userLoggedIn && <Navigate to={'/vendordashboard'} replace={true} />}
+			<Link to="/">
+				<button
+					type="button"
+					className="btn-close"
+					aria-label="Close"
+					style={{
+						color: '#FFFF',
+						marginLeft: '22em',
+						backgroundColor: '#5ae0c8',
+						borderRadius: '15px',
+						padding: '8px',
+						marginBottom: '5px',
+					}}
+				></button>
+			</Link>
 
-  return (
-    <>
-      {userLoggedIn && <Navigate to={'/vendordashboard'} replace={true} />}
-      <Link to="/">
-        <button type="button" class="btn-close" aria-label="Close"></button>
-      </Link>
+			<Card>
+				<Card.Body>
+					<h2 className="text-center mb-2">Vendor Sign Up</h2>
+					<Form onSubmit={handleSubmit}>
+						{/* Step 1: Vendor Information */}
+						{currentStep === 1 && (
+							<>
+								<Form.Group id="vendorName">
+									<Form.Label>Vendor Name</Form.Label>
+									<Form.Control
+										type="text"
+										required
+										value={formData.vendorName}
+										onChange={(e) =>
+											setFormData({ ...formData, vendorName: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="email">
+									<Form.Label>Email</Form.Label>
+									<Form.Control
+										type="email"
+										required
+										value={formData.email}
+										onChange={(e) =>
+											setFormData({ ...formData, email: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="password">
+									<Form.Label>Password</Form.Label>
+									<Form.Control
+										type="password"
+										required
+										value={formData.password}
+										onChange={(e) =>
+											setFormData({ ...formData, password: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="confirmPassword">
+									<Form.Label>Confirm Password</Form.Label>
+									<Form.Control
+										type="password"
+										required
+										value={formData.confirmPassword}
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												confirmPassword: e.target.value,
+											})
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="dob">
+									<Form.Label>Date of Birth</Form.Label>
+									<Form.Control
+										type="date"
+										required
+										value={formData.dob}
+										onChange={(e) =>
+											setFormData({ ...formData, dob: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Button
+									type="button"
+									className="d-block mx-auto mt-2"
+									onClick={handleNextStep}
+								>
+									Next →
+								</Button>
+							</>
+						)}
+						{/* Step 2: Additional Information */}
+						{currentStep === 2 && (
+							<>
+								<Form.Group id="foodVendorId">
+									<Form.Label>Food Vendor ID number</Form.Label>
+									<Form.Control
+										type="text"
+										required
+										value={formData.foodVendorId}
+										onChange={(e) =>
+											setFormData({ ...formData, foodVendorId: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="licenseId">
+									<Form.Label>License ID number</Form.Label>
+									<Form.Control
+										type="text"
+										required
+										value={formData.licenseId}
+										onChange={(e) =>
+											setFormData({ ...formData, licenseId: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="licensePlate">
+									<Form.Label>Ice Cream Truck License Plate number</Form.Label>
+									<Form.Control
+										type="text"
+										required
+										value={formData.licensePlate}
+										onChange={(e) =>
+											setFormData({ ...formData, licensePlate: e.target.value })
+										}
+									/>
+								</Form.Group>
+								<Form.Group id="iceCreamCompany">
+									<Form.Label>Ice Cream Company</Form.Label>
+									<Form.Control
+										type="text"
+										required
+										value={formData.iceCreamCompany}
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												iceCreamCompany: e.target.value,
+											})
+										}
+									/>
+								</Form.Group>
+								<Button
+									type="button"
+									className="mt-2 mx-2"
+									onClick={handlePrevStep}
+									variant="secondary"
+								>
+									← Previous
+								</Button>
+								<Button
+									type="button"
+									className="mx-2 mt-2"
+									onClick={handleNextStep}
+								>
+									Next →
+								</Button>
+							</>
+						)}
+						{/* Step 3: App Permissions */}
+						{currentStep === 3 && (
+							<>
+              <h4 className='ml-5 mt-4'>Location Permissions</h4>
+								<span className="medium mb-4 mt-2">
+									By checking this box, you agree to grant us permission to
+									access your device's location for providing location-based
+									services, personalizing content, and improving app
+									functionality. You can manage and revoke these permissions at
+									any time in your device settings or within the app settings.
+								</span>
+								<Form.Group id="locationPermission">
+									<Form.Check
+										className="text-muted mb-3"
+										type="checkbox"
+										label="Agree and allow location access"
+										checked={formData.locationPermission}
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												locationPermission: e.target.checked,
+											})
+										}
+									/>
+								</Form.Group>
 
-      <Card>
-        <Card.Body>
-          <h2 className="text-center mb-4">Vendor Sign Up</h2>
-          <Form onSubmit={handleSubmit}>
-            {/* Add form fields here */}
-            {/* Vendor Name */}
-            <Form.Group id="vendorName">
-              <Form.Label>Vendor Name</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                value={vendorName}
-                onChange={(e) => setVendorName(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Email */}
-            <Form.Group id="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Password */}
-            <Form.Group id="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Confirm Password */}
-            <Form.Group id="confirmPassword">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type="password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Date of Birth */}
-            <Form.Group id="dob">
-              <Form.Label>Date of Birth</Form.Label>
-              <Form.Control
-                type="date"
-                required
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Food Vendor ID number */}
-            <Form.Group id="foodVendorId">
-              <Form.Label>Food Vendor ID number</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                value={foodVendorId}
-                onChange={(e) => setFoodVendorId(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* License ID number */}
-            <Form.Group id="licenseId">
-              <Form.Label>License ID number</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                value={licenseId}
-                onChange={(e) => setLicenseId(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Ice Cream Truck License Plate number */}
-            <Form.Group id="licensePlate">
-              <Form.Label>Ice Cream Truck License Plate number</Form.Label>
-              <Form.Control
-                type="text"
-                required
-                value={licensePlate}
-                onChange={(e) => setLicensePlate(e.target.value)}
-              />
-            </Form.Group>
-
-            {/* Checkbox for location permissions */}
-            <Form.Group id="locationPermission" className="mb-3">
-              <Form.Check
-                type="checkbox"
-                label="Consent to app location permissions"
-                checked={locationPermission}
-                onChange={(e) => setLocationPermission(e.target.checked)}
-              />
-            </Form.Group>
-
-            {errorMessage && (
-              <span className="text-red-600 font-bold">{errorMessage}</span>
-            )}
-            <Button
-              type="submit"
-              disabled={isRegistering}
-              className={`mx-auto d-block text-white font-medium rounded-lg mt-2 ${
-                isRegistering
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-xl transition duration-300'
-              }`}
-            >
-              {isRegistering ? 'Signing Up...' : 'Sign Up'}
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
-      <div className="w-100 text-center mt-2">
-        Already have an account? <Link to="/vendorlogin">Log In</Link>
-      </div>
-    </>
-  );
+								<Button
+									type="button"
+									className="mx-2 mt-2"
+									onClick={handlePrevStep}
+									variant="secondary"
+								>
+									← Previous
+								</Button>
+								<Button
+									type="submit"
+									className="mx-2 mt-2 justify-content-right ms-auto"
+								>
+									Sign Up
+								</Button>
+							</>
+						)}
+						{/* Error message */}
+						{errorMessage && (
+							<span className="text-red-600 font-bold">{errorMessage}</span>
+						)}
+					</Form>
+				</Card.Body>
+			</Card>
+			<div className="w-100 text-center mt-2">
+				Already have an account? <Link to="/vendorlogin">Log In</Link>
+			</div>
+		</>
+	);
 };
 
 export default VendorSignup;
