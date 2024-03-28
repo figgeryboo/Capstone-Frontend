@@ -102,9 +102,12 @@ const Map = () => {
             marker.setPosition(pathCoordinates[index]);
             index = (index + 1) % pathCoordinates.length;
 
+            if (index === 0) {
+              // marker reached the end of the path
+              return;
+            }
             setTimeout(animateMarker, 3730);
           };
-
           animateMarker();
         });
 
