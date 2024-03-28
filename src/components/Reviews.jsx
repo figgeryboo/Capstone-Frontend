@@ -8,10 +8,11 @@ const VendorRatings = () => {
     const [ratings, setRatings] = useState([]);
 
     useEffect(() => {
-        // Fetch vendor options from backend
+      
         axios
             .get('http://localhost:4444/vendors')
             .then((response) => {
+              console.log('reviews',response.data)
                 setVendorOptions(response.data);
             })
             .catch((error) => {
@@ -23,9 +24,23 @@ const VendorRatings = () => {
     useEffect(() => {
         if (vendorId) {
             axios
-                .get(`http://localhost:4444/rating/vendor/${vendorId}`)
-                .then((response) => {
-                    setRatings(response.data);
+                .get(`http://localhost:4444/reviews/vendor/${vendorId}`)
+                .then(async (response) => {
+                    const vendorsObj = response.data
+                    console.log('vendorObj', vendorsObj)
+
+                const vendorMap = {};
+                vendorOptions.forEach((vendor) => {
+                    vendorMap[vendor.vendor_id] = vendor.vendor_name;
+                });
+
+                // Map reviews with vendor names
+                const reviewsWithVendorNames = vendorsObj.map((review) => ({
+                    ...review,
+                    vendor_name: vendorMap[review.vendor_id],
+                }));
+                console.log('reviews w names', reviewsWithVendorNames)
+                setRatings(reviewsWithVendorNames);
                 })
                 .catch((error) => {
                     console.error('Error fetching ratings:', error);
@@ -34,7 +49,7 @@ const VendorRatings = () => {
         } else {
             setRatings([]);
         }
-    }, [vendorId]);
+    }, [vendorId, vendorOptions]);
 
     const handleVendorChange = (event) => {
         setVendorId(event.target.value);
@@ -73,3 +88,7 @@ const VendorRatings = () => {
 };
 
 export default VendorRatings;
+
+
+// update the fetch route 
+// 
