@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import './Map.css'
 //import { Button } from 'react-bootstrap';
 
 const center = {
@@ -135,8 +136,10 @@ const Map = () => {
   };
 
   return (
-    <div style={{ display: "flex", position: 'relative'}}>
+    <div className="map-container" 
+    style={{ maxWidth: 'unset !important', display: "flex", position: 'relative'}}>
       <div
+      
         id="map-container"
         style={{ width: "100vw", height: "80vh", border: "2px solid #59E0C8", borderRadius: '10px'}}
       ></div>

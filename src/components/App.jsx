@@ -16,6 +16,7 @@ import NavigationFooter from './testing/NavigationFooter';
 import VendorNavFooter from './testing/VendorNavFooter';
 import UserReviewsFeed from './testing/UserReviewsFeed';
 import LocationTracker from './LocationTracker';
+import HeaderWithConditionalRendering from './Header';
 
 
 
@@ -28,6 +29,7 @@ function App() {
           style={{ minHeight: '100vh', backgroundColor: '#bcf5ef'}}
         >
           <div className="w-100" style={{ maxWidth: '400px' }}>
+            <HeaderWithConditionalRendering />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route exact path="/vendormapview" element={<LocationTracker />} />
