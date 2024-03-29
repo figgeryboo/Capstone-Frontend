@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, Card } from 'react-bootstrap';
+import { Form, Card, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const VendorRatings = () => {
     const [vendorId, setVendorId] = useState('');
@@ -83,6 +84,10 @@ const VendorRatings = () => {
                     ))}
                 </ul>
             </Card.Body>
+        <Button > 
+            <Link to='/events'> </Link> Submit Catering Request
+        </Button>
+
         </Card>
     );
 };

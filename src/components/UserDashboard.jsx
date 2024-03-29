@@ -19,7 +19,7 @@ const UserDashboard = () => {
 					</h3>
 					<div className="d-grid gap-2">
 					<Link to="/usersettings">
-						<Button className="w-100" variant="primary" size="lg" disabled>
+						<Button className="w-100" variant="primary" size="lg" >
 							Profile Settings
 						</Button>
 						</Link>
