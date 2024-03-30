@@ -53,33 +53,26 @@ function App() {
 function FooterWithConditionalRendering() {
   const location = useLocation();
 
-  // Define paths that should render the VendorNavFooter
   const vendorPaths = [
     '/vendormapview',
     '/vendordashboard',
     '/vendorcatering',
     '/analytics',
-    // Add other vendor-specific paths here if needed
   ];
 
-  // Check if the current location is a vendor path
   const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));
 
-  // Check if the current location is one of the specified pages where footer should not be rendered
   const excludeFooterPaths = ['/', '/userlogin', '/usersignup', '/vendorlogin', '/vendorsignup'];
   const shouldRenderFooter = !excludeFooterPaths.includes(location.pathname);
 
-  // If the current location is a vendor path and should render the footer, render the VendorNavFooter
   if (isVendorPath && shouldRenderFooter) {
     return <VendorNavFooter />;
   }
 
-  // If the current location is one of the specified pages, do not render any footer
   if (excludeFooterPaths.includes(location.pathname)) {
     return null;
   }
 
-  // Render the NavigationFooter component for all other pages
   return <NavigationFooter />;
 }
 
