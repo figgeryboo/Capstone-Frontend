@@ -188,6 +188,7 @@ const CateringForm = () => {
 									onClick={handlePrevStep}
 									className="mx-2"
 									variant="secondary"
+                                    style={{ backgroundColor: '#ff5ea6', borderColor: '#ff5ea6' }}
 								>
 									Previous
 								</Button>
@@ -197,6 +198,7 @@ const CateringForm = () => {
 									onClick={handleNextStep}
 									className="mx-2"
 									variant="primary"
+                                    style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 								>
 									Next
 								</Button>
@@ -205,6 +207,7 @@ const CateringForm = () => {
 									onClick={submitCateringForm}
 									className="mx-2"
 									variant="success"
+                                    style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 								>
 									Submit Your Request
 								</Button>

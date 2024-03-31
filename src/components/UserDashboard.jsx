@@ -20,7 +20,7 @@ const UserDashboard = () => {
 						</h3>
 						<div className="d-grid gap-2">
 							<Link to="/usersettings">
-								<Button className="w-100" variant="primary" size="lg" disabled>
+								<Button className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
 									Profile Settings
 								</Button>
 							</Link>
@@ -31,6 +31,7 @@ const UserDashboard = () => {
 									type="link"
 									size="lg"
 									disabled
+									style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 								>
 									Support
 								</Button>

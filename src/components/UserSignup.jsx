@@ -28,7 +28,17 @@ const UserSignup = () => {
 			<div className="w-100" style={{ maxWidth: '400px' }}>
 				{userLoggedIn && <Navigate to={'/userdashboard'} replace={true} />}
 				<Link to="/">
-					<button type="button" class="btn-close" aria-label="Close"></button>
+					<button type="button"
+						class="btn-close "
+						aria-label="Close"
+						style={{
+							color: '#FFFF',
+							marginLeft: '22em',
+							backgroundColor: '#5ae0c8',
+							borderRadius: '15px',
+							padding: '8px',
+							marginBottom: '5px',
+						}}></button>
 				</Link>
 
 				<Card>
@@ -79,6 +89,7 @@ const UserSignup = () => {
 							<Button
 								type="submit"
 								disabled={isRegistering}
+								style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 								className={`mx-auto d-block text-white font-medium rounded-lg mt-2 ${
 									isRegistering
 										? 'bg-gray-300 cursor-not-allowed'

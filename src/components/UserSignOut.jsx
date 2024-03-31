@@ -17,7 +17,7 @@ const UserSignOut = () => {
   return (
     <>
       {userLoggedIn ? (
-        <Button onClick={handleSignOut} className="w-100" variant="primary" size="lg">
+        <Button onClick={handleSignOut} className="w-100" variant="primary" size="lg" style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
           Sign Out
         </Button>
       ) : (

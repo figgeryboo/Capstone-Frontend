@@ -6,4 +6,13 @@
     width: unset !important;
   }
 
+  .resize-handle {
+    width: 10px;
+    height: 100%;
+    background-color: #59E0C8;
+    position: absolute;
+    top: 0;
+    right: -5px;
+    cursor: ew-resize;
+  }
   
