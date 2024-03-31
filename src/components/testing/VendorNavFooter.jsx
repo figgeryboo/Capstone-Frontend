@@ -54,7 +54,7 @@ const VendorNavFooter = () => {
             <span className="icon">
               <i className="bi bi-stars"></i>
             </span>
-            <span className="text">Ratings</span>
+            <span className="text">Analytics</span>
           </Link>
         </li>
         <li className={`list ${activeIndex === 3 ? 'active' : ''}`} onClick={(e) => handleItemClick(3, e)}>
@@ -62,7 +62,7 @@ const VendorNavFooter = () => {
             <span className="icon">
               <i className="bi bi-person-circle"></i>
             </span>
-            <span className="text">Profile</span>
+            <span className="text">Dashboard</span>
           </Link>
         </li>
       </ul>
