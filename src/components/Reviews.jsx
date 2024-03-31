@@ -73,8 +73,8 @@ const VendorRatings = () => {
 							))}
 						</Form.Select>
 					</Form.Group>
-					<br />
 					<ul>
+                        <br/>
 						{ratings.map((rating) => (
 							<li key={rating.rating_id}>
 								<strong>Rating:</strong> {rating.rating} -{' '}

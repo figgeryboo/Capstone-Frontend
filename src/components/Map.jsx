@@ -38,7 +38,7 @@ const Map = () => {
           const polyline = new google.maps.Polyline({
             path: pathCoordinates,
             geodesic: true,
-            strokeColor: "#a048f8e6",
+            strokeColor: "#5CF2D9", 
             strokeOpacity: 1.0,
             strokeWeight: 2.8,
           });
@@ -93,7 +93,7 @@ const Map = () => {
               const traveledPolyline = new google.maps.Polyline({
                 path: traveledPath,
                 geodesic: true,
-                strokeColor: "#e8340ce6",
+                strokeColor: "#59E0C8",
                 strokeOpacity: 1.0,
                 strokeWeight: 3,
               });
@@ -142,7 +142,7 @@ const Map = () => {
         style={{ width: "100vw", height: "100vh", border: "2px solid #59E0C8", borderRadius: '10px'}}
       ></div>
       {showExpandedDetails && selectedVendor && selectedVendorDetails && (
-        <div style={{ position: 'absolute', width: "100%", height: "20vh", background: "#ffffff", padding: "15px", border: "2px solid #59E0C8", borderRadius: '10px', overflowY: "auto", bottom: '0'}}>
+        <div style={{ position: 'absolute', width: "100%", height: "30vh", background: "#ffffff", padding: "15px", border: "2px solid #59E0C8", borderRadius: '10px', overflowY: "auto", bottom: '0'}}>
           <div>
             <h4>{selectedVendorDetails.vendor_name}'s Menu</h4>
             <ul>
