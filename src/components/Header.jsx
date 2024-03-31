@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../public/WMICLOGO.png';
+import logo from '../../public/image.png';
 import { useLocation } from 'react-router-dom';
 
 const fontStyles = `
@@ -27,17 +27,16 @@ const HeaderWithConditionalRendering = () => {
 			<style>{fontStyles}</style>
 			<header
 				style={{
-					backgroundColor: '#BCF4EF',
-					padding: '10px 20px',
+					//padding: '10px 20px',
 					position: 'fixed',
 					top: 0,
 					left: 0,
-					width: '100%',
+					//width: '100%',
 					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'space-between',
+					//alignItems: 'center',
+					//justifyContent: 'space-between',
 					zIndex: 1000,
-					fontFamily: 'Bagel Fat One, cursive',
+					//fontFamily: 'Bagel Fat One, cursive',
 				}}
 			>
 				<img
@@ -46,7 +45,6 @@ const HeaderWithConditionalRendering = () => {
 					style={{ maxWidth: '100px', height: 'auto' }}
 				/>
 				<h3 style={{ fontFamily: 'Bagel Fat One, cursive' }}>
-					Where's My Ice Cream?
 				</h3>
 			</header>
 		</>

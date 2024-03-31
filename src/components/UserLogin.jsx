@@ -35,6 +35,8 @@ const UserLogin = () => {
 
 	return (
 		<>
+		          <div className="w-100" style={{ maxWidth: '400px' }}>
+
 			{userLoggedIn && <Navigate to={'/usermapview'} replace={true} />}
 			<Link to="/">
 				<button type="button" class="btn-close" aria-label="Close"></button>
@@ -98,6 +100,7 @@ const UserLogin = () => {
 			</Button>
 			<div className="w-100 text-center mt-5">
 				Need an account? <Link to="/usersignup">Sign Up</Link>
+			</div>
 			</div>
 		</>
 	);

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import './Map.css'
-//import { Button } from 'react-bootstrap';
 
 const center = {
   lat: 40.846688,
@@ -136,12 +135,11 @@ const Map = () => {
   };
 
   return (
-    <div className="map-container" 
-    style={{ maxWidth: 'unset !important', display: "flex", position: 'relative'}}>
+    <div
+    style={{ display: "flex", position: 'relative'}}>
       <div
-      
         id="map-container"
-        style={{ width: "100vw", height: "80vh", border: "2px solid #59E0C8", borderRadius: '10px'}}
+        style={{ width: "100vw", height: "100vh", border: "2px solid #59E0C8", borderRadius: '10px'}}
       ></div>
       {showExpandedDetails && selectedVendor && selectedVendorDetails && (
         <div style={{ position: 'absolute', width: "100%", height: "20vh", background: "#ffffff", padding: "15px", border: "2px solid #59E0C8", borderRadius: '10px', overflowY: "auto", bottom: '0'}}>
