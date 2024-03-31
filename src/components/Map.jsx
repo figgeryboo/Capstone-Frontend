@@ -26,6 +26,7 @@ const Map = () => {
             zoom: 14,
             center: center,
             mapId: import.meta.env.VITE_GOOGLE_MAPID,
+            disableDefaultUI: true,
           }
         );
 

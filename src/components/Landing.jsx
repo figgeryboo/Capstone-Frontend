@@ -21,6 +21,7 @@ export default function Landing() {
 							type="link"
 							size="lg"
 							className="text-white font-medium rounded-lg mt-3 ms-3 me-4"
+							style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 							active
 						>
 							User Login
@@ -32,6 +33,7 @@ export default function Landing() {
 							type="link"
 							size="lg"
 							className="text-white font-medium rounded-lg mt-3 ms-4 me-3"
+							style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 							active
 						>
 							Vendor Login
