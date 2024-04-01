@@ -17,6 +17,7 @@ import VendorNavFooter from './testing/VendorNavFooter';
 import UserReviewsFeed from './testing/UserReviewsFeed';
 import LocationTracker from './LocationTracker';
 import HeaderWithConditionalRendering from './Header';
+import CateringRequests from './vendor/CateringRequests';
 
 
 
@@ -39,6 +40,7 @@ function App() {
               <Route exact path="/vendordashboard" element={<VendorDashboard />} />
               <Route path="/vendorsignup" element={<VendorSignup />} />
               <Route path="/vendorlogin" element={<VendorLogin />} />
+              <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />
               <Route path="*" element={<Error404 />} />

@@ -24,6 +24,11 @@ const UserDashboard = () => {
 									Profile Settings
 								</Button>
 							</Link>
+							<Link to="/events">
+								<Button className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
+									Event Requests
+								</Button>
+							</Link>
 							<Link to="/usersupport">
 								<Button
 									className="w-100"
