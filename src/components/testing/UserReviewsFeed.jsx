@@ -1,10 +1,12 @@
-import React from 'react'
-import VendorRatings from '../Reviews'
+import React from 'react';
+import VendorRatings from '../Reviews';
 
 export default function UserReviewsFeed() {
-  return (
-    <>
-    <VendorRatings/>
-  </>
-  )
+	return (
+		<>
+			<div className="w-100" style={{ maxWidth: '400px' }}>
+				<VendorRatings />
+			</div>
+		</>
+	);
 }

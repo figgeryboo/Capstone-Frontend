@@ -25,72 +25,85 @@ const UserSignup = () => {
 
 	return (
 		<>
-			{userLoggedIn && <Navigate to={'/userdashboard'} replace={true} />}
-			<Link to="/">
-				<button type="button" class="btn-close" aria-label="Close"></button>
-			</Link>
+			<div className="w-100" style={{ maxWidth: '400px' }}>
+				{userLoggedIn && <Navigate to={'/userdashboard'} replace={true} />}
+				<Link to="/">
+					<button type="button"
+						class="btn-close "
+						aria-label="Close"
+						style={{
+							color: '#FFFF',
+							marginLeft: '22em',
+							backgroundColor: '#5ae0c8',
+							borderRadius: '15px',
+							padding: '8px',
+							marginBottom: '5px',
+						}}></button>
+				</Link>
 
-			<Card>
-				<Card.Body>
-					<h2 className="text-center mb-4">User Sign Up</h2>
-					<Form onSubmit={handleSubmit}>
-						<Form.Group id="email">
-							<Form.Label>Email</Form.Label>
+				<Card>
+					<Card.Body>
+						<h2 className="text-center mb-4">User Sign Up</h2>
+						<Form onSubmit={handleSubmit}>
+							<Form.Group id="email">
+								<Form.Label>Email</Form.Label>
 
-							<Form.Control
-								type="email"
-								required
-								value={email}
-								onChange={(e) => {
-									setEmail(e.target.value);
-								}}
-							/>
-						</Form.Group>
-						<Form.Group id="password">
-							<Form.Label>Password</Form.Label>
-							<Form.Control
+								<Form.Control
+									type="email"
+									required
+									value={email}
+									onChange={(e) => {
+										setEmail(e.target.value);
+									}}
+								/>
+							</Form.Group>
+							<Form.Group id="password">
+								<Form.Label>Password</Form.Label>
+								<Form.Control
+									disabled={isRegistering}
+									type="password"
+									autoComplete="new-password"
+									required
+									value={password}
+									onChange={(e) => {
+										setPassword(e.target.value);
+									}}
+								/>
+							</Form.Group>
+							<Form.Group id="password">
+								<Form.Label>Password Confirmation</Form.Label>
+								<Form.Control
+									disabled={isRegistering}
+									type="password"
+									autoComplete="off"
+									required
+									value={confirmPassword}
+									onChange={(e) => {
+										setconfirmPassword(e.target.value);
+									}}
+								/>
+							</Form.Group>
+							{errorMessage && (
+								<span className="text-red-600 font-bold">{errorMessage}</span>
+							)}
+							<Button
+								type="submit"
 								disabled={isRegistering}
-								type="password"
-								autoComplete="new-password"
-								required
-								value={password}
-								onChange={(e) => {
-									setPassword(e.target.value);
-								}}
-							/>
-						</Form.Group>
-						<Form.Group id="password">
-							<Form.Label>Password Confirmation</Form.Label>
-							<Form.Control
-								disabled={isRegistering}
-								type="password"
-								autoComplete="off"
-								required
-								value={confirmPassword}
-								onChange={(e) => {
-									setconfirmPassword(e.target.value);
-								}}
-							/>
-						</Form.Group>
-						{errorMessage && (
-							<span className="text-red-600 font-bold">{errorMessage}</span>
-						)}
-						<Button
-							type="submit"
-							disabled={isRegistering}
-							className={`mx-auto d-block text-white font-medium rounded-lg mt-2 ${
-								isRegistering
-									? 'bg-gray-300 cursor-not-allowed'
-									: 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-xl transition duration-300'
-							}`}
-						>
-							{isRegistering ? 'Signing Up...' : 'Sign Up'}
-						</Button>
-					</Form>
-				</Card.Body>
-			</Card>
-			<div className="w-100 text-center mt-2">
-				Already have an account? <Link to="/userlogin">Log In</Link>
+								style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
+								className={`mx-auto d-block text-white font-medium rounded-lg mt-2 ${
+									isRegistering
+										? 'bg-gray-300 cursor-not-allowed'
+										: 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-xl transition duration-300'
+								}`}
+							>
+								{isRegistering ? 'Signing Up...' : 'Sign Up'}
+							</Button>
+						</Form>
+					</Card.Body>
+				</Card>
+				<div className="w-100 text-center mt-2">
+					Already have an account? <Link to="/userlogin">Log In</Link>
+				</div>
 			</div>
 		</>
 	);
