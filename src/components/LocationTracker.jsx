@@ -115,7 +115,7 @@ function LocationTracker() {
           : "Start Watching Location"}
       </Button>
       </h1>
-      <div id="vendormap" style={{ height: "80vh", width: "75vw" }}></div>
+      <div id="vendormap" style={{ height: "100vh", width: "100vw" }}></div>
       <p>WebSocket state: {wsState}</p>
       <p>
         Your current location: Latitude {latitude}, Longitude {longitude}
