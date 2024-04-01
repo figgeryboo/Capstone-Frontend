@@ -107,20 +107,30 @@ function LocationTracker() {
   };
 
   return (
-    <div className="vendormap_container">
-      <h1>
-      <Button onClick={toggleWatchLocation}>
-        {watchingLocation
-          ? "Stop Watching Location"
-          : "Start Watching Location"}
+    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+    <div id="vendormap" style={{ height: "100vh", width: "100vw" }}></div>
+    <div
+      style={{
+        position: "absolute",
+        bottom: "14px",
+        left: "10px",
+        zIndex: 1}}
+    >
+      <Button className="btn btn-lg"
+        style={{
+          backgroundColor: "rgb(234, 49, 135)",
+          borderColor: "rgb(234, 49, 135)",
+        }}
+        onClick={toggleWatchLocation}
+      >
+        {watchingLocation ? "Stop Route" : "Start Route"}
       </Button>
-      </h1>
-      <div id="vendormap" style={{ height: "100vh", width: "100vw" }}></div>
+    </div>
       <p>WebSocket state: {wsState}</p>
       <p>
         Your current location: Latitude {latitude}, Longitude {longitude}
       </p>
-  
+
       <h2>Received Locations:</h2>
       <ul>
         {receivedLocations.map((location, index) => (
