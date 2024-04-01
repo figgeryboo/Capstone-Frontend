@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/authContext';
 
 
 const UserProfile = () => {
+  const api = import.meta.env.VITE_LOCAL_HOST;
+
 const { currentUser } = useAuth();
 
   const [customer, setCustomer] = useState({
@@ -25,7 +27,7 @@ const { currentUser } = useAuth();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4444/customers/${customer.customer_id}`)
+      .get(`${api}/customers/${customer.customer_id}`)
       .then((response) => {
         const user = response.data;
         console.log(user);
@@ -38,7 +40,7 @@ const { currentUser } = useAuth();
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .put(`http://localhost:4444/customers/${customer.customer_id}`, customer)
+      .put(`${api}/customers/${customer.customer_id}`, customer)
       .then((response) => console.log("Profile updated successfully"))
       .catch((error) => console.error("Error updating user profile:", error));
   };

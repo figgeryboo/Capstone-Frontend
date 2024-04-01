@@ -4,6 +4,8 @@ import { useAuth } from '../contexts/authContext';
 import { Link } from 'react-router-dom';
 
 const CateringForm = () => {
+	const api = import.meta.env.VITE_LOCAL_HOST;
+
 	const { currentUser } = useAuth();
 	const [currentStep, setCurrentStep] = useState(1);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../public/image.png';
+import logo from '/image.png';
 import { useLocation } from 'react-router-dom';
 
 const fontStyles = `
