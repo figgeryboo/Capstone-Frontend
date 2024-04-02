@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import './Map.css'
+import "./Map.css";
 
 const center = {
   lat: 40.846688,
@@ -39,9 +39,9 @@ const Map = () => {
           const polyline = new google.maps.Polyline({
             path: pathCoordinates,
             geodesic: true,
-            strokeColor: "#5CF2D9", 
+            strokeColor: "#0870c4",
             strokeOpacity: 1.0,
-            strokeWeight: 2.8,
+            strokeWeight: 3,
           });
 
           polyline.setMap(map);
@@ -52,7 +52,7 @@ const Map = () => {
             map: map,
             icon: {
               url: "/truckIcon.png",
-              scaledSize: new google.maps.Size(40, 40),
+              scaledSize: new google.maps.Size(50, 50),
               anchor: new google.maps.Point(20, 20),
             },
           });
@@ -70,7 +70,7 @@ const Map = () => {
           const infoWindow = new google.maps.InfoWindow({
             content: infoWindowContent,
             maxWidth: 180,
-            ariaLabel: 'vendor details in black text on white background'
+            ariaLabel: "vendor details in black text on white background",
           });
 
           infoWindows[vendor.vendor_id] = infoWindow;
@@ -80,7 +80,7 @@ const Map = () => {
             infoWindow.open(map, marker);
           });
 
-          google.maps.event.addListener(infoWindow, 'closeclick', () => {
+          google.maps.event.addListener(infoWindow, "closeclick", () => {
             setShowExpandedDetails(false);
             setSelectedVendor(null);
             setSelectedVendorDetails(null);
@@ -136,20 +136,38 @@ const Map = () => {
   };
 
   return (
-    <div
-    style={{ display: "flex", position: 'relative'}}>
+    <div style={{ display: "flex", position: "relative" }}>
       <div
         id="map-container"
-        style={{ width: "100vw", height: "100vh", border: "2px solid #59E0C8", borderRadius: '10px'}}
+        style={{
+          width: "100vw",
+          height: "100vh",
+          border: "2px solid #59E0C8",
+          borderRadius: "10px",
+        }}
       ></div>
       {showExpandedDetails && selectedVendor && selectedVendorDetails && (
-        <div style={{ position: 'absolute', width: "100%", height: "30vh", background: "#ffffff", padding: "15px", border: "2px solid #59E0C8", borderRadius: '10px', overflowY: "auto", bottom: '0'}}>
+        <div
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "30vh",
+            background: "#ffffff",
+            padding: "15px",
+            border: "2px solid #59E0C8",
+            borderRadius: "10px",
+            overflowY: "auto",
+            bottom: "0",
+          }}
+        >
           <div>
             <h4>{selectedVendorDetails.vendor_name}'s Menu</h4>
             <ul>
               {selectedVendorDetails.menu.map((item, index) => (
                 <li key={index}>
-                  <sub>{item.name} - ${item.price}</sub>
+                  <sub>
+                    {item.name} - ${item.price}
+                  </sub>
                 </li>
               ))}
             </ul>
