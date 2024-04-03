@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import vendorMarker from "/truckIcon.png";
-import "../App.css";
+import vendorMarker from "/image.png";
+import "../../App.css";
 
 function LocationTracker() {
   const [ws, setWs] = useState(null);
@@ -49,6 +49,7 @@ function LocationTracker() {
     map = new google.maps.Map(document.getElementById("vendormap"), {
       center: { lat: 40.8571627, lng: -73.9015161 },
       zoom: 12,
+      disableDefaultUI: true,
     });
 
     receivedLocations.forEach((location, index) => {
@@ -120,13 +121,19 @@ function LocationTracker() {
         style={{
           backgroundColor: "rgb(234, 49, 135)",
           borderColor: "rgb(234, 49, 135)",
+          position: "absolute",
+        bottom: "70px",
+        left: "10px",
+        zIndex: 1,
+        width: "150px",
+
         }}
         onClick={toggleWatchLocation}
       >
         {watchingLocation ? "Stop Route" : "Start Route"}
       </Button>
     </div>
-      <p>WebSocket state: {wsState}</p>
+      {/* <p>WebSocket state: {wsState}</p>
       <p>
         Your current location: Latitude {latitude}, Longitude {longitude}
       </p>
@@ -139,7 +146,7 @@ function LocationTracker() {
             Latitude: {location.latitude}, Longitude {location.longitude}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 }

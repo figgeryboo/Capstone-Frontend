@@ -1,22 +1,22 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import UserSignup from './UserSignup';
-import UserLogin from './UserLogin';
-import UserDashboard from './UserDashboard';
-import Landing from './Landing';
-import CateringForm from './CateringForm';
+import UserSignup from './user/UserSignup';
+import UserLogin from './user/UserLogin';
+import UserDashboard from './user/UserDashboard';
+import Landing from './pages/Landing';
+import CateringForm from './user/CateringForm';
 import { AuthProvider } from '../contexts/authContext';
-import Error404 from '../pages/Error404';
-import Map from './Map';
+import Error404 from './pages/Error404';
+import Map from './user/Map';
 import VendorDashboard from './vendor/VendorDashboard';
 import VendorSignup from './vendor/VendorSignup';
 import VendorLogin from './vendor/VendorLogin';
-import NavigationFooter from './testing/NavigationFooter';
-import VendorNavFooter from './testing/VendorNavFooter';
-import UserReviewsFeed from './testing/UserReviewsFeed';
-import LocationTracker from './LocationTracker';
-import HeaderWithConditionalRendering from './Header';
+import NavigationFooter from './pages/NavigationFooter';
+import VendorNavFooter from './vendor/VendorNavFooter';
+import UserReviewsFeed from './user/UserReviewsFeed';
+import LocationTracker from './vendor/LocationTracker';
+import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
 
 

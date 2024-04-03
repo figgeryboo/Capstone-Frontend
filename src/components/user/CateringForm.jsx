@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Card, Button, Row, Col } from 'react-bootstrap';
-import { useAuth } from '../contexts/authContext';
+import { useAuth } from '../../contexts/authContext';
 import { Link } from 'react-router-dom';
 
 const CateringForm = () => {

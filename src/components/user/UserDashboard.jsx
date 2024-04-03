@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
-import { useAuth } from '../contexts/authContext';
+import { useAuth } from '../../contexts/authContext';
 import UserSignOut from './UserSignOut';
 import './UserDashboard.css';
 
