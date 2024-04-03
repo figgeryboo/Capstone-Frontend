@@ -11,7 +11,25 @@ import {
 } from 'firebase/auth';
 
 export const doCreateUserWithEmailAndPassword = async (email, password) => {
-	return createUserWithEmailAndPassword(auth, email, password);
+	// return createUserWithEmailAndPassword(auth, email, password);
+	try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Get the JWT token
+        const token = await user.getIdToken();
+console.log(token)
+        // Save the user data and JWT token in Firestore
+        await firestore.collection('users').doc(user.uid).set({
+            email: user.email,
+            displayName: user.displayName,
+            token: token // Save the JWT token with the user data
+        });
+
+        return user;
+    } catch (error) {
+        throw error;
+    }
 };
 
 export const doSignInUserWithEmailAndPassword = async (email, password) => {

@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app"
-import { getAuth, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth"
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, getIdToken } from "firebase/auth"
 import { getFirestore } from 'firebase/firestore';
-
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {   
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
@@ -15,7 +15,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const firestore = getFirestore(app);
+const analytics = getAnalytics(app);
+
+// onAuthStateChanged(auth, (user) => {
+//   if (user) {
+//     // User is signed in, get the JWT token
+//     // console.log("User:", user);
+//     user.getIdToken().then((token)=>{ console.log(token)
+//       setToken(token)})
+    
+//   } else {
+//     // User is signed out
+//     console.log("User is signed out");
+//   }
+// });
 
 
 
-export {  auth, onAuthStateChanged, firestore, GoogleAuthProvider  };
+export {  auth, onAuthStateChanged, firestore, GoogleAuthProvider, analytics  };

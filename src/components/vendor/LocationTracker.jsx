@@ -42,7 +42,7 @@ function LocationTracker() {
     };
   }, []);
 
-  // Create a map instance
+  // map instance
   let map;
 
   useEffect(() => {
@@ -69,7 +69,6 @@ function LocationTracker() {
       lng: location.longitude,
     }));
 
-    // Create a Polyline and set it on the map
     const newPolyline = new google.maps.Polyline({
       path,
       geodesic: true,
