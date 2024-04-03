@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/authContext';
-import { doSignOut } from '../firebase/auth';
+import { useAuth } from '../../contexts/authContext';
+import { doSignOut } from '../../firebase/auth';
 
 const UserSignOut = () => {
   const navigate = useNavigate();
