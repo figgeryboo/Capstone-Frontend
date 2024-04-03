@@ -11,6 +11,7 @@ function LocationTracker() {
   const [receivedLocations, setReceivedLocations] = useState([]);
   const [watchingLocation, setWatchingLocation] = useState(false);
   const [polyline, setPolyline] = useState(null);
+  const [routeCoordinates, setRouteCoordinates] = useState([]);
 
   useEffect(() => {
     const newWs = new WebSocket("ws://localhost:4444");
@@ -105,6 +106,12 @@ function LocationTracker() {
   const toggleWatchLocation = () => {
     setWatchingLocation((prev) => !prev);
   };
+  
+// TODO post to /locations
+  const saveRoute = () => {
+    // Send routeCoordinates to the backend for saving
+    console.log("Route saved:", routeCoordinates);
+  };
 
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
@@ -132,6 +139,22 @@ function LocationTracker() {
         {watchingLocation ? "Stop Route" : "Start Route"}
       </Button>
     </div>
+    <Button
+          className="btn btn-lg"
+          style={{
+            backgroundColor: "rgb(234, 49, 135)",
+            borderColor: "rgb(234, 49, 135)",
+            position: "absolute",
+            bottom: "80px",
+            right: "10px",
+            zIndex: 1,
+            width: "150px"
+          }}
+          onClick={saveRoute}
+          disabled={!watchingLocation || routeCoordinates.length === 0}
+        >
+          Save Route
+        </Button>
       {/* <p>WebSocket state: {wsState}</p>
       <p>
         Your current location: Latitude {latitude}, Longitude {longitude}
