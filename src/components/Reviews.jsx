@@ -5,11 +5,11 @@ import { Form, Button, Card } from "react-bootstrap";
 const VendorRatings = () => {
   const [vendorId, setVendorId] = useState("");
   const [ratings, setRatings] = useState([]);
-
+  const url = import.meta.env.VITE_LOCAL_HOST
   useEffect(() => {
     if (vendorId) {
       axios
-        .get(`http://localhost:4444/rating/vendor/${vendorId}`)
+        .get(`${url}/rating/vendor/${vendorId}`)
         .then((response) => {
           setRatings(response.data);
         })
