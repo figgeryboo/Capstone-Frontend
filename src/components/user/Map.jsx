@@ -186,7 +186,7 @@ const Map = () => {
 								{selectedVendorDetails.menu.map((item, index) => (
 									<li key={index}>
 										<sub>
-                    <i className="fa-solid fa-ice-cream"></i>  {item.name} - ${item.price}
+                    <i className="fa-solid fa-ice-cream"></i>  {item.name} - <b>${item.price}</b>
 										</sub>
 									</li>
 								))}

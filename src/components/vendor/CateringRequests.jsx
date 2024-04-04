@@ -77,7 +77,7 @@ const CateringRequests = () => {
   return (
     <div className="catering_container" style={{ minWidth: "100vw", maxWidth: "500px", overflowX: "auto", overflowY: "auto" }}>
        <div className="header-container" style={{ minWidth: "100vw", maxWidth: "100%", position: "sticky", zIndex: 100, padding: "10px", borderRadius: "10px" }}>
-        <h2 style={{ textAlign: "center", margin: 0 }}>Catering Requests</h2>
+        <h3 style={{ textAlign: "center", margin: 0 }}>Catering Requests</h3>
       </div>
       <div className="card-container" style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 0", gap: "10px" }}>
         {requests.map((request, index) => (
@@ -85,7 +85,7 @@ const CateringRequests = () => {
             <Card.Header onClick={() => setExpanded(expanded === index ? null : index)} style={{ cursor: "pointer", backgroundColor:"#59e0c8", padding: "5px 10px", minHeight: "auto" }}>
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  Customer Name: {request.customer_name} <br/>Event Date: {new Date(request.event_date).toLocaleDateString()} | Event Size: {request.event_size}
+                  <b>Customer Name: {request.customer_name}</b> <br/>Event Date: {new Date(request.event_date).toLocaleDateString()} | Event Size: {request.event_size}
                 </div>
                 <i className={expanded === index ? "bi bi-chevron-contract" : "bi bi-chevron-expand"}></i>
               </div>

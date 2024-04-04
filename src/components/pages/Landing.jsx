@@ -15,12 +15,13 @@ export default function Landing() {
 					></img>
 				</div>
 				<div className="mt-2 text-center">
+				<div className="w-100" style={{ maxWidth: '100vw' }}>	
 					<Link to="/userlogin">
 						<Button
 							variant="primary"
 							type="link"
 							size="lg"
-							className="text-white font-medium rounded-lg mt-3 ms-3 me-4"
+							className="text-white font-medium rounded-lg mt-3 ms-2 me-2 w-40 "
 							style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 							active
 						>
@@ -32,13 +33,14 @@ export default function Landing() {
 							variant="primary"
 							type="link"
 							size="lg"
-							className="text-white font-medium rounded-lg mt-3 ms-4 me-3"
+							className="text-white font-medium rounded-lg mt-3 me-2 ms-2 w-40"
 							style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 							active
 						>
 							Vendor Login
 						</Button>
 					</Link>
+					</div>
 				</div>
 			</div>
 		</>
