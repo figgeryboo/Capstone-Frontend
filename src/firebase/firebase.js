@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const firestore = getFirestore(app);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 
 // onAuthStateChanged(auth, (user) => {
 //   if (user) {
@@ -32,4 +32,4 @@ const analytics = getAnalytics(app);
 
 
 
-export {  auth, onAuthStateChanged, firestore, GoogleAuthProvider, analytics  };
+export {  auth, onAuthStateChanged, firestore, GoogleAuthProvider};

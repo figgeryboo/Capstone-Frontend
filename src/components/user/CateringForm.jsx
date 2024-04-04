@@ -19,6 +19,7 @@ const CateringForm = () => {
     special_instructions: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deposit, setDeposit] = useState("");
 
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -34,6 +35,10 @@ const CateringForm = () => {
     ...prevFormData,
     [id]: type === "checkbox" ? checked : value,
   }));
+  if (id === "budget" && !isNaN(value) && value !== "") {
+    const depositValue = parseFloat(value) * 0.4;
+    setDeposit(depositValue.toFixed(2)); // Keep two decimal places
+  }
   };
 
   const submitCateringForm = async () => {
@@ -57,16 +62,17 @@ const CateringForm = () => {
 
   return (
     <>
-      <div className="w-100" style={{ maxWidth: "400px" }}>
+      <div className="w-100" style={{ maxWidth: "440px" }}>
         <Card>
           <Card.Body>
             <div className="d-grid gap-2">
               {/* Step 1: Catering Intro Page */}
               {currentStep === 1 && (
                 <>
-                  <h2 className="text-center mb-2">Catering Request</h2>
+                  <h3 className="text-center mb-2">Catering Request</h3>
                   <p className="text-center font-big">
-                    Want to hire one of our vendors to cater your event? Fill
+                    Want to hire one of our vendors to cater your event?
+                    <br/> Fill
                     out the requested information and submit the form. Estimated
                     response time is 7-10 business days.
                   </p>
@@ -75,7 +81,7 @@ const CateringForm = () => {
               {/* Step 2: Person Details Section */}
               {currentStep === 2 && (
                 <>
-                  <h2 className="text-center mb-2">Coordinator Details</h2>
+                  <h3 className="text-center mb-2">Coordinator Details</h3>
                   <Form>
                     <Form.Group className="mb-4" controlId="customer_name">
                       <Form.Label>Coordinator Name</Form.Label>
@@ -113,7 +119,7 @@ const CateringForm = () => {
               {/* Step 3: Event Details */}
               {currentStep === 3 && (
                 <>
-                  <h2 className="text-center mb-2">Event Details</h2>
+                  <h3 className="text-center mb-2">Event Details</h3>
                   <Form>
                     <Row>
                       <Col>
@@ -168,7 +174,7 @@ const CateringForm = () => {
               {/* Step 4: Group Details */}
               {currentStep === 4 && (
                 <>
-                  <h2 className="text-center mb-2">Group Details</h2>
+                  <h3 className="text-center mb-2">Group Details</h3>
                   <Form>
                     <Form.Group className="mb-4" controlId="budget">
                       <Form.Label>Max Budget </Form.Label>
@@ -178,6 +184,11 @@ const CateringForm = () => {
                         required
                         onChange={handleChange}
                       />
+                      {deposit && (
+                        <div style={{ color: "green" }}>
+                          Required 40% Deposit: ${deposit}
+                        </div>
+                      )}
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="dietary_options">
@@ -204,7 +215,7 @@ const CateringForm = () => {
               {/* Step 5: Final Details/Submit */}
               {currentStep === 5 && (
                 <>
-                  <h2 className="text-center mb-2">Final Steps</h2>
+                  <h3 className="text-center mb-2">Final Steps</h3>
                   <Form>
                     <Form.Group className="mb-4" controlId="howDidYouHear">
                       <Form.Label>How Did You Hear About Us?</Form.Label>
@@ -233,9 +244,9 @@ const CateringForm = () => {
               {/* Step 6: Confirmation of Submission */}
               {currentStep === 6 && (
                 <>
-                  <h2 className="text-center mb-2">
+                  <h3 className="text-center mb-2">
                     Confirmation of Submission
-                  </h2>
+                  </h3>
                   <p className="text-center font-big">
                     Thank you for submitting your request. Lorem ipsum dolor sit
                     amet, consectetur adipiscing elit, sed do eiusmod tempor

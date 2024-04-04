@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/authContext';
 import { doSignOut } from '../../firebase/auth';
+import { Button } from 'react-bootstrap';
+
 
 const UserSignOut = () => {
   const navigate = useNavigate();
@@ -17,9 +19,9 @@ const UserSignOut = () => {
   return (
     <>
       {userLoggedIn ? (
-        <Link onClick={handleSignOut} className="text-sm text-blue-600 underline" to="#">
+        <Button onClick={handleSignOut} to="#" className="w-100" variant="primary" size="lg" style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
           Sign Out
-        </Link>
+        </Button>
       ) : (
         <>
           <Link className="text-sm text-blue-600 underline" to={'/vendorlogin'}>
