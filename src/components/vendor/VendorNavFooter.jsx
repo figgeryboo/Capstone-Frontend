@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './NavigationFooter.css';
+import '../pages/NavigationFooter.css';
 import { Link, useLocation } from 'react-router-dom';
 
-const NavigationFooter = () => {
+const VendorNavFooter = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const location = useLocation();
 
@@ -19,13 +19,13 @@ const NavigationFooter = () => {
     }
 
     const pathname = location.pathname;
-    if (pathname === '/usercatering') {
+    if (pathname === '/vendorcatering') {
       setActiveIndex(0);
-    } else if (pathname === '/mapview') {
+    } else if (pathname === '/vendormapview') {
       setActiveIndex(1);
-    } else if (pathname === '/userratings') {
+    } else if (pathname === '/analytics') {
       setActiveIndex(2);
-    } else if (pathname === '/userdashboard') {
+    } else if (pathname === '/vendordashboard') {
       setActiveIndex(3);
     }
   }, [location.pathname]);
@@ -34,7 +34,7 @@ const NavigationFooter = () => {
     <div className="navigation">
       <ul>
         <li className={`list ${activeIndex === 0 ? 'active' : ''}`} onClick={(e) => handleItemClick(0, e)}>
-          <Link to="/usercatering">
+          <Link to="/vendorcatering">
             <span className="icon">
               <i className="bi bi-calendar3"></i>
             </span>
@@ -42,27 +42,27 @@ const NavigationFooter = () => {
           </Link>
         </li>
         <li className={`list ${activeIndex === 1 ? 'active' : ''}`} onClick={(e) => handleItemClick(1, e)}>
-          <Link to="/mapview">
-            <span className="icon">
-              <i className="fa-solid fa-ice-cream"></i>
+          <Link to="/vendormapview">
+            <span className="icon" >
+              <i className="fa-solid fa-ice-cream"> </i>
             </span>
-            <span className="text">Find Me</span>
+            <span className="text">Route</span>
           </Link>
         </li>
         <li className={`list ${activeIndex === 2 ? 'active' : ''}`} onClick={(e) => handleItemClick(2, e)}>
-          <Link to="/userratings">
+          <Link to="/analytics">
             <span className="icon">
               <i className="bi bi-stars"></i>
             </span>
-            <span className="text">Ratings</span>
+            <span className="text">Analytics</span>
           </Link>
         </li>
         <li className={`list ${activeIndex === 3 ? 'active' : ''}`} onClick={(e) => handleItemClick(3, e)}>
-          <Link to="/userdashboard">
+          <Link to="/vendordashboard">
             <span className="icon">
               <i className="bi bi-person-circle"></i>
             </span>
-            <span className="text">Profile</span>
+            <span className="text">Dashboard</span>
           </Link>
         </li>
       </ul>
@@ -79,4 +79,4 @@ const NavigationFooter = () => {
   );
 };
 
-export default NavigationFooter;
+export default VendorNavFooter;

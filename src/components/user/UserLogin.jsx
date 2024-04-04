@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Form, Button, Card } from 'react-bootstrap';
 import { Navigate, Link } from 'react-router-dom';
 import {
-	doSignInVendorWithEmailAndPassword,
+	doSignInUserWithEmailAndPassword,
 	doSignInWithGoogle,
 } from '../../firebase/auth';
-import { useAuth } from '../../contexts/authContext/';
+import { useAuth } from '../../contexts/authContext/index';
 
-const VendorLogin = () => {
+const UserLogin = () => {
 	const { userLoggedIn } = useAuth();
 
 	const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ const VendorLogin = () => {
 		e.preventDefault();
 		if (!isSigningIn) {
 			setIsSigningIn(true);
-			await doSignInVendorWithEmailAndPassword(email, password);
+			await doSignInUserWithEmailAndPassword(email, password);
 		}
 	};
 
@@ -36,10 +36,9 @@ const VendorLogin = () => {
 	return (
 		<>
 			<div className="w-100" style={{ maxWidth: '400px' }}>
-				{userLoggedIn && <Navigate to={'/vendordashboard'} replace={true} />}
+				{userLoggedIn && <Navigate to={'/usermapview'} replace={true} />}
 				<Link to="/">
-					<button
-						type="button"
+					<button type="button"
 						class="btn-close "
 						aria-label="Close"
 						style={{
@@ -54,7 +53,7 @@ const VendorLogin = () => {
 				</Link>
 				<Card>
 					<Card.Body>
-						<h2 className="text-center mb-2">Vendor Log In</h2>
+						<h2 className="text-center mb-4">User Log In</h2>
 						<Form onSubmit={handleSubmit}>
 							<Form.Group id="email">
 								<Form.Label>Email</Form.Label>
@@ -85,6 +84,7 @@ const VendorLogin = () => {
 							<Button
 								type="submit"
 								disabled={isSigningIn}
+								style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 								className={`mx-auto d-block text-white font-medium rounded-lg mt-2 ${
 									isSigningIn
 										? 'bg-gray-300 cursor-not-allowed'
@@ -97,6 +97,7 @@ const VendorLogin = () => {
 					</Card.Body>
 				</Card>
 				<Button
+					style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
 					disabled={isSigningIn}
 					onClick={(e) => {
 						onGoogleSignIn(e);
@@ -110,11 +111,11 @@ const VendorLogin = () => {
 					<div>{isSigningIn ? 'Signing In...' : 'Sign in with Google'}</div>
 				</Button>
 				<div className="w-100 text-center mt-5">
-					Need an account? <Link to="/vendorsignup">Sign Up</Link>
+					Need an account? <Link to="/usersignup">Sign Up</Link>
 				</div>
 			</div>
 		</>
 	);
 };
 
-export default VendorLogin;
+export default UserLogin;

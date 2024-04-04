@@ -11,11 +11,15 @@
     align-items: center;
     border-radius: 10px;
     margin-top: 40px;
+    text-decoration: none; 
+
   }
   
   .navigation ul {
     display: flex;
     width: 350px;
+    text-decoration: none; 
+
   }
   
   .navigation ul li {
@@ -24,6 +28,8 @@
     width: 70px;
     height: 70px;
     z-index: 1;
+    text-decoration: none; 
+
   }
   
   .navigation ul li a {
@@ -43,27 +49,32 @@
     line-height: 75px;
     font-size: 1.5em;
     text-align: center;
-    color: var(--clr);
+    color: #E93287;
+    text-decoration: none; 
   }
   
   .navigation ul li.active a i {
     transform: translateY(-15px);
+    text-decoration: none; 
   }
   
   .navigation ul li a .text {
     position: absolute;
-    color: #64649C;
+    color: #E93287;
+    /* color: #64649C; */
     font-weight: 400;
     font-size: 0.75em;
     letter-spacing: 0.05em;
     opacity: 0;
     transform: translateY(25px);
     transition: opacity 0.5s, transform 0.5s;
+    text-decoration: none;
   }
   
   .navigation ul li.active a .text {
     opacity: 1;
     transform: translateY(10px);
+    text-decoration: none;
   }
   
   .indicator {
@@ -72,7 +83,8 @@
     left: calc((100% - 275px) / 2); /* Adjust this value to center the indicator */
     width: 70px;
     height: 70px;
-    background: #5ae0c8;
+    background: #5cf2d9;
+    /* background: #fe5ea6; */
     border-radius: 50%;
     transition: transform 0.5s 0.1s;
   }
@@ -93,4 +105,4 @@
     transform: translateX(300%);
   }
   
-  
+
