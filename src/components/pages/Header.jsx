@@ -30,7 +30,7 @@ const HeaderWithConditionalRendering = () => {
 					//padding: '10px 20px',
 					position: 'fixed',
 					top: 0,
-					left: 0,
+					left: -15,
 					//width: '100%',
 					display: 'flex',
 					//alignItems: 'center',

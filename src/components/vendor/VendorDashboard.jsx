@@ -19,7 +19,7 @@ const VendorDashboard = () => {
 						</h2>
 						<div className="d-grid gap-2">
 							<Link to="/vendormapview">
-								<Button className="w-100" variant="primary" size="lg" active>
+								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#EA3689", borderColor: "#EA3689"}}>
 									Start My Route
 								</Button>
 							</Link>
