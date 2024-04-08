@@ -8,7 +8,8 @@ const CateringRequests = () => {
   const url = import.meta.env.VITE_LOCAL_HOST;
   const [requests, setRequests] = useState([]);
   const { currentUser } = useAuth();
-  const [expanded, setExpanded] = useState(null); // State for tracking expanded card
+  const [expanded, setExpanded] = useState(null); 
+  const [sortOption, setSortOption] = useState("");
 
   const fetchCustomerData = async () => {
     try {
@@ -37,6 +38,24 @@ const CateringRequests = () => {
         ...event,
         customer_name: customersData[event.customer_id]?.customer_name || "Unknown Customer"
       }));
+
+      let sortedData;
+      switch (sortOption) {
+        case "eventDate":
+          sortedData = combinedData.sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+          break;
+        case "lastName":
+          sortedData = combinedData.sort((a, b) => a.customer_name.split(" ")[1].localeCompare(b.customer_name.split(" ")[1]));
+          break;
+        case "firstName":
+          sortedData = combinedData.sort((a, b) => a.customer_name.split(" ")[0].localeCompare(b.customer_name.split(" ")[0]));
+          break;
+        case "eventSize":
+          sortedData = combinedData.sort((a, b) => a.event_size - b.event_size);
+          break;
+        default:
+          sortedData = combinedData;
+      }
 
       setRequests(combinedData);
     } catch (error) {
@@ -76,8 +95,15 @@ const CateringRequests = () => {
 
   return (
     <div className="catering_container" style={{ minWidth: "100vw", maxWidth: "500px", overflowX: "auto", overflowY: "auto" }}>
-       <div className="header-container" style={{ minWidth: "100vw", maxWidth: "100%", position: "sticky", zIndex: 100, padding: "10px", borderRadius: "10px" }}>
-        <h3 style={{ textAlign: "center", margin: 0 }}>Catering Requests</h3>
+       <div className="header-container" style={{ display: "flex", justifyContent: "space-evenly", alignItems: "center", minWidth: "100vw", maxWidth: "100%", position: "sticky", zIndex: 100, padding: "10px", borderRadius: "10px" }}>
+        <h3 style={{ fontWeight:"bolder", textAlign: "center", margin: 0 }}>Catering Requests</h3>
+        <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+          <option value="">Filter By</option>
+          <option value="eventDate">Date of Event</option>
+          <option value="lastName">Last Name</option>
+          <option value="firstName">First Name</option>
+          <option value="eventSize">Event Size</option>
+        </select>
       </div>
       <div className="card-container" style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 0", gap: "10px" }}>
         {requests.map((request, index) => (
@@ -122,99 +148,3 @@ const CateringRequests = () => {
 
 export default CateringRequests;
 
-
-
-
-
-
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-// import { useAuth } from "../../contexts/authContext";
-// import { Button, Table } from "react-bootstrap";
-
-// const CateringRequests = () => {
-//   const url = import.meta.env.VITE_LOCAL_HOST;
-//   const [requests, setRequests] = useState([]);
-//     const { currentUser } = useAuth();
-//   //   const [vendorId, setVendorId] = useState("");
-//   const fetchCateringRequests = async () => {
-//     try {
-//       const response = await axios.get(`${url}/events`);
-//       setRequests(response.data);
-//       console.log(response.data)
-//     } catch (error) {
-//       console.error("Error fetching events:", error);
-//       return [];
-//     }
-//   };
-//   useEffect(() => {
-//     fetchCateringRequests();
-//   }, []);
-//   const handleEventConfirmation = async (orderId) => {
-//     try {
-//       await axios.put(`${url}/events/${orderId}`, { status: "confirmed" });
-//       setRequests((prevRequests) =>
-//         prevRequests.map((request) =>
-//           request.order_id === orderId
-//             ? { ...request, status: "confirmed" }
-//             : request
-//         )
-//       );
-//     } catch (error) {
-//       console.error("Error confirming event:", error);
-//     }
-//   };
-//   return (
-//     <div className="catering_container table-responsive-sm">
-//       <h2 style={{ textAlign: "center" }}>Catering Requests</h2>
-//       <div style={{ display: "flex", overflow: "scroll" }}>
-//         <Table
-//           className="align-middle table-danger table-striped table-bordered hover"
-//           style={{ height: "80vh", width: "90vw" }}
-//         >
-//           <thead>
-//             <tr>
-//               <th>Event Date</th>
-//               <th>Event Time</th>
-//               <th>Delivery Location</th>
-//               <th>Menu Items</th>
-//               <th>Event Size</th>
-//               <th>Dietary Options</th>
-//               <th>Special Instructions</th>
-//               <th>Actions</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {requests.map((request) => (
-//               <tr key={request.order_id}>
-//                 <td>{new Date(request.event_date).toLocaleDateString()}</td>
-//                 <td>{request.event_time}</td>
-//                 <td>{request.delivery_location}</td>
-//                 <td>{request.menu_items}</td>
-//                 <td>{request.event_size}</td>
-//                 <td>{request.dietary_options}</td>
-//                 <td>{request.special_instructions}</td>
-//                 <td>
-//                   {request.status !== "confirmed" && (
-//                     <Button
-//                       variant="light"
-//                       onClick={() => handleEventConfirmation(request.order_id)}
-//                     >
-//                       Confirm
-//                     </Button>
-//                   )}
-//                   {request.status === "confirmed" && (
-//                     <Button variant="info" disabled>
-//                       Confirmed
-//                     </Button>
-//                   )}
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </Table>
-//       </div>
-//     </div>
-//   );
-// };
-// export default CateringRequests;
