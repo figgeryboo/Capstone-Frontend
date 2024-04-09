@@ -11,36 +11,34 @@ const VendorDashboard = () => {
 			<div className="w-100" style={{ maxWidth: '400px' }}>
 				<Card>
 					<Card.Body>
-						<h2 className="text-center mb-4">
+						<h3 className="text-center mb-3"> <i id="menu-image" className="bi bi-person-bounding-box"></i>
 							Welcome{' '}
 							{currentUser.displayName
 								? currentUser.displayName
 								: currentUser.email}
-						</h2>
+						</h3>
 						<div className="d-grid gap-2">
 							<Link to="/vendormapview">
-								<Button className="w-100" variant="primary" size="lg" active>
+								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#EA3689", borderColor: "#EA3689"}}>
 									Start My Route
 								</Button>
 							</Link>
-							<div className="d-flex align-center">
+							<div className="d-grid gap-2">
 								<Link to="/vendorcatering">
-									<Button className="w-20" variant="secondary" size="sm">
+								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
 										Inbound Catering Requests
 									</Button>
 									<br />
 								</Link>
-								<Button className="w-50" variant="secondary" size="sm">
+								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
 									Chat Support
 								</Button>
+								<VendorSignOut />
 							</div>
 						</div>
 					</Card.Body>
 				</Card>
 				<br />
-				<div className="mr-10">
-					<VendorSignOut />
-				</div>
 			</div>
 		</>
 	);

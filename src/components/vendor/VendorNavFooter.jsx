@@ -19,13 +19,13 @@ const VendorNavFooter = () => {
     }
 
     const pathname = location.pathname;
-    if (pathname === '/usercatering') {
+    if (pathname === '/vendorcatering') {
       setActiveIndex(0);
-    } else if (pathname === '/mapview') {
+    } else if (pathname === '/vendormapview') {
       setActiveIndex(1);
-    } else if (pathname === '/userratings') {
+    } else if (pathname === '/analytics') {
       setActiveIndex(2);
-    } else if (pathname === '/userdashboard') {
+    } else if (pathname === '/vendordashboard') {
       setActiveIndex(3);
     }
   }, [location.pathname]);
@@ -43,8 +43,8 @@ const VendorNavFooter = () => {
         </li>
         <li className={`list ${activeIndex === 1 ? 'active' : ''}`} onClick={(e) => handleItemClick(1, e)}>
           <Link to="/vendormapview">
-            <span className="icon">
-              <i className="fa-solid fa-ice-cream"></i>
+            <span className="icon" >
+              <i className="fa-solid fa-ice-cream"> </i>
             </span>
             <span className="text">Route</span>
           </Link>
