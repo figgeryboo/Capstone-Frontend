@@ -12,7 +12,7 @@ const UserDashboard = () => {
 			<div className="w-100" style={{ maxWidth: '400px' }}>
 				<Card>
 					<Card.Body>
-						<h3 className="text-center mb-4"> <i id="menu-image" class="bi bi-person-bounding-box"></i>
+						<h3 className="text-center mb-4"> <i id="menu-image" className="bi bi-person-bounding-box"></i>
 							Welcome{' '}
 							{currentUser.displayName
 								? currentUser.displayName
