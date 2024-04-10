@@ -18,6 +18,7 @@ import UserReviewsFeed from './user/UserReviewsFeed';
 import LocationTracker from './vendor/LocationTracker';
 import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
+import PaymentForm from './pages/PaymentForm';
 
 
 
@@ -32,6 +33,7 @@ function App() {
             <HeaderWithConditionalRendering />
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/pay" element={<PaymentForm />} />
               <Route exact path="/vendormapview" element={<LocationTracker />} />
               <Route exact path="/usermapview" element={<Map />} />
               <Route exact path="/userdashboard" element={<UserDashboard />} />

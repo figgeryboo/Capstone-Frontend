@@ -40,7 +40,7 @@ const VendorLogin = () => {
 				<Link to="/">
 					<button
 						type="button"
-						class="btn-close "
+						className="btn-close "
 						aria-label="Close"
 						style={{
 							color: '#FFFF',

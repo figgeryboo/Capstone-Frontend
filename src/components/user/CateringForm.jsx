@@ -1,25 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Card, Button, Row, Col } from "react-bootstrap";
-import { useAuth } from '../../contexts/authContext';
+import { useAuth } from "../../contexts/authContext";
 import axios from "axios";
 
 const CateringForm = () => {
   const api = import.meta.env.VITE_LOCAL_HOST;
+  const { currentUser } = useAuth();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
+    customer_id: currentUser.uid,
     customer_name: "",
-    eventDate: "",
-    eventTime: "",
-    delivery_address: "",
+    customer_email: "",
+    contact_info: "",
+    event_date: "",
+    event_time: "",
+    delivery_location: "",
     budget: "",
     menu_items: "",
-    eventSize: "",
+    event_size: "",
     dietary_options: "",
     special_instructions: "",
+    confirmed: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deposit, setDeposit] = useState("");
+  const [menu, setMenu] = useState([]);
 
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -31,15 +37,39 @@ const CateringForm = () => {
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
-  setFormData((prevFormData) => ({
-    ...prevFormData,
-    [id]: type === "checkbox" ? checked : value,
-  }));
-  if (id === "budget" && !isNaN(value) && value !== "") {
-    const depositValue = parseFloat(value) * 0.4;
-    setDeposit(depositValue.toFixed(2)); // Keep two decimal places
-  }
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [id]: type === "checkbox" ? checked : value,
+    }));
+    if (id === "budget" && !isNaN(value) && value !== "") {
+      const depositValue = parseFloat(value) * 0.3;
+      setDeposit(depositValue.toFixed(2));
+    }
   };
+
+  useEffect(() => {
+    const menuFetch = async () => {
+      try {
+        const vendorsResponse = await axios.get(`${api}/vendors`);
+        const menus = await Promise.all(
+          vendorsResponse.data.map(async (vendor) => {
+            const menuResponse = await axios.get(
+              `${api}/vendors/${vendor.vendor_id}`
+            );
+            return {
+              vendor_id: vendor.vendor_id,
+              menu_items: menuResponse.data.menu.map((item) => item.name),
+            };
+          })
+        );
+        setMenu(menus);
+      } catch (error) {
+        console.error("Error fetching menu:", error);
+      }
+    };
+
+    menuFetch();
+  }, []);
 
   const submitCateringForm = async () => {
     try {
@@ -62,7 +92,7 @@ const CateringForm = () => {
 
   return (
     <>
-      <div className="w-100" style={{ maxWidth: "440px" }}>
+      <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>
           <Card.Body>
             <div className="d-grid gap-2">
@@ -70,11 +100,19 @@ const CateringForm = () => {
               {currentStep === 1 && (
                 <>
                   <h3 className="text-center mb-2">Catering Request</h3>
-                  <p className="text-center font-big">
-                    Want to hire one of our vendors to cater your event?
-                    <br/> Fill
-                    out the requested information and submit the form. Estimated
-                    response time is 7-10 business days.
+                  <p className="text-center">
+                    <b>Excited to add some flavor to your event? </b>
+                    <br />
+                    Our vendors are ready to impress!
+                  </p>
+                  <hr />
+                  <p>
+                    Fill in all the requested information to get started & we'll
+                    whip up a customized proposal just for you.
+                    <br />
+                    <sub>
+                      <i>Estimated response times are 7-14 business days.</i>
+                    </sub>
                   </p>
                 </>
               )}
@@ -93,7 +131,7 @@ const CateringForm = () => {
                       />
                     </Form.Group>
 
-                    <Form.Group className="mb-4" controlId="contactInfo">
+                    <Form.Group className="mb-4" controlId="customer_email">
                       <Form.Label>Coordinator Email</Form.Label>
                       <Form.Control
                         type="email"
@@ -103,7 +141,7 @@ const CateringForm = () => {
                       />
                     </Form.Group>
 
-                    <Form.Group className="mb-4" controlId="contactInfo">
+                    <Form.Group className="mb-4" controlId="contact_info">
                       <Form.Label>Coordinator Phone</Form.Label>
                       <Form.Control
                         type="tel"
@@ -123,9 +161,9 @@ const CateringForm = () => {
                   <Form>
                     <Row>
                       <Col>
-                        <Form.Group className="mb-4" controlId="eventDate">
+                        <Form.Group className="mb-4" controlId="event_date">
                           <Form.Label>
-                            Event Time (min 6 weeks advance)
+                            Event Date (min 6 weeks advance)
                           </Form.Label>
                           <Form.Control
                             type="date"
@@ -136,7 +174,7 @@ const CateringForm = () => {
                         </Form.Group>
                       </Col>
                       <Col>
-                        <Form.Group className="mb-4" controlId="eventTime">
+                        <Form.Group className="mb-4" controlId="event_time">
                           <Form.Label>Event Time</Form.Label>
                           <Form.Control
                             type="time"
@@ -147,7 +185,7 @@ const CateringForm = () => {
                       </Col>
                     </Row>
 
-                    <Form.Group className="mb-4" controlId="delivery_address">
+                    <Form.Group className="mb-4" controlId="delivery_location">
                       <Form.Label>Event Address</Form.Label>
                       <Form.Control
                         type="text"
@@ -157,7 +195,7 @@ const CateringForm = () => {
                       />
                     </Form.Group>
 
-                    <Form.Group className="mb-4" controlId="eventSize">
+                    <Form.Group className="mb-4" controlId="event_size">
                       <Form.Label>Event Size</Form.Label>
                       <Form.Control
                         type="number"
@@ -186,17 +224,24 @@ const CateringForm = () => {
                       />
                       {deposit && (
                         <div style={{ color: "green" }}>
-                          Required 40% Deposit: ${deposit}
+                          Required 30% Deposit: ${deposit}
                         </div>
                       )}
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="dietary_options">
                       <Form.Label>Dietary Options</Form.Label>
-                      <Form.Check type="checkbox" label="Dairy" onChange={handleChange}/>
-                      <Form.Check type="checkbox" label="Non-Dairy" onChange={handleChange}/>
+                      <Form.Check
+                        type="checkbox"
+                        label="Dairy"
+                        onChange={handleChange}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        label="Non-Dairy"
+                        onChange={handleChange}
+                      />
                     </Form.Group>
-
                     <Form.Group className="mb-4" controlId="needUtensils">
                       <Form.Label>
                         Will You Need Additional Utensils?
@@ -205,15 +250,56 @@ const CateringForm = () => {
                         type="radio"
                         label="Yes"
                         name="needUtensils"
-						onChange={handleChange}
+                        onChange={handleChange}
                       />
                       <Form.Check type="radio" label="No" name="needUtensils" />
                     </Form.Group>
                   </Form>
                 </>
               )}
-              {/* Step 5: Final Details/Submit */}
               {currentStep === 5 && (
+                <>
+                  <h3 className="text-center mb-2"> Choose Menu Items </h3>
+                  <Form>
+                    <Form.Group
+                      className="mb-4"
+                      controlId="menu_items"
+                      style={{ maxHeight: "300px", overflowY: "auto" }}
+                    >
+                      {menu.map((vendor) => (
+                        <div key={vendor.vendor_id}>
+                          <h5>{vendor.vendor_name}</h5>
+                          {vendor.menu_items.map((item) => (
+                            <Form.Check
+                              key={item}
+                              type="checkbox"
+                              id={item}
+                              label={item}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    menu_items: [...prev.menu_items, item],
+                                  }));
+                                } else {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    menu_items: prev.menu_items.filter(
+                                      (i) => i !== item
+                                    ),
+                                  }));
+                                }
+                              }}
+                            />
+                          ))}
+                        </div>
+                      ))}
+                    </Form.Group>
+                  </Form>
+                </>
+              )}
+              {/* Step 6: Final Details/Submit */}
+              {currentStep === 6 && (
                 <>
                   <h3 className="text-center mb-2">Final Steps</h3>
                   <Form>
@@ -228,21 +314,24 @@ const CateringForm = () => {
                       </Form.Control>
                     </Form.Group>
 
-                    <Form.Group className="mb-4" controlId="special_instructions">
+                    <Form.Group
+                      className="mb-4"
+                      controlId="special_instructions"
+                    >
                       <Form.Label>Additional Comments:</Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={3}
                         maxLength={250}
                         placeholder="Comments"
-						onChange={handleChange}
+                        onChange={handleChange}
                       />
                     </Form.Group>
                   </Form>
                 </>
               )}
-              {/* Step 6: Confirmation of Submission */}
-              {currentStep === 6 && (
+              {/* Step 7: Confirmation of Submission */}
+              {currentStep === 7 && (
                 <>
                   <h3 className="text-center mb-2">
                     Confirmation of Submission
@@ -265,7 +354,7 @@ const CateringForm = () => {
                   Previous
                 </Button>
               )}
-              {currentStep !== 6 ? (
+              {currentStep !== 7 ? (
                 <Button
                   onClick={handleNextStep}
                   className="mx-2"
