@@ -60,7 +60,6 @@ function LocationTracker() {
       center: { lat: 40.8571627, lng: -73.9015161 },
       zoom: 12,
       disableDefaultUI: true,
-      // mapId: import.meta.env.VITE_VENDOR_MAPID,
     });
 
     receivedLocations.forEach((location, index) => {
@@ -77,11 +76,12 @@ function LocationTracker() {
 
     axios
     .get(`${url}/vendors`)
-    .then((res) => {console.log(res.data)
+    .then((res) => {
     setSeeVendors(res.data)
   })
   seeVendors.forEach((vendor, index) => {
     if (vendor.coordinates && vendor.coordinates.length > 0) {
+      // console.log(vendor)
       new google.maps.Marker({
         position: { lat: vendor.coordinates[0].lat, lng: vendor.coordinates[0].lng },
         map,
@@ -108,25 +108,6 @@ function LocationTracker() {
     newPolyline.setMap(map);
     setPolyline(newPolyline);
   }, [receivedLocations]);
-
-
-  useEffect(() => {
-    if (map && seeVendors.length > 0) {
-      seeVendors.forEach((vendor, index) => {
-        if (vendor.latitude && vendor.longitude) {
-          new google.maps.Marker({
-            position: { lat: parseFloat(vendor.latitude), lng: parseFloat(vendor.longitude) },
-            map,
-            title: vendor.name, // Assuming you have a 'name' field in your vendor data
-            icon: {
-              url: vendorMarker,
-              scaledSize: new google.maps.Size(45, 45),
-            },
-          });
-        }
-      });
-    }
-  }, [seeVendors, map]);
 
   useEffect(() => {
     if (watchingLocation) {
@@ -193,7 +174,7 @@ function LocationTracker() {
 
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
-      <div id="vendormap" style={{ height: "100vh", width: "100vw" }}></div>
+      <div id="vendormap" style={{ height: "100vh", width: "100vw", border: "3px solid #59E0C8"}}></div>
       <div
         style={{
           position: "absolute",
