@@ -207,6 +207,7 @@ const CateringRequests = () => {
                   <Card.Title>
                     Delivery Location: {request.delivery_location}
                   </Card.Title>
+                  <p>Contact Details: {request.contact_info}</p>
                   <p>Event Time: {formatEventTime(request.event_time)}</p>
                   <p>Menu Items: {request.menu_items}</p>
                   <p>Dietary Options: {request.dietary_options}</p>
