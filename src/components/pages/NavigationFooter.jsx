@@ -61,7 +61,7 @@ const NavigationFooter = () => {
 				>
 					<Link to="/userratings">
 						<span className="icon">
-						<i class="bi bi-star-half"></i>
+						<i className="bi bi-star-half"></i>
 						</span>
 						<span className="text">Ratings</span>
 					</Link>
