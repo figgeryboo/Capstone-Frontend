@@ -35,6 +35,14 @@ export default function Landing() {
 							size="lg"
 							className="text-white font-medium rounded-lg mt-3 me-2 ms-2 w-40"
 							style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
+							onMouseOver={(e) => {
+								e.target.style.backgroundColor = '#0066ff'; // Change to the desired color on hover
+								e.target.style.borderColor = '#031f99'; // Change to the desired color on hover
+							  }}
+							  onMouseOut={(e) => {
+								e.target.style.backgroundColor = '#EA3187'; // Revert back to original color on mouse out
+								e.target.style.borderColor = '#EA3187'; // Revert back to original color on mouse out
+							  }}
 							active
 						>
 							Vendor Login
