@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Form, Card, Button } from 'react-bootstrap';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Form, Card, Button } from "react-bootstrap";
 
 const VendorRatings = () => {
-  const [vendorId, setVendorId] = useState('');
+  const [vendorId, setVendorId] = useState("");
   const [vendorOptions, setVendorOptions] = useState([]);
   const [ratings, setRatings] = useState([]);
-  const [reviewText, setReviewText] = useState('');
-  const [rating, setRating] = useState(1); 
-  const [isVendorSelected, setIsVendorSelected] = useState(false); 
+  const [customers, setCustomers] = useState([]);
+  const [customerImages, setCustomerImages] = useState([]);
+  const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState("");
+  const [isVendorSelected, setIsVendorSelected] = useState(false);
   const api = import.meta.env.VITE_LOCAL_HOST;
 
   useEffect(() => {
@@ -19,8 +20,20 @@ const VendorRatings = () => {
         setVendorOptions(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching vendors:', error);
+        console.error("Error fetching vendors:", error);
         setVendorOptions([]);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`${api}/customers`)
+      .then((response) => {
+        setCustomers(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching vendors:", error);
+        setCustomers([]);
       });
   }, []);
 
@@ -42,11 +55,11 @@ const VendorRatings = () => {
           setRatings(reviewsWithVendorNames);
         })
         .catch((error) => {
-          console.error('Error fetching ratings:', error);
+          console.error("Error fetching ratings:", error);
           setRatings([]);
         });
     } else {
-      setIsVendorSelected(false); 
+      setIsVendorSelected(false);
       setRatings([]);
     }
   }, [vendorId, vendorOptions]);
@@ -67,28 +80,28 @@ const VendorRatings = () => {
         ratingDate: new Date().toISOString(),
       })
       .then((response) => {
-        console.log('Review added successfully:', response.data); 
-        setReviewText('');
+        console.log("Review added successfully:", response.data);
+        setReviewText("");
         setRating(1);
-        axios.get(`${api}/reviews/vendor/${vendorId}`)
+        axios
+          .get(`${api}/reviews/vendor/${vendorId}`)
           .then((res) => {
-            console.log('Updated reviews:', res.data); 
+            console.log("Updated reviews:", res.data);
             setRatings(res.data);
           })
           .catch((error) => {
-            console.error('Error fetching updated reviews:', error); 
+            console.error("Error fetching updated reviews:", error);
           });
       })
       .catch((error) => {
-        console.error('Error adding review:', error); 
+        console.error("Error adding review:", error);
       });
   };
-  
 
-  const ratingEmojis = ['✰', '✰✰', '✰✰✰', '✰✰✰✰', '✰✰✰✰✰'];
+  const ratingEmojis = ["✰", "✰✰", "✰✰✰", "✰✰✰✰", "✰✰✰✰✰"];
 
   return (
-    <div className="w-100" style={{ maxWidth: '450px' }}>
+    <div className="w-100" style={{ maxWidth: "450px" }}>
       <Card>
         <Card.Body>
           <h3>Ratings for Vendor {vendorId}</h3>
@@ -96,7 +109,7 @@ const VendorRatings = () => {
           <Form.Group controlId="vendorId">
             <Form.Label>Select from one of Our Vendors below: </Form.Label>
             <Form.Select value={vendorId} onChange={handleVendorChange}>
-              <option style={{ color: '#aaa' }} value="" disabled>
+              <option style={{ color: "#aaa" }} value="" disabled>
                 Select a vendor...
               </option>
               {vendorOptions.map((vendor) => (
@@ -112,23 +125,61 @@ const VendorRatings = () => {
               <br></br> No ratings available for this vendor.
             </p>
           ) : (
-            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-            <ul style={{ listStyle: 'none' }}>
-              <br />
-              {ratings.map((rating) => (
-                <li key={rating.rating_id}>
-                  <i id="menu-image" className="bi bi-person-bounding-box"> </i>
-                  <br />
-                  <strong>User Says:</strong> {rating.review_text}
-                  <br />
-                  <strong>Rating:</strong>{' '}
-                  {ratingEmojis[Math.floor(rating.rating) - 1]}
-                  {rating.rating % 1 !== 0 && '✰'}{' '}
-                  <br />
-                  <br />
-                </li>
-              ))}
-            </ul>
+            <div style={{ maxHeight: "300px", overflowY: "auto"}}>
+              <ul style={{ listStyle: "none"}}>
+                <br />
+                {ratings.map((rating, index) => (
+                  <li
+                    key={index}
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    {/* <i id="menu-image" className="bi bi-person-bounding-box"> </i>
+                     */}
+                    {customers.find(
+                      (customer) => customer.customer_id === rating.user_id
+                    ) && (
+                      <img
+                        id="customer_image"
+                        src={
+                          customers.find(
+                            (customer) =>
+                              customer.customer_id === rating.user_id
+                          ).customer_image_url
+                        }
+                        alt={`Customer ${rating.user_id}`}
+                        style={{
+                          width: "50px",
+                          height: "60px",
+                          objectFit: "cover",
+                         marginBottom: "27px"
+                          
+                        }}
+                      />
+                    )}
+                    <br />
+                    {/* <strong>User Says:</strong> {rating.review_text} */}
+                    <div style={{ marginLeft: "10px" }}>
+                    <strong>
+                      {
+                        customers
+                          .find(
+                            (customer) =>
+                              customer.customer_id === rating.user_id
+                          )
+                          ?.customer_name.split(" ")[0]
+                      }{" "}
+                      says:
+                    </strong>{" "}
+                    {rating.review_text}
+                    <br />
+                    <strong>Rating:</strong>{" "}
+                    {ratingEmojis[Math.floor(rating.rating) - 1]}
+                    {rating.rating % 1 !== 0 && "✰"} <br />
+                    <br />
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
@@ -159,7 +210,7 @@ const VendorRatings = () => {
                   <option value={5}>✰✰✰✰✰</option>
                 </Form.Control>
               </Form.Group>
-              <br/>
+              <br />
               <Button type="submit">Add New Review</Button>
             </Form>
           )}

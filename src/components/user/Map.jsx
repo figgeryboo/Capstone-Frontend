@@ -266,7 +266,8 @@ const Map = () => {
             </Button>
           </div>
           <Collapse in={menuExpanded}>
-            <div id="menu-content" className="menu-content">
+          <div id="menu-content" className="menu-content" style={{ maxHeight: "200px", overflowY: "auto" }}>
+
               <ul>
                 {selectedVendorDetails.menu.map((item, index) => (
                   <li key={index}>
