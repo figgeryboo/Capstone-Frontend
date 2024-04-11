@@ -64,7 +64,9 @@ const CateringRequests = () => {
           );
           break;
         case "eventSize":
-          sortedData = unconfirmedData.sort((a, b) => a.event_size - b.event_size);
+          sortedData = unconfirmedData.sort(
+            (a, b) => a.event_size - b.event_size
+          );
           break;
         default:
           sortedData = unconfirmedData;
@@ -78,21 +80,7 @@ const CateringRequests = () => {
 
   useEffect(() => {
     fetchCateringRequests();
-  }, []);
-
-  // const handleEventConfirmation = async (orderId) => {
-  //   try {
-  //     const response = await axios.put(`${url}/events/${orderId}`, { confirmed: true });
-  //     console.log(response.data);
-  //     setRequests((prevRequests) =>
-  //       prevRequests.map((request) =>
-  //         request.order_id === orderId ? { ...request, status: "confirmed" } : request
-  //       )
-  //     );
-  //   } catch (error) {
-  //     console.error("Error confirming event:", error);
-  //   }
-  // };
+  }, [sortOption]);
 
   const handleEventConfirmation = async (orderId, currentStatus) => {
     try {
@@ -153,6 +141,7 @@ const CateringRequests = () => {
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
+          aria-label="Sort By"
         >
           <option value="">Filter By</option>
           <option value="eventDate">Date of Event</option>
@@ -178,6 +167,7 @@ const CateringRequests = () => {
           >
             <Card.Header
               onClick={() => setExpanded(expanded === index ? null : index)}
+              aria-expanded={expanded === index}
               style={{
                 cursor: "pointer",
                 backgroundColor: "#59e0c8",
@@ -198,12 +188,18 @@ const CateringRequests = () => {
                       ? "bi bi-chevron-contract"
                       : "bi bi-chevron-expand"
                   }
+                  aria-expanded={expanded === index}
+                  aria-controls={`collapse-${index}`}
                 ></i>
               </div>
             </Card.Header>
             <Collapse in={expanded === index}>
-              <div style={{ backgroundColor: "#d0f2ef" }}>
-                <Card.Body style={{ padding: "10px" }}>
+              <div
+                style={{ backgroundColor: "#d0f2ef" }}
+                aria-hidden={expanded !== index}
+                aria-labelledby={`card-header-${index}`}
+              >
+                <Card.Body style={{ padding: "10px", textAlign: "left" }}>
                   <Card.Title>
                     Delivery Location: {request.delivery_location}
                   </Card.Title>
@@ -230,6 +226,7 @@ const CateringRequests = () => {
                       onClick={() =>
                         handleEventConfirmation(request.order_id, false)
                       }
+                      aria-label="Confirm Event"
                     >
                       Confirm
                     </Button>

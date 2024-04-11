@@ -19,6 +19,7 @@ import LocationTracker from './vendor/LocationTracker';
 import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
 import PaymentForm from './pages/PaymentForm';
+import VendorAnalytics from './vendor/VendorAnalytics';
 
 
 
@@ -42,6 +43,7 @@ function App() {
               <Route exact path="/vendordashboard" element={<VendorDashboard />} />
               <Route path="/vendorsignup" element={<VendorSignup />} />
               <Route path="/vendorlogin" element={<VendorLogin />} />
+              <Route path="/vendoranalytics" element={<VendorAnalytics />} />
               <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />

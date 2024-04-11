@@ -168,10 +168,9 @@ const Map = () => {
   };
 
   const handleToggleUserLocation = () => {
-	setIsUserLocationEnabled(!isUserLocationEnabled);
-	setUserMarker(!userMarker)
+    setIsUserLocationEnabled(!isUserLocationEnabled);
+    setUserMarker(!userMarker);
   };
-  
 
   const handleCloseDetails = () => {
     setShowExpandedDetails(false);
@@ -192,14 +191,23 @@ const Map = () => {
       ></div>
 
       <div>
-      <Button
-  variant="primary"
-  onClick={() => setIsUserLocationEnabled(!isUserLocationEnabled)}
->
-  {isUserLocationEnabled ? 'Disable Location' : 'Enable Location'}
-</Button>
+        <Button
+          className="btn btn-sm"
+          style={{
+            backgroundColor: "rgb(234, 49, 135)",
+            borderColor: "rgb(234, 49, 135)",
+            position: "absolute",
+            top: "20px",
+            right: "9px",
+            zIndex: 1,
+            width: "200px",
+          }}
+          onClick={() => setIsUserLocationEnabled(!isUserLocationEnabled)}
+        >
+          {isUserLocationEnabled ? "Disable Location" : "Enable Location"}
+        </Button>
       </div>
-	  
+
       {showExpandedDetails && selectedVendor && selectedVendorDetails && (
         <div
           className="menu-container"
