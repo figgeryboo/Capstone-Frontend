@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
 import { Navigate, Link, useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ const VendorSignup = () => {
     confirmPassword: "",
     dob: "",
     foodVendorId: "",
+    foodVendorIdExp: "",
     licenseId: "",
     licensePlate: "",
     iceCreamCompany: "",
@@ -34,11 +35,29 @@ const VendorSignup = () => {
     setErrorMessage("");
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const isOver21 = (dob) => {
+    const dobDate = new Date(dob);
+    const today = new Date();
+    const diff = today.getFullYear() - dobDate.getFullYear();
+    if (diff < 21 || (diff === 21 && today.getMonth() < dobDate.getMonth())) {
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (currentStep === 1) {
-
+      if (!isOver21(formData.dob)) {
+        alert("You must be 21 years or older to continue.");
+        return;
+      }
       if (
         !formData.vendorName ||
         !formData.email ||
@@ -57,6 +76,7 @@ const VendorSignup = () => {
     } else if (currentStep === 2) {
       if (
         !formData.foodVendorId ||
+        !formData.foodVendorIdExp ||
         !formData.licenseId ||
         !formData.licensePlate ||
         !formData.iceCreamCompany
@@ -100,7 +120,7 @@ const VendorSignup = () => {
             aria-label="Close"
             style={{
               color: "#FFFF",
-              marginLeft: "22em",
+              marginLeft: "21.5em",
               backgroundColor: "#5ae0c8",
               borderRadius: "15px",
               padding: "8px",
@@ -130,6 +150,7 @@ const VendorSignup = () => {
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                       type="email"
+                      placeholder="email@email.com"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
@@ -163,6 +184,11 @@ const VendorSignup = () => {
                   </Form.Group>
                   <Form.Group id="dob">
                     <Form.Label>Date of Birth</Form.Label>
+                    {!isOver21(formData.dob) && (
+                      <span className="text-danger">
+                        You must be 21 years or older.
+                      </span>
+                    )}
                     <Form.Control
                       type="date"
                       required
@@ -170,8 +196,10 @@ const VendorSignup = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, dob: e.target.value })
                       }
+                      min="1900-01-01"
                     />
                   </Form.Group>
+
                   <Button
                     type="button"
                     className="d-block mx-auto mt-2"
@@ -183,37 +211,12 @@ const VendorSignup = () => {
               )}
               {currentStep === 2 && (
                 <>
-                  <Form.Group id="foodVendorId">
-                    <Form.Label>Food Vendor ID number</Form.Label>
-                    <Form.Control
-                      type="text"
-                      required
-                      value={formData.foodVendorId}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          foodVendorId: e.target.value,
-                        })
-                      }
-                    />
-                  </Form.Group>
-                  <Form.Group id="licenseId">
-                    <Form.Label>License ID number</Form.Label>
-                    <Form.Control
-                      type="text"
-                      required
-                      value={formData.licenseId}
-                      onChange={(e) =>
-                        setFormData({ ...formData, licenseId: e.target.value })
-                      }
-                    />
-                  </Form.Group>
                   <Form.Group id="licensePlate">
-                    <Form.Label>
-                      Ice Cream Truck License Plate number
-                    </Form.Label>
+                    <Form.Label>Ice Cream Truck License Plate #</Form.Label>
                     <Form.Control
                       type="text"
+                      placeholder="ABC1234" style={{ fontSize: ".9em" }}
+                      pattern="[A-Za-z]{3}[0-9]{4}"
                       required
                       value={formData.licensePlate}
                       onChange={(e) =>
@@ -224,8 +227,52 @@ const VendorSignup = () => {
                       }
                     />
                   </Form.Group>
+                  <Form.Group id="foodVendorId">
+                    <Form.Label>Food Vendor Permit #</Form.Label>
+                    <Form.Control
+                      type="text"
+                      required
+                      placeholder="EH01234" style={{ fontSize: ".9em" }}
+                      value={formData.foodVendorId}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          foodVendorId: e.target.value,
+                        })
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group id="foodVendorIdExp">
+                    <Form.Label>Permit Expiration(MM/YYYY)</Form.Label>
+                    <Form.Control
+                      type="text"
+                      pattern="(0[1-9]|1[0-2])\/[0-9]{4}"
+                      placeholder="MM/YYYY" style={{ fontSize: ".9em" }}
+                      required
+                      value={formData.foodVendorIdExp}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          foodVendorId: e.target.value,
+                        })
+                      }
+                    />
+                  </Form.Group>
+                  <Form.Group id="licenseId">
+                    <Form.Label>State License ID #</Form.Label>
+                    <Form.Control
+                      type="text"
+                      required
+                      placeholder="123456789" style={{ fontSize: ".9em" }}
+                      value={formData.licenseId}
+                      onChange={(e) =>
+                        setFormData({ ...formData, licenseId: e.target.value })
+                      }
+                    />
+                  </Form.Group>
+
                   <Form.Group id="iceCreamCompany">
-                    <Form.Label>Ice Cream Company</Form.Label>
+                    <Form.Label>Truck Name/ Company Name</Form.Label>
                     <Form.Control
                       type="text"
                       required
@@ -236,6 +283,8 @@ const VendorSignup = () => {
                           iceCreamCompany: e.target.value,
                         })
                       }
+                      placeholder="Enter Truck or Company Name"
+                      style={{ fontSize: ".9em" }}
                     />
                   </Form.Group>
                   <Button
@@ -258,7 +307,7 @@ const VendorSignup = () => {
               {currentStep === 3 && (
                 <>
                   <h4 className="ml-5 mt-4">Location Permissions</h4>
-                  <span className="medium mb-4 mt-2">
+                  <span className="medium mb-4 mt-2" style={{ fontSize: "14px" }}>
                     By checking this box, you agree to grant us permission to
                     access your device's location for providing location-based
                     services, personalizing content, and improving app

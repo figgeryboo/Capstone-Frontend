@@ -54,7 +54,7 @@
   }
   
   .navigation ul li.active a i {
-    transform: translateY(-15px);
+    transform: translateY(-5px);
     text-decoration: none; 
   }
   

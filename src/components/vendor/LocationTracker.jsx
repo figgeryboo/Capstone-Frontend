@@ -184,15 +184,15 @@ function LocationTracker() {
         }}
       >
         <Button
-          className="btn btn-lg"
+          className="btn btn-md"
           style={{
             backgroundColor: "rgb(234, 49, 135)",
             borderColor: "rgb(234, 49, 135)",
             position: "absolute",
             bottom: "70px",
-            left: "10px",
+            left: "0px",
             zIndex: 1,
-            width: "150px",
+            width: "120px",
           }}
           onClick={toggleWatchLocation}
         >
@@ -200,15 +200,15 @@ function LocationTracker() {
         </Button>
       </div>
       <Button
-        className="btn btn-lg"
+        className="btn btn-md"
         style={{
           backgroundColor: "rgb(234, 49, 135)",
           borderColor: "rgb(234, 49, 135)",
           position: "absolute",
-          bottom: "80px",
-          right: "10px",
+          bottom: "84px",
+          right: "5px",
           zIndex: 1,
-          width: "150px",
+          width: "120px",
         }}
         onClick={saveRoute}
         disabled={!watchingLocation || routeCoordinates.length === 0}

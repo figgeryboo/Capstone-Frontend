@@ -52,7 +52,7 @@ const VendorNavFooter = () => {
         <li className={`list ${activeIndex === 2 ? 'active' : ''}`} onClick={(e) => handleItemClick(2, e)}>
           <Link to="/vendoranalytics">
             <span className="icon">
-              <i className="bi bi-stars"></i>
+              <i className="bi bi-star-half"></i>
             </span>
             <span className="text">Analytics</span>
           </Link>

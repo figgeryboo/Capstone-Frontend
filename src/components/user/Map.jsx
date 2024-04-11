@@ -168,8 +168,9 @@ const Map = () => {
   };
 
   const handleToggleUserLocation = () => {
-    setIsUserLocationEnabled(!isUserLocationEnabled);
-    setUserMarker(!userMarker);
+    setIsUserLocationEnabled(
+      (prevIsUserLocationEnabled) => !prevIsUserLocationEnabled
+    );
   };
 
   const handleCloseDetails = () => {
@@ -192,7 +193,7 @@ const Map = () => {
 
       <div>
         <Button
-          className="btn btn-sm"
+          className="btn btn-md"
           style={{
             backgroundColor: "rgb(234, 49, 135)",
             borderColor: "rgb(234, 49, 135)",
@@ -202,7 +203,7 @@ const Map = () => {
             zIndex: 1,
             width: "200px",
           }}
-          onClick={() => setIsUserLocationEnabled(!isUserLocationEnabled)}
+          onClick={handleToggleUserLocation}
         >
           {isUserLocationEnabled ? "Disable Location" : "Enable Location"}
         </Button>

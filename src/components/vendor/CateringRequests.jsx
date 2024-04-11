@@ -135,7 +135,7 @@ const CateringRequests = () => {
           borderRadius: "10px",
         }}
       >
-        <h3 style={{ fontWeight: "bolder", textAlign: "center", margin: 0 }}>
+        <h3 style={{ fontWeight: "bolder", textAlign: "center", margin: "0px 0px 5px 10px" }}>
           Catering Requests
         </h3>
         <select
@@ -157,7 +157,7 @@ const CateringRequests = () => {
           flexDirection: "column",
           alignItems: "center",
           padding: "10px 0",
-          gap: "10px",
+          gap: "11px",
         }}
       >
         {requests.map((request, index) => (
@@ -200,14 +200,14 @@ const CateringRequests = () => {
                 aria-labelledby={`card-header-${index}`}
               >
                 <Card.Body style={{ padding: "10px", textAlign: "left" }}>
-                  <Card.Title>
-                    Delivery Location: {request.delivery_location}
+                  <Card.Title >
+                  <span style={{ fontSize: "10px" }} >Delivery Location: </span>{request.delivery_location}
                   </Card.Title>
-                  <p>Contact Details: {request.contact_info}</p>
-                  <p>Event Time: {formatEventTime(request.event_time)}</p>
-                  <p>Menu Items: {request.menu_items}</p>
-                  <p>Dietary Options: {request.dietary_options}</p>
-                  <p>Special Instructions: {request.special_instructions}</p>
+                  <p> <span style={{ fontSize: "12px" }} > Contact Details:</span> {request.contact_info}</p>
+                  <p><span style={{ fontSize: "12px" }} > Event Time:</span> {formatEventTime(request.event_time)}</p>
+                  <p><span style={{ fontSize: "12px" }} >Menu Items:</span> {request.menu_items}</p>
+                  <p><span style={{ fontSize: "12px" }} >Dietary Options:</span> {request.dietary_options}</p>
+                  <p><span style={{ fontSize: "12px" }} >Special Instructions:</span> {request.special_instructions}</p>
                   {/* {request.status !== "confirmed" && (
                     <Button variant="light" onClick={() => handleEventConfirmation(request.order_id)}>
                       Confirm
