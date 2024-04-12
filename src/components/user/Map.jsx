@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./Map.css";
 import { Button, Card, Collapse } from "react-bootstrap";
@@ -9,6 +9,7 @@ const center = {
 };
 
 const Map = () => {
+  const mapRef = useRef(null);
   const url = import.meta.env.VITE_LOCAL_HOST;
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [isUserLocationEnabled, setIsUserLocationEnabled] = useState(false);
@@ -34,34 +35,34 @@ const Map = () => {
           }
         );
 
-        if (isUserLocationEnabled) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const userLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              };
+//         if (isUserLocationEnabled) {
+//           navigator.geolocation.getCurrentPosition(
+//             (position) => {
+//               const userLocation = {
+//                 lat: position.coords.latitude,
+//                 lng: position.coords.longitude,
+//               };
 
-              const userMarker = new google.maps.Marker({
-                position: userLocation,
-                map: map,
-                icon: {
-                  url: "/image.png",
-                  scaledSize: new google.maps.Size(50, 50),
-                  anchor: new google.maps.Point(20, 20),
-                },
-              });
+//               const userMarker = new google.maps.Marker({
+//                 position: userLocation,
+//                 map: map,
+//                 icon: {
+//                   url: "/image.png",
+//                   scaledSize: new google.maps.Size(50, 50),
+//                   anchor: new google.maps.Point(20, 20),
+//                 },
+//               });
 
-              setUserMarker(userMarker);
-
-              map.setCenter(userLocation);
-            },
-            (error) => {
-              console.error("Error getting user location:", error);
-              alert("Error getting user location. Please try again.");
-            }
-          );
-        }
+//               setUserMarker(userMarker);
+// setIsUserLocationEnabled(isUserLocationEnabled)
+//               map.setCenter(userLocation);
+//             },
+//             (error) => {
+//               console.error("Error getting user location:", error);
+//               alert("Error getting user location. Please try again.");
+//             }
+//           );
+//         }
 
         vendors.forEach((vendor) => {
           const pathCoordinates = vendor.coordinates.map((coord) => ({
@@ -144,7 +145,7 @@ const Map = () => {
           };
           animateMarker();
         });
-
+        mapRef.current = map;
         setInfoWindows(infoWindows);
       } catch (error) {
         console.error("Error fetching vendor data:", error);
@@ -167,11 +168,39 @@ const Map = () => {
     }
   };
 
-  const handleToggleUserLocation = () => {
-    setIsUserLocationEnabled(
-      (prevIsUserLocationEnabled) => !prevIsUserLocationEnabled
-    );
-  };
+    const handleToggleUserLocation = () => {
+      if (!isUserLocationEnabled) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+    
+            const userMarker = new google.maps.Marker({
+              position: userLocation,
+              map: mapRef.current,
+              icon: {
+                url: "/image.png",
+                scaledSize: new google.maps.Size(50, 50),
+                anchor: new google.maps.Point(20, 20),
+              },
+            });
+    
+            setUserMarker(userMarker);
+            setIsUserLocationEnabled(true);
+            mapRef.current.setCenter(userLocation);
+          },
+          (error) => {
+            console.error("Error getting user location:", error);
+            alert("Error getting user location. Please try again.");
+          }
+        );
+      } else {
+        setUserMarker(null); // Remove the user marker from the map
+        setIsUserLocationEnabled(false);
+      }
+    };
 
   const handleCloseDetails = () => {
     setShowExpandedDetails(false);
@@ -237,7 +266,8 @@ const Map = () => {
             </Button>
           </div>
           <Collapse in={menuExpanded}>
-            <div id="menu-content" className="menu-content">
+          <div id="menu-content" className="menu-content" style={{ maxHeight: "200px", overflowY: "auto" }}>
+
               <ul>
                 {selectedVendorDetails.menu.map((item, index) => (
                   <li key={index}>

@@ -57,11 +57,11 @@ function LocationTracker() {
 
   useEffect(() => {
     map = new google.maps.Map(document.getElementById("vendormap"), {
-      center: { lat: 40.8571627, lng: -73.9015161 },
+      center: { lat: 40.750797, lng: -73.989578 },
       zoom: 12,
       disableDefaultUI: true,
     });
-
+// add border for self view
     receivedLocations.forEach((location, index) => {
       new google.maps.Marker({
         position: { lat: location.latitude, lng: location.longitude },
@@ -79,6 +79,8 @@ function LocationTracker() {
     .then((res) => {
     setSeeVendors(res.data)
   })
+
+  // TODO - marker/icon change 
   seeVendors.forEach((vendor, index) => {
     if (vendor.coordinates && vendor.coordinates.length > 0) {
       // console.log(vendor)
