@@ -35,35 +35,6 @@ const Map = () => {
           }
         );
 
-//         if (isUserLocationEnabled) {
-//           navigator.geolocation.getCurrentPosition(
-//             (position) => {
-//               const userLocation = {
-//                 lat: position.coords.latitude,
-//                 lng: position.coords.longitude,
-//               };
-
-//               const userMarker = new google.maps.Marker({
-//                 position: userLocation,
-//                 map: map,
-//                 icon: {
-//                   url: "/image.png",
-//                   scaledSize: new google.maps.Size(50, 50),
-//                   anchor: new google.maps.Point(20, 20),
-//                 },
-//               });
-
-//               setUserMarker(userMarker);
-// setIsUserLocationEnabled(isUserLocationEnabled)
-//               map.setCenter(userLocation);
-//             },
-//             (error) => {
-//               console.error("Error getting user location:", error);
-//               alert("Error getting user location. Please try again.");
-//             }
-//           );
-//         }
-
         vendors.forEach((vendor) => {
           const pathCoordinates = vendor.coordinates.map((coord) => ({
             lat: coord.lat,
