@@ -107,7 +107,7 @@ const VendorRatings = () => {
           <h3>Ratings for Vendor {vendorId}</h3>
 
           <Form.Group controlId="vendorId">
-            <Form.Label>Select from one of Our Vendors below: </Form.Label>
+            <Form.Label style={{marginLeft:"29px"}}> See what other customers are saying ⬇️</Form.Label>
             <Form.Select value={vendorId} onChange={handleVendorChange}>
               <option style={{ color: "#aaa" }} value="" disabled>
                 Select a vendor...
@@ -120,7 +120,7 @@ const VendorRatings = () => {
             </Form.Select>
           </Form.Group>
 
-          {ratings.length === 0 ? (
+          {ratings.length === 0 && isVendorSelected ? (
             <p>
               <br></br> No ratings available for this vendor.
             </p>
@@ -151,8 +151,9 @@ const VendorRatings = () => {
                           width: "50px",
                           height: "60px",
                           objectFit: "cover",
-                         marginBottom: "27px"
-                          
+                         marginBottom: "27px",
+                          borderRadius: "2px",
+                          border: ""
                         }}
                       />
                     )}
