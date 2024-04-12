@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import vendorMarker from "/image.png";
+import userMarker from "/image.gif";
+import vendorMarker from "/vendorscone.png";
 import "../../App.css";
 import axios from "axios";
 import { useAuth } from "../../contexts/authContext";
@@ -61,17 +62,18 @@ function LocationTracker() {
       zoom: 12,
       disableDefaultUI: true,
     });
-// add border for self view
     receivedLocations.forEach((location, index) => {
       new google.maps.Marker({
         position: { lat: location.latitude, lng: location.longitude },
         map,
         title: `Location ${index + 1}`,
         icon: {
-          url: vendorMarker,
+          url: userMarker,
           scaledSize: new google.maps.Size(45, 45),
         },
       });
+
+      
     });
 
     axios
@@ -80,7 +82,6 @@ function LocationTracker() {
     setSeeVendors(res.data)
   })
 
-  // TODO - marker/icon change 
   seeVendors.forEach((vendor, index) => {
     if (vendor.coordinates && vendor.coordinates.length > 0) {
       // console.log(vendor)

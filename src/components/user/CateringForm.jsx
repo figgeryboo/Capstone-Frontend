@@ -1,385 +1,391 @@
-import React, { useEffect, useState } from "react";
-import { Form, Card, Button, Row, Col } from "react-bootstrap";
-import { useAuth } from "../../contexts/authContext";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { Form, Card, Button, Row, Col } from 'react-bootstrap';
+import { useAuth } from '../../contexts/authContext';
+import axios from 'axios';
 
 const CateringForm = () => {
-  const api = import.meta.env.VITE_LOCAL_HOST;
-  const { currentUser } = useAuth();
+	const api = import.meta.env.VITE_LOCAL_HOST;
+	const { currentUser } = useAuth();
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({
-    customer_id: currentUser.uid,
-    customer_name: "",
-    customer_email: "",
-    contact_info: "",
-    event_date: "",
-    event_time: "",
-    delivery_location: "",
-    budget: "",
-    menu_items: "",
-    event_size: "",
-    dietary_options: "",
-    special_instructions: "",
-    confirmed: false,
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [deposit, setDeposit] = useState("");
-  const [menu, setMenu] = useState([]);
+	const [currentStep, setCurrentStep] = useState(1);
+	const [formData, setFormData] = useState({
+		customer_id: currentUser.uid,
+		customer_name: '',
+		customer_email: '',
+		contact_info: '',
+		event_date: '',
+		event_time: '',
+		delivery_location: '',
+		budget: '',
+		menu_items: '',
+		event_size: '',
+		dietary_options: '',
+		special_instructions: '',
+		confirmed: false,
+	});
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [deposit, setDeposit] = useState('');
+	const [menu, setMenu] = useState([]);
 
-  const handleNextStep = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
-  };
+	const handleNextStep = () => {
+		setCurrentStep((prevStep) => prevStep + 1);
+	};
 
-  const handlePrevStep = () => {
-    setCurrentStep((prevStep) => prevStep - 1);
-  };
+	const handlePrevStep = () => {
+		setCurrentStep((prevStep) => prevStep - 1);
+	};
 
-  const handleChange = (e) => {
-    const { id, value, type, checked } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: type === "checkbox" ? checked : value,
-    }));
-    if (id === "budget" && !isNaN(value) && value !== "") {
-      const depositValue = parseFloat(value) * 0.3;
-      setDeposit(depositValue.toFixed(2));
-    }
-  };
+	const handleChange = (e) => {
+		const { id, value, type, checked } = e.target;
+		setFormData((prevFormData) => ({
+			...prevFormData,
+			[id]: type === 'checkbox' ? checked : value,
+		}));
+		if (id === 'budget' && !isNaN(value) && value !== '') {
+			const depositValue = parseFloat(value) * 0.3;
+			setDeposit(depositValue.toFixed(2));
+		}
+	};
 
-  useEffect(() => {
-    const menuFetch = async () => {
-      try {
-        const vendorsResponse = await axios.get(`${api}/vendors`);
-        const menus = await Promise.all(
-          vendorsResponse.data.map(async (vendor) => {
-            const menuResponse = await axios.get(
-              `${api}/vendors/${vendor.vendor_id}`
-            );
-            return {
-              vendor_id: vendor.vendor_id,
-              menu_items: menuResponse.data.menu.map((item) => item.name),
-            };
-          })
-        );
-        setMenu(menus);
-      } catch (error) {
-        console.error("Error fetching menu:", error);
-      }
-    };
+	useEffect(() => {
+		const menuFetch = async () => {
+			try {
+				const vendorsResponse = await axios.get(`${api}/vendors`);
+				const menus = await Promise.all(
+					vendorsResponse.data.map(async (vendor) => {
+						const menuResponse = await axios.get(
+							`${api}/vendors/${vendor.vendor_id}`
+						);
+						return {
+							vendor_id: vendor.vendor_id,
+							menu_items: menuResponse.data.menu.map((item) => item.name),
+						};
+					})
+				);
+				setMenu(menus);
+			} catch (error) {
+				console.error('Error fetching menu:', error);
+			}
+		};
 
-    menuFetch();
-  }, []);
+		menuFetch();
+	}, []);
 
-  const submitCateringForm = async () => {
-    try {
-      console.log("Submitting form data:", formData);
-      const response = await axios.post(`${api}/events`, formData);
-      console.log(response.data);
-      setFormData(response.data);
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+	const submitCateringForm = async () => {
+		try {
+			console.log('Submitting form data:', formData);
+			const response = await axios.post(`${api}/events`, formData);
+			console.log(response.data);
+			setFormData(response.data);
+		} catch (error) {
+			console.error('Error submitting form:', error);
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
 
-  const getMinDate = () => {
-    const today = new Date();
-    const minDate = new Date(today.getTime() + 6 * 7 * 24 * 60 * 60 * 1000); // 6 weeks in milliseconds
-    return minDate.toISOString().split("T")[0];
-  };
+	const getMinDate = () => {
+		const today = new Date();
+		const minDate = new Date(today.getTime() + 6 * 7 * 24 * 60 * 60 * 1000); // 6 weeks in milliseconds
+		return minDate.toISOString().split('T')[0];
+	};
 
-  return (
-    <>
-      <div className="w-100" style={{ maxWidth: "400px" }}>
-        <Card>
-          <Card.Body>
-            <div className="d-grid gap-2">
-              {/* Step 1: Catering Intro Page */}
-              {currentStep === 1 && (
-                <>
-                  <h3 className="text-center mb-2">Catering Request</h3>
-                  <p className="text-center">
-                    <b>Excited to add some flavor to your event? </b>
-                    <br />
-                    Our vendors are ready to impress!
-                  </p>
-                  <hr />
-                  <p>
-                    Fill in all the requested information to get started & we'll
-                    whip up a customized proposal just for you.
-                    <br />
-                    <sub>
-                      <i>Estimated response times are 7-14 business days.</i>
-                    </sub>
-                  </p>
-                </>
-              )}
-              {/* Step 2: Person Details Section */}
-              {currentStep === 2 && (
-                <>
-                  <h3 className="text-center mb-2">Coordinator Details</h3>
-                  <Form>
-                    <Form.Group className="mb-4" controlId="customer_name">
-                      <Form.Label>Coordinator Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="John Doe"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+	return (
+		<>
+			<div className="w-100" style={{ maxWidth: '400px' }}>
+				<Card>
+					<Card.Body>
+						<div className="d-grid gap-2">
+							{/* Step 1: Catering Intro Page */}
+							{currentStep === 1 && (
+								<>
+									<h3 className="text-center mb-2">Catering Request</h3>
+									<p className="text-center">
+										<b>Excited to add some flavor to your event? </b>
+										<br />
+										Our vendors are ready to impress!
+									</p>
+									<hr />
+									<p>
+										Fill in all the requested information to get started & we'll
+										whip up a customized proposal just for you.
+										<br />
+										<sub>
+											<i>Estimated response times are 7-14 business days.</i>
+										</sub>
+									</p>
+								</>
+							)}
+							{/* Step 2: Person Details Section */}
+							{currentStep === 2 && (
+								<>
+									<h3 className="text-center mb-2">Coordinator Details</h3>
+									<Form>
+										<Form.Group className="mb-4" controlId="customer_name">
+											<Form.Label>Coordinator Name</Form.Label>
+											<Form.Control
+												type="text"
+												placeholder="John Doe"
+												required
+												onChange={handleChange}
+											/>
+										</Form.Group>
 
-                    <Form.Group className="mb-4" controlId="customer_email">
-                      <Form.Label>Coordinator Email</Form.Label>
-                      <Form.Control
-                        type="email"
-                        placeholder="example@example.com"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+										<Form.Group className="mb-4" controlId="customer_email">
+											<Form.Label>Coordinator Email</Form.Label>
+											<Form.Control
+												type="email"
+												placeholder="example@example.com"
+												required
+												onChange={handleChange}
+											/>
+										</Form.Group>
 
-                    <Form.Group className="mb-4" controlId="contact_info">
-                      <Form.Label>Coordinator Phone</Form.Label>
-                      <Form.Control
-                        type="tel"
-                        placeholder="1234567890"
-                        maxLength="10"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Form>
-                </>
-              )}
-              {/* Step 3: Event Details */}
-              {currentStep === 3 && (
-                <>
-                  <h3 className="text-center mb-2">Event Details</h3>
-                  <Form>
-                    <Row>
-                      <Col>
-                        <Form.Group className="mb-4" controlId="event_date">
-                          <Form.Label>
-                            Event Date (min 6 weeks advance)
-                          </Form.Label>
-                          <Form.Control
-                            type="date"
-                            required
-                            min={getMinDate()}
-                            onChange={handleChange}
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col>
-                        <Form.Group className="mb-4" controlId="event_time">
-                          <Form.Label>Event Time</Form.Label>
-                          <Form.Control
-                            type="time"
-                            required
-                            onChange={handleChange}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
+										<Form.Group className="mb-4" controlId="contact_info">
+											<Form.Label>Coordinator Phone</Form.Label>
+											<Form.Control
+												type="tel"
+												placeholder="1234567890"
+												maxLength="10"
+												required
+												onChange={handleChange}
+											/>
+										</Form.Group>
+									</Form>
+								</>
+							)}
+							{/* Step 3: Event Details */}
+							{currentStep === 3 && (
+								<>
+									<h3 className="text-center mb-2">Event Details</h3>
+									<Form>
+										<Row>
+											<Col>
+												<Form.Group className="mb-4" controlId="event_date">
+													<Form.Label>
+														Event Date (min 6 weeks advance)
+													</Form.Label>
+													<Form.Control
+														type="date"
+														required
+														min={getMinDate()}
+														onChange={handleChange}
+													/>
+												</Form.Group>
+											</Col>
+											<Col>
+												<Form.Group className="mb-4" controlId="event_time">
+													<Form.Label>Event Time</Form.Label>
+													<Form.Control
+														type="time"
+														required
+														onChange={handleChange}
+													/>
+												</Form.Group>
+											</Col>
+										</Row>
 
-                    <Form.Group className="mb-4" controlId="delivery_location">
-                      <Form.Label>Event Address</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Ex: 222 Maiden Lane StonyBook, AZ 70834"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
+										<Form.Group className="mb-4" controlId="delivery_location">
+											<Form.Label>Event Address</Form.Label>
+											<Form.Control
+												type="text"
+												placeholder="Ex: 222 Maiden Lane StonyBook, AZ 70834"
+												required
+												onChange={handleChange}
+											/>
+										</Form.Group>
 
-                    <Form.Group className="mb-4" controlId="event_size">
-                      <Form.Label>Event Size</Form.Label>
-                      <Form.Control
-                        type="number"
-                        placeholder="20"
-                        min="20"
-                        max="50"
-                        required
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Form>
-                </>
-              )}
-              {/* Step 4: Group Details */}
-              {currentStep === 4 && (
-                <>
-                  <h3 className="text-center mb-2">Group Details</h3>
-                  <Form>
-                    <Form.Group className="mb-4" controlId="budget">
-                      <Form.Label>Max Budget </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Budget"
-                        required
-                        onChange={handleChange}
-                      />
-                      {deposit && (
-                        <div style={{ color: "green" }}>
-                          Required 30% Deposit: ${deposit}
-                        </div>
-                      )}
-                    </Form.Group>
+										<Form.Group className="mb-4" controlId="event_size">
+											<Form.Label>Event Size</Form.Label>
+											<Form.Control
+												type="number"
+												placeholder="20"
+												min="20"
+												max="50"
+												required
+												onChange={handleChange}
+											/>
+										</Form.Group>
+									</Form>
+								</>
+							)}
+							{/* Step 4: Group Details */}
+							{currentStep === 4 && (
+								<>
+									<h3 className="text-center mb-2">Group Details</h3>
+									<Form>
+										<Form.Group className="mb-4" controlId="budget">
+											<Form.Label>Max Budget </Form.Label>
+											<Form.Control
+												type="text"
+												placeholder="Budget"
+												required
+												onChange={handleChange}
+											/>
+											{deposit && (
+												<div style={{ color: 'green' }}>
+													Required 30% Deposit: ${deposit}
+												</div>
+											)}
+										</Form.Group>
 
-                    <Form.Group className="mb-4" controlId="dietary_options">
-                      <Form.Label>Dietary Options</Form.Label>
-                      <Form.Check
-                        type="checkbox"
-                        label="Dairy"
-                        onChange={handleChange}
-                      />
-                      <Form.Check
-                        type="checkbox"
-                        label="Non-Dairy"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-4" controlId="needUtensils">
-                      <Form.Label>
-                        Will You Need Additional Utensils?
-                      </Form.Label>
-                      <Form.Check
-                        type="radio"
-                        label="Yes"
-                        name="needUtensils"
-                        onChange={handleChange}
-                      />
-                      <Form.Check type="radio" label="No" name="needUtensils" />
-                    </Form.Group>
-                  </Form>
-                </>
-              )}
-              {currentStep === 5 && (
-                <>
-                  <h3 className="text-center mb-2"> Choose Menu Items </h3>
-                  <Form>
-                    <Form.Group
-                      className="mb-4"
-                      controlId="menu_items"
-                      style={{ maxHeight: "300px", overflowY: "auto" }}
-                    >
-                      {menu.map((vendor) => (
-                        <div key={vendor.vendor_id}>
-                          <h5>{vendor.vendor_name}</h5>
-                          {vendor.menu_items.map((item) => (
-                            <Form.Check
-                              key={item}
-                              type="checkbox"
-                              id={item}
-                              label={item}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    menu_items: [...prev.menu_items, item],
-                                  }));
-                                } else {
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    menu_items: prev.menu_items.filter(
-                                      (i) => i !== item
-                                    ),
-                                  }));
-                                }
-                              }}
-                            />
-                          ))}
-                        </div>
-                      ))}
-                    </Form.Group>
-                  </Form>
-                </>
-              )}
-              {/* Step 6: Final Details/Submit */}
-              {currentStep === 6 && (
-                <>
-                  <h3 className="text-center mb-2">Final Steps</h3>
-                  <Form>
-                    <Form.Group className="mb-4" controlId="howDidYouHear">
-                      <Form.Label>How Did You Hear About Us?</Form.Label>
-                      <Form.Control as="select">
-                        <option value="">Select</option>
-                        <option value="friend">Friend</option>
-                        <option value="event">Event</option>
-                        <option value="internet">Internet</option>
-                        <option value="other">Other</option>
-                      </Form.Control>
-                    </Form.Group>
+										<Form.Group className="mb-4" controlId="dietary_options">
+											<Form.Label>Dietary Options</Form.Label>
+											<Form.Check
+												type="checkbox"
+												label="Dairy"
+												onChange={handleChange}
+											/>
+											<Form.Check
+												type="checkbox"
+												label="Non-Dairy"
+												onChange={handleChange}
+											/>
+										</Form.Group>
+										<Form.Group className="mb-4" controlId="needUtensils">
+											<Form.Label>
+												Will You Need Additional Utensils?
+											</Form.Label>
+											<Form.Check
+												type="radio"
+												label="Yes"
+												name="needUtensils"
+												onChange={handleChange}
+											/>
+											<Form.Check type="radio" label="No" name="needUtensils" />
+										</Form.Group>
+									</Form>
+								</>
+							)}
+							{currentStep === 5 && (
+								<>
+									<h3 className="text-center mb-2"> Choose Menu Items </h3>
+									<Form>
+										<Form.Group
+											className="mb-4"
+											controlId="menu_items"
+											style={{ maxHeight: '300px', overflowY: 'auto' }}
+										>
+											{menu.map((vendor) => (
+												<div key={vendor.vendor_id}>
+													<h5>{vendor.vendor_name}</h5>
+													{vendor.menu_items.map((item) => (
+														<Form.Check
+															key={item}
+															type="checkbox"
+															id={item}
+															label={item}
+															onChange={(e) => {
+																if (e.target.checked) {
+																	setFormData((prev) => ({
+																		...prev,
+																		menu_items: [...prev.menu_items, item],
+																	}));
+																} else {
+																	setFormData((prev) => ({
+																		...prev,
+																		menu_items: prev.menu_items.filter(
+																			(i) => i !== item
+																		),
+																	}));
+																}
+															}}
+														/>
+													))}
+												</div>
+											))}
+										</Form.Group>
+									</Form>
+								</>
+							)}
+							{/* Step 6: Final Details/Submit */}
+							{currentStep === 6 && (
+								<>
+									<h3 className="text-center mb-2">Final Steps</h3>
+									<Form>
+										<Form.Group className="mb-4" controlId="howDidYouHear">
+											<Form.Label>How Did You Hear About Us?</Form.Label>
+											<Form.Control as="select">
+												<option value="">Select</option>
+												<option value="friend">Friend</option>
+												<option value="event">Event</option>
+												<option value="internet">Internet</option>
+												<option value="other">Other</option>
+											</Form.Control>
+										</Form.Group>
 
-                    <Form.Group
-                      className="mb-4"
-                      controlId="special_instructions"
-                    >
-                      <Form.Label>Additional Comments:</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={3}
-                        maxLength={250}
-                        placeholder="Comments"
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Form>
-                </>
-              )}
-              {/* Step 7: Confirmation of Submission */}
-              {currentStep === 7 && (
-                <>
-                  <h3 className="text-center mb-2">
-                    Confirmation of Submission
-                  </h3>
-                  <p className="text-center font-big">
-                    Thank you for submitting your request. Lorem ipsum dolor sit
-                    amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua.
-                  </p>
-                </>
-              )}
-              {/* Navigation buttons */}
-              {currentStep !== 1 && (
-                <Button
-                  onClick={handlePrevStep}
-                  className="mx-2"
-                  variant="secondary"
-                  style={{ backgroundColor: "#ff5ea6", borderColor: "#ff5ea6" }}
-                >
-                  Previous
-                </Button>
-              )}
-              {currentStep !== 7 ? (
-                <Button
-                  onClick={handleNextStep}
-                  className="mx-2"
-                  variant="primary"
-                  style={{ backgroundColor: "#EA3187", borderColor: "#EA3187" }}
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button
-                  onClick={submitCateringForm}
-                  className="mx-2"
-                  variant="success"
-                  style={{ backgroundColor: "#EA3187", borderColor: "#EA3187" }}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Your Request"}
-                </Button>
-              )}
-            </div>
-          </Card.Body>
-        </Card>
-      </div>
-    </>
-  );
+										<Form.Group
+											className="mb-4"
+											controlId="special_instructions"
+										>
+											<Form.Label>Additional Comments:</Form.Label>
+											<Form.Control
+												as="textarea"
+												rows={3}
+												maxLength={250}
+												placeholder="Comments"
+												onChange={handleChange}
+											/>
+										</Form.Group>
+									</Form>
+								</>
+							)}
+							{/* Step 7: Confirmation of Submission */}
+							{currentStep === 7 && (
+								<>
+									<h3 class="text-center mb-2">Confirmation of Submission</h3>
+									<p class="text-center font-big">
+										Thank you for submitting your request! Our team is excited
+										to add some flavor to your event. Our vendors are ready to
+										impress! Lorem ipsum dolor sit amet, consectetur adipiscing
+										elit, sed do eiusmod tempor incididunt ut labore et dolore
+										magna aliqua. Fill in all the requested information to get
+										started, and we'll whip up a customized proposal just for
+										you.
+										<br />
+										<sub>
+											<i>Estimated response times are 7-14 business days.</i>
+										</sub>
+									</p>
+								</>
+							)}
+							{/* Navigation buttons */}
+							{currentStep !== 1 && (
+								<Button
+									onClick={handlePrevStep}
+									className="mx-2"
+									variant="secondary"
+									style={{ backgroundColor: '#ff5ea6', borderColor: '#ff5ea6' }}
+								>
+									Previous
+								</Button>
+							)}
+							{currentStep !== 7 ? (
+								<Button
+									onClick={handleNextStep}
+									className="mx-2"
+									variant="primary"
+									style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
+								>
+									Next
+								</Button>
+							) : (
+								<Button
+									onClick={submitCateringForm}
+									className="mx-2"
+									variant="success"
+									style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? 'Submitting...' : 'Submit Your Request'}
+								</Button>
+							)}
+						</div>
+					</Card.Body>
+				</Card>
+			</div>
+		</>
+	);
 };
 
 export default CateringForm;
