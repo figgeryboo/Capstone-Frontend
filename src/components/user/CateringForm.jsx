@@ -100,20 +100,18 @@ const CateringForm = () => {
 							{currentStep === 1 && (
 								<>
 									<h3 className="text-center mb-2">Catering Request</h3>
-									<p className="text-center">
+									<p className="text-center mb-2">
 										<b>Excited to add some flavor to your event? </b>
-										<br />
+										<hr />
 										Our vendors are ready to impress!
-									</p>
-									<hr />
-									<p>
+										<br />
 										Fill in all the requested information to get started & we'll
 										whip up a customized proposal just for you.
-										<br />
-										<sub>
-											<i>Estimated response times are 7-14 business days.</i>
-										</sub>
 									</p>
+									<sub className="text-center mt-2">
+										<i>Estimated response times are 7-14 business days.</i>
+									</sub>
+									<br />
 								</>
 							)}
 							{/* Step 2: Person Details Section */}
@@ -162,15 +160,18 @@ const CateringForm = () => {
 										<Row>
 											<Col>
 												<Form.Group className="mb-4" controlId="event_date">
-													<Form.Label>
-														Event Date (min 6 weeks advance)
-													</Form.Label>
+													<Form.Label>Event Date</Form.Label>
 													<Form.Control
 														type="date"
 														required
 														min={getMinDate()}
 														onChange={handleChange}
 													/>
+													<sub>
+														<p className=" mt-2 text-muted">
+															Min. 6 weeks advance
+														</p>
+													</sub>
 												</Form.Group>
 											</Col>
 											<Col>
@@ -185,7 +186,10 @@ const CateringForm = () => {
 											</Col>
 										</Row>
 
-										<Form.Group className="mb-4" controlId="delivery_location">
+										<Form.Group
+											className="mt-2 mb-4"
+											controlId="delivery_location"
+										>
 											<Form.Label>Event Address</Form.Label>
 											<Form.Control
 												type="text"
@@ -333,15 +337,19 @@ const CateringForm = () => {
 							{/* Step 7: Confirmation of Submission */}
 							{currentStep === 7 && (
 								<>
-									<h3 class="text-center mb-2">Confirmation of Submission</h3>
+									<h3 class="text-center mb-2">
+										{' '}
+										Thank you for your submission!
+									</h3>
 									<p class="text-center font-big">
-										Thank you for submitting your request! Our team is excited
-										to add some flavor to your event. Our vendors are ready to
-										impress! Lorem ipsum dolor sit amet, consectetur adipiscing
-										elit, sed do eiusmod tempor incididunt ut labore et dolore
-										magna aliqua. Fill in all the requested information to get
-										started, and we'll whip up a customized proposal just for
-										you.
+										<hr />
+										Our team has received your request and is excited to add
+										some flavor to your event. Our vendors are ready to impress!
+										<br />
+										<i class="bi bi-balloon-heart"></i>
+										<br />
+										You'll receive a customized proposal based on your
+										information soon.
 										<br />
 										<sub>
 											<i>Estimated response times are 7-14 business days.</i>
