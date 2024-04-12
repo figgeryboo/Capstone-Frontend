@@ -7,48 +7,22 @@ const VendorAnalytics = () => {
   const [vendorId, setVendorId] = useState("3");
   const [yearlyMetrics, setYearlyMetrics] = useState({});
   const [monthlyMetrics, setMonthlyMetrics] = useState([]);
-  const [weeklyMetric, setWeeklyMetric] = useState([]);
+  const [dailyMetrics, setDailyMetrics] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("yearly");
 
   useEffect(() => {
     axios.get(`${url}/vendors/${vendorId}/metrics`).then((res) => {
       setYearlyMetrics(res.data[0].transaction_metrics[0]);
       setMonthlyMetrics(res.data[0].transaction_metrics[0].monthly_variation);
-      setWeeklyMetric(res.data[0].transaction_metrics[0].monthly_variation);
+      setDailyMetrics(res.data[0].transaction_metrics[0].monthly_variation);
     });
   }, []);
 
-  // const handleChange = (event) => {
-  //   setSelectedMetric(event.target.value);
-  // };
   const handleFilterChange = (filter) => {
     setSelectedFilter(filter);
   };
 
   return (
-    //     <div className="analytics_container">
-    //       <h2>Vendor ID: {vendorId}</h2>
-    //       <select value={selectedMetric} onChange={handleChange}>
-    //         <option value="daily">Daily</option>
-    //         <option value="weekly">Weekly</option>
-    //         <option value="monthly">Monthly</option>
-    //         <option value="yearly">Yearly</option>
-    //       </select>
-    //       <Table>
-    //         <thead>
-    //           <tr>
-    //             <th>Period</th>
-    //             <th>Total Sales</th>
-    //             <th>Transactions</th>
-    //           </tr>
-    //         </thead>
-    //         <tbody>
-    //         </tbody>
-    //       </Table>
-    // {"Loading ..."}
-
-    // {console.log(monthlyMetrics)}
-    //     </div>
     <div>
       <h1>Metrics</h1>
       <div>
@@ -91,43 +65,88 @@ const VendorAnalytics = () => {
       </div>
       {selectedFilter === "yearly" && yearlyMetrics && (
         <div>
-          <table className="table">
+          <Table>
             <thead>
               <tr>
-                <th>Month</th>
-                <th>Days</th>
-                <th>Sales per Day</th>
-                <th>Transactions per Day</th>
+                <th>Year</th>
+                <th>Sales</th>
+                <th>Transactions</th>
               </tr>
             </thead>
             <tbody>
-              {monthlyMetrics.map((monthData, index) => (
-                <tr key={index}>
-                  <td>{monthData.sales}</td>
-                  <td>{monthData.days}</td>
-                  <td>
-                    <ul>
-                      {monthData.sales_per_day.map((sales, index) => (
-                        <li key={index}>{sales}</li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td>
-                    <ul>
-                      {monthData.transactions_per_day.map(
-                        (transactions, index) => (
-                          <li key={index}>{transactions}</li>
-                        )
-                      )}
-                    </ul>
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td>{2024}</td>
+                <td>{yearlyMetrics.sales}</td>
+                <td>{yearlyMetrics.transactions}</td>
+              </tr>
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
-      {selectedFilter === "monthly" && monthlyMetrics.length > 0 && (
+{selectedFilter === "monthly" &&
+  monthlyMetrics &&
+  monthlyMetrics.length > 0 && (
+    <div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Day</th>
+            <th>Sales</th>
+            <th>Transactions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dailyMetrics.map((dayData, index) => (
+            <tr key={index}>
+              <td>{dayData.month}</td>
+              <td>{index + 1}</td>
+              <td>{dayData.sales_per_day[index]}</td>
+              <td>{dayData.transactions_per_day[index]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+   
+
+{selectedFilter === "weekly" && (
+  <div>
+    <table className="table">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Week</th>
+          <th>Sales</th>
+          <th>Transactions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {monthlyMetrics.map((monthData, index) => {
+          const weeksData = [];
+          for (let i = 0; i < Math.ceil(monthData.days / 7); i++) {
+            const startDay = i * 7;
+            const endDay = Math.min((i + 1) * 7, monthData.days);
+            const sales = monthData.sales_per_day.slice(startDay, endDay).reduce((a, b) => a + b, 0);
+            const transactions = monthData.transactions_per_day.slice(startDay, endDay).reduce((a, b) => a + b, 0);
+            weeksData.push({ week: i + 1, sales, transactions });
+          }
+          return weeksData.map((weekData, idx) => (
+            <tr key={idx}>
+              {idx === 0 ? <td rowSpan={weeksData.length}>{monthData.month}</td> : null}
+              <td>{weekData.week}</td>
+              <td>{weekData.sales}</td>
+              <td>{weekData.transactions}</td>
+            </tr>
+          ));
+        })}
+      </tbody>
+    </table>
+  </div>
+)}
+
+{selectedFilter === "daily" && monthlyMetrics.length > 0 && (
         <table className="table table-striped">
           <thead>
             <tr>
@@ -152,46 +171,6 @@ const VendorAnalytics = () => {
         </table>
       )}
 
-      {selectedFilter === "weekly" && (
-        <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Days</th>
-                <th>Sales per Day</th>
-                <th>Transactions per Day</th>
-              </tr>
-            </thead>
-            <tbody>
-              {monthlyMetrics.map((monthData, index) => (
-                <div key={index}>{/* Weekly data rendering */}</div>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-      {selectedFilter === "daily" &&
-        monthlyMetrics &&
-        monthlyMetrics.length > 0 && (
-          <div>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Month</th>
-                  <th>Days</th>
-                  <th>Sales per Day</th>
-                  <th>Transactions per Day</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monthlyMetrics.map((monthData, index) => (
-                  <div key={index}>{/* Daily data rendering */}</div>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
     </div>
   );
 };
