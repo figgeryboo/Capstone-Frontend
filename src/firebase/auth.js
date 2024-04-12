@@ -57,12 +57,22 @@ export const doCreateVendorWithEmailAndPassword = async (
       password
     );
     const vendor = vendorCredential.user;
-    // await axios.post(`http://localhost:4444/firebase/sendVendorsToPostgres`, {
-    //   uid: user.uid,
-    //   email: user.email,
-    // })
-    //   .then((res) => console.log(res.data))
-    //   .catch((err) => console.error(err));
+    console.log("Posting vendor data:", {
+      uid: vendor.uid,
+      email: vendor.email,
+      displayName: vendor.displayName
+  
+    });
+    
+    await axios.post("http://localhost:4444/firebase/sendAllVendorsToPostgres", {
+      uid: vendor.uid,
+      email: vendor.email,
+      displayName: vendor.displayName
+     
+    }).catch(error => {
+      console.error("Error posting vendor data:", error);
+      throw error;
+    });
     // Update user profile (display name, etc.)
     await firestore.collection("vendors").doc(vendor.uid).set({
       email: vendor.email,
