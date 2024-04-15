@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Table, Card } from 'react-bootstrap';
 
 const VendorMetrics = () => {
-	const url = import.meta.env.VITE_LOCAL_HOST;
+	const url = import.meta.env.VITE_URL;
 	const [vendorId, setVendorId] = useState('3');
 	const [yearlyMetrics, setYearlyMetrics] = useState({});
 	const [monthlyMetrics, setMonthlyMetrics] = useState([]);

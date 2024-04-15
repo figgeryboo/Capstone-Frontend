@@ -4,7 +4,7 @@ import { useAuth } from "../../contexts/authContext";
 import axios from "axios";
 
 const CateringForm = () => {
-  const api = import.meta.env.VITE_LOCAL_HOST;
+  const api = import.meta.env.VITE_URL;
   const { currentUser } = useAuth();
 
   const [currentStep, setCurrentStep] = useState(1);

@@ -6,8 +6,7 @@ import { Button, Card, Collapse } from "react-bootstrap";
 
 const CateringRequests = () => {
   const { currentUser } = useAuth();
-  console.log(currentUser)
-  const url = import.meta.env.VITE_LOCAL_HOST;
+  const url = import.meta.env.VITE_URL;
   const [requests, setRequests] = useState([]);
   const [expanded, setExpanded] = useState(null);
   const [sortOption, setSortOption] = useState("");

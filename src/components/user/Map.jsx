@@ -10,7 +10,7 @@ const center = {
 
 const Map = () => {
   const mapRef = useRef(null);
-  const url = import.meta.env.VITE_LOCAL_HOST;
+  const url = import.meta.env.VITE_URL;
   const [selectedVendor, setSelectedVendor] = useState(null);
   const [isUserLocationEnabled, setIsUserLocationEnabled] = useState(false);
   const [showExpandedDetails, setShowExpandedDetails] = useState(false);

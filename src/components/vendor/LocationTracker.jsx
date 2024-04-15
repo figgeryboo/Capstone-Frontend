@@ -16,11 +16,11 @@ function LocationTracker() {
   const [polyline, setPolyline] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [seeVendors, setSeeVendors]  = useState([])
-  const url = import.meta.env.VITE_LOCAL_HOST;
+  const url = import.meta.env.VITE_URL;
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const newWs = new WebSocket("ws://localhost:4444");
+    const newWs = new WebSocket("wss://capstone-backend-vi3e.onrender.com");
 
     newWs.onopen = () => {
       console.log("WebSocket connected");
