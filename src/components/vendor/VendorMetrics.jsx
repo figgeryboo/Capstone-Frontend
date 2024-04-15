@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Table, Card } from 'react-bootstrap';
 
-const VendorAnalytics = () => {
+const VendorMetrics = () => {
 	const url = import.meta.env.VITE_LOCAL_HOST;
 	const [vendorId, setVendorId] = useState('3');
 	const [yearlyMetrics, setYearlyMetrics] = useState({});
@@ -265,4 +265,4 @@ $300,000 </h2>
 	);
 };
 
-export default VendorAnalytics;
+export default VendorMetrics;
