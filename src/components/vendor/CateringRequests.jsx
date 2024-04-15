@@ -82,10 +82,11 @@ const CateringRequests = () => {
     fetchCateringRequests();
   }, [sortOption]);
 
-  const handleEventConfirmation = async (orderId, currentStatus) => {
+  const handleEventConfirmation = async (orderId, currentStatus, vendorUid) => {
     try {
       const response = await axios.put(`${url}/events/${orderId}`, {
         confirmed: !currentStatus,
+        vendor_uid: vendorUid
       });
       console.log(response.data);
       setRequests((prevRequests) =>
@@ -199,32 +200,21 @@ const CateringRequests = () => {
                 aria-hidden={expanded !== index}
                 aria-labelledby={`card-header-${index}`}
               >
-                <Card.Body style={{ padding: "10px", textAlign: "left" }}>
+                <Card.Body style={{ padding: "10px", display: "flex", flexDirection: "column", textAlign: "left" }}>
                   <Card.Title >
-                  <span style={{ fontSize: "10px" }} >Delivery Location: </span>{request.delivery_location}
+                  <span style={{ fontSize: "10px"}} >Delivery Location: </span>{request.delivery_location}
                   </Card.Title>
-                  <p> <span style={{ fontSize: "12px" }} > Contact Details:</span> {request.contact_info}</p>
-                  <p><span style={{ fontSize: "12px" }} > Event Time:</span> {formatEventTime(request.event_time)}</p>
-                  <p><span style={{ fontSize: "12px" }} >Menu Items:</span> {request.menu_items}</p>
+                  <p><span style={{ fontSize: "12px"}} > Contact Details:</span> {request.contact_info}</p>
+                  <p><span style={{ fontSize: "12px" }} > Event Start Time:</span> {formatEventTime(request.event_time)}</p>
+                  <p><span style={{ fontSize: "12px" }} > Requested Menu Items:</span> {request.menu_items}</p>
                   <p><span style={{ fontSize: "12px" }} >Dietary Options:</span> {request.dietary_options}</p>
                   <p><span style={{ fontSize: "12px" }} >Special Instructions:</span> {request.special_instructions}</p>
-                  {/* {request.status !== "confirmed" && (
-                    <Button variant="light" onClick={() => handleEventConfirmation(request.order_id)}>
-                      Confirm
-                    </Button>
-                  )}
-                  {request.status === "confirmed" && (
-                    <>
-                      <Button variant="info" disabled>
-                        Confirmed
-                      </Button>
-                    </>
-                  )} */}
+
                   {request.status !== "confirmed" && (
                     <Button
                       variant="light"
                       onClick={() =>
-                        handleEventConfirmation(request.order_id, false)
+                        handleEventConfirmation(request.order_id, false, currentUser.uid)
                       }
                       aria-label="Confirm Event"
                     >
@@ -237,6 +227,7 @@ const CateringRequests = () => {
                       onClick={() =>
                         handleEventConfirmation(request.order_id, true)
                       }
+                      aria-label="unConfirm Event"
                     >
                       Unconfirm
                     </Button>
