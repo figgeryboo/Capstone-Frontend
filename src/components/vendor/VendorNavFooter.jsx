@@ -23,7 +23,7 @@ const VendorNavFooter = () => {
       setActiveIndex(0);
     } else if (pathname === '/vendormapview') {
       setActiveIndex(1);
-    } else if (pathname === '/vendoranalytics') {
+    } else if (pathname === '/vendormetrics') {
       setActiveIndex(2);
     } else if (pathname === '/vendordashboard') {
       setActiveIndex(3);
@@ -50,7 +50,7 @@ const VendorNavFooter = () => {
           </Link>
         </li>
         <li className={`list ${activeIndex === 2 ? 'active' : ''}`} onClick={(e) => handleItemClick(2, e)}>
-          <Link to="/vendoranalytics">
+          <Link to="/vendormetrics">
             <span className="icon">
               <i className="bi bi-star-half"></i>
             </span>

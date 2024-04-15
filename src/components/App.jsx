@@ -19,7 +19,7 @@ import LocationTracker from './vendor/LocationTracker';
 import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
 import PaymentForm from './pages/PaymentForm';
-import VendorAnalytics from './vendor/VendorAnalytics';
+import VendorMetrics from './vendor/VendorMetrics';
 
 
 
@@ -43,7 +43,7 @@ function App() {
               <Route exact path="/vendordashboard" element={<VendorDashboard />} />
               <Route path="/vendorsignup" element={<VendorSignup />} />
               <Route path="/vendorlogin" element={<VendorLogin />} />
-              <Route path="/vendoranalytics" element={<VendorAnalytics />} />
+              <Route path="/vendormetrics" element={<VendorMetrics />} />
               <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />
@@ -63,7 +63,7 @@ function FooterWithConditionalRendering() {
     '/vendormapview',
     '/vendordashboard',
     '/vendorcatering',
-    '/analytics',
+    '/vendormetrics',
   ];
 
   const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));

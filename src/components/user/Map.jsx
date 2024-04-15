@@ -152,7 +152,7 @@ const Map = () => {
               position: userLocation,
               map: mapRef.current,
               icon: {
-                url: "/image.png",
+                url: "/image.gif",
                 scaledSize: new google.maps.Size(50, 50),
                 anchor: new google.maps.Point(20, 20),
               },
