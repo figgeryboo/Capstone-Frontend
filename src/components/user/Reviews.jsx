@@ -149,11 +149,12 @@ const VendorRatings = () => {
                         alt={`Customer ${rating.user_id}`}
                         style={{
                           width: "50px",
-                          height: "60px",
+                          height: "50px",
                           objectFit: "cover",
                          marginBottom: "27px",
-                          borderRadius: "2px",
-                          border: ""
+                          borderRadius: "60px",
+                          border: "2px solid #EB428F",
+                          borderColor: "#EB428F"
                         }}
                       />
                     )}
@@ -203,6 +204,7 @@ const VendorRatings = () => {
                   value={rating}
                   onChange={(e) => setRating(e.target.value)}
                   required
+                  style={{ color: "#ea3689"}}
                 >
                   <option value={1}>✰</option>
                   <option value={2}>✰✰</option>
