@@ -15,6 +15,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/material": "^5.15.15",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
@@ -24,7 +25,6 @@
     "react-bootstrap-icons": "^1.11.3",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2",
-    "stripe": "^14.24.0",
     "ws": "^8.16.0",
     "y": "^0.3.2"
   },
