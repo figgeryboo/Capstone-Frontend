@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/authContext';
 
 
 const UserProfile = () => {
-  const api = import.meta.env.VITE_LOCAL_HOST;
+  const api = import.meta.env.VITE_URL;
 
 const { currentUser } = useAuth();
 
