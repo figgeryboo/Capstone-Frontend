@@ -54,7 +54,7 @@
   }
   
   .navigation ul li.active a i {
-    transform: translateY(-15px);
+    transform: translateY(-10px);
     text-decoration: none; 
   }
   
@@ -73,18 +73,17 @@
   
   .navigation ul li.active a .text {
     opacity: 1;
-    transform: translateY(10px);
+    transform: translateY(15px);
     text-decoration: none;
   }
   
   .indicator {
     position: absolute;
-    bottom: 10px;
-    left: calc((100% - 275px) / 2); /* Adjust this value to center the indicator */
+    bottom: 5px;
+    left: calc((100% - 275px) / 2); 
     width: 70px;
     height: 70px;
     background: #5cf2d9;
-    /* background: #fe5ea6; */
     border-radius: 50%;
     transition: transform 0.5s 0.1s;
   }

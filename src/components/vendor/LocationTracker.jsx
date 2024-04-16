@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import vendorMarker from "/image.png";
+import userMarker from "/image.gif";
+import vendorMarker from "/vendorscone.png";
 import "../../App.css";
+import axios from "axios";
+import { useAuth } from "../../contexts/authContext";
+import { Snackbar } from "@mui/material";
+
 
 function LocationTracker() {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [ws, setWs] = useState(null);
   const [wsState, setWsState] = useState("disconnected");
   const [latitude, setLatitude] = useState(null);
@@ -12,9 +19,14 @@ function LocationTracker() {
   const [watchingLocation, setWatchingLocation] = useState(false);
   const [polyline, setPolyline] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const [seeVendors, setSeeVendors] = useState([]);
+  const url = import.meta.env.VITE_URL;
+  const websocketURL = import.meta.env.VITE_WEBSOCKET_URL;
+
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    const newWs = new WebSocket("ws://localhost:4444");
+    const newWs = new WebSocket(websocketURL);
 
     newWs.onopen = () => {
       console.log("WebSocket connected");
@@ -31,6 +43,10 @@ function LocationTracker() {
         const data = JSON.parse(event.data);
         console.log("parsed", data);
         setReceivedLocations((prevLocations) => [...prevLocations, data]);
+        setRouteCoordinates((prevCoordinates) => [
+          ...prevCoordinates,
+          { lat: data.latitude, lng: data.longitude },
+        ]);
       } catch (error) {
         console.error("Error parsing message:", error);
       }
@@ -48,8 +64,8 @@ function LocationTracker() {
 
   useEffect(() => {
     map = new google.maps.Map(document.getElementById("vendormap"), {
-      center: { lat: 40.8571627, lng: -73.9015161 },
-      zoom: 12,
+      center: { lat: 40.750797, lng: -73.989578 },
+      zoom: 13,
       disableDefaultUI: true,
     });
 
@@ -59,12 +75,34 @@ function LocationTracker() {
         map,
         title: `Location ${index + 1}`,
         icon: {
-          url: vendorMarker,
-          scaledSize: new google.maps.Size(45, 45),
+          url: userMarker,
+          scaledSize: new google.maps.Size(47, 47),
         },
       });
+
+      
     });
 
+    axios
+    .get(`${url}/vendors`)
+    .then((res) => {
+    setSeeVendors(res.data)
+  })
+
+  seeVendors.forEach((vendor, index) => {
+    if (vendor.coordinates && vendor.coordinates.length > 0) {
+      // console.log(vendor)
+      new google.maps.Marker({
+        position: { lat: vendor.coordinates[0].lat, lng: vendor.coordinates[0].lng },
+        map,
+        title: vendor.vendor_name,
+        icon: {
+          url: vendorMarker,
+          scaledSize: new google.maps.Size(49, 49),
+        },
+      });
+    }
+  });
     const path = receivedLocations.map((location) => ({
       lat: location.latitude,
       lng: location.longitude,
@@ -79,7 +117,7 @@ function LocationTracker() {
     });
     newPolyline.setMap(map);
     setPolyline(newPolyline);
-  }, [receivedLocations]);
+  }, [receivedLocations, location]);
 
   useEffect(() => {
     if (watchingLocation) {
@@ -106,55 +144,102 @@ function LocationTracker() {
   const toggleWatchLocation = () => {
     setWatchingLocation((prev) => !prev);
   };
-  
-// TODO post to /locations
+
   const saveRoute = () => {
-    // Send routeCoordinates to the backend for saving
-    console.log("Route saved:", routeCoordinates);
+    if (routeCoordinates.length === 0) {
+      console.log("No route to save");
+      return;
+    }
+    const uid = currentUser.uid;
+
+    axios
+      .get(`${url}/vendors/locations/${uid}`)
+      .then((res) => {
+        const existingLocations = res.data.locations || [];
+        const updatedLocations = [...existingLocations, ...routeCoordinates];
+
+        axios
+          .put(`${url}/vendors/locations/${uid}`, {
+            locations: updatedLocations,
+          })
+          .then((res) => {
+            console.log("Route saved:", routeCoordinates);
+            console.log("Response status code:", res.status);
+            console.log(res.data);
+            setSnackbarMessage("Route saved successfully!"); 
+            setOpenSnackbar(true);
+            setRouteCoordinates([]);
+          })
+          .catch((error) => {
+            console.error("Error saving route:", error.response.data);
+            setSnackbarMessage("Failed to save route. Please try again."); 
+            setOpenSnackbar(true);
+          });
+      })
+      .catch((error) => {
+        console.error(
+          "Error fetching existing locations:",
+          error.response.data
+        );
+        setSnackbarMessage("Failed to save route. Please try again.");
+        setOpenSnackbar(true);
+      });
   };
 
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
-    <div id="vendormap" style={{ height: "100vh", width: "100vw" }}></div>
     <div
-      style={{
-        position: "absolute",
-        bottom: "14px",
-        left: "10px",
-        zIndex: 1}}
-    >
-      <Button className="btn btn-lg"
+    id="vendormap"
+    style={{ height: "100vh", width: "100vw", border: "3px solid #59E0C8" }}
+  ></div>
+  <div>
+    <Snackbar
+      open={openSnackbar}
+      autoHideDuration={5500}
+      onClose={() => setOpenSnackbar(false)}
+      message={snackbarMessage}
+    />
+  </div>
+      <div
         style={{
-          backgroundColor: "rgb(234, 49, 135)",
-          borderColor: "rgb(234, 49, 135)",
           position: "absolute",
-        bottom: "70px",
-        left: "10px",
-        zIndex: 1,
-        width: "150px",
-
+          bottom: "14px",
+          left: "10px",
+          zIndex: 1,
         }}
-        onClick={toggleWatchLocation}
       >
-        {watchingLocation ? "Stop Route" : "Start Route"}
-      </Button>
-    </div>
-    <Button
-          className="btn btn-lg"
+        <Button
+          className="btn btn-md"
           style={{
             backgroundColor: "rgb(234, 49, 135)",
             borderColor: "rgb(234, 49, 135)",
             position: "absolute",
-            bottom: "80px",
-            right: "10px",
+            bottom: "70px",
+            left: "0px",
             zIndex: 1,
-            width: "150px"
+            width: "120px",
           }}
-          onClick={saveRoute}
-          disabled={!watchingLocation || routeCoordinates.length === 0}
+          onClick={toggleWatchLocation}
         >
-          Save Route
+          {watchingLocation ? "Stop Route" : "Start Route"}
         </Button>
+      </div>
+      <Button
+        className="btn btn-md"
+        style={{
+          backgroundColor: "rgb(234, 49, 135)",
+          borderColor: "rgb(234, 49, 135)",
+          position: "absolute",
+          bottom: "84px",
+          right: "5px",
+          zIndex: 1,
+          width: "120px",
+        }}
+        onClick={saveRoute}
+        disabled={!watchingLocation || routeCoordinates.length === 0}
+      >
+        Save Route
+      </Button>
       {/* <p>WebSocket state: {wsState}</p>
       <p>
         Your current location: Latitude {latitude}, Longitude {longitude}

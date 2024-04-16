@@ -18,8 +18,8 @@ import UserReviewsFeed from './user/UserReviewsFeed';
 import LocationTracker from './vendor/LocationTracker';
 import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
-
-
+import PaymentForm from './pages/PaymentForm';
+import VendorMetrics from './vendor/VendorMetrics';
 
 function App() {
   return (
@@ -32,6 +32,7 @@ function App() {
             <HeaderWithConditionalRendering />
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/pay" element={<PaymentForm />} />
               <Route exact path="/vendormapview" element={<LocationTracker />} />
               <Route exact path="/usermapview" element={<Map />} />
               <Route exact path="/userdashboard" element={<UserDashboard />} />
@@ -40,6 +41,7 @@ function App() {
               <Route exact path="/vendordashboard" element={<VendorDashboard />} />
               <Route path="/vendorsignup" element={<VendorSignup />} />
               <Route path="/vendorlogin" element={<VendorLogin />} />
+              <Route path="/vendormetrics" element={<VendorMetrics />} />
               <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />
@@ -54,16 +56,14 @@ function App() {
 
 function FooterWithConditionalRendering() {
   const location = useLocation();
-
   const vendorPaths = [
     '/vendormapview',
     '/vendordashboard',
     '/vendorcatering',
-    '/analytics',
+    '/vendormetrics',
   ];
 
   const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));
-
   const excludeFooterPaths = ['/', '/userlogin', '/usersignup', '/vendorlogin', '/vendorsignup'];
   const shouldRenderFooter = !excludeFooterPaths.includes(location.pathname);
 
