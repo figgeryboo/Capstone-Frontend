@@ -9,4 +9,3 @@ Please npm i
 
 add .env
 
-check documentation for env variables. 

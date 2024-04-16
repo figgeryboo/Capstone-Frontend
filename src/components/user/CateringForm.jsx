@@ -6,7 +6,7 @@ import MuiAlert from "@mui/material/Alert";
 import axios from "axios";
 
 const CateringForm = () => {
-  const api = import.meta.env.VITE_LOCAL_HOST;
+  const api = import.meta.env.VITE_URL;
   const { currentUser } = useAuth();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -316,7 +316,7 @@ const CateringForm = () => {
                         label="Yes"
                         name="needUtensils"
                         onChange={handleChange}
-                        value="true"
+                        alue="true"
                         checked={formData.needUtensils === "true"}
                       />
                       <Form.Check
@@ -405,39 +405,51 @@ const CateringForm = () => {
                 </>
               )}
               {/* Step 7: Confirmation of Submission */}
+
               {currentStep === 7 && (
                 <>
-                  <h3 class="text-center mb-2"> Almost there!!!</h3>
-                  <p class="text-center font-big">
-                    <hr />
-                    <b>
-                      Please ensure all requested fields are accurately filled
-                      out
-                    </b>{" "}
-                    !
+                  <h3 class="text-center mt-2"> You're almost there!</h3>
+                  <p class="text-center">
+                    <b>Does everything look good so far?</b>
+                    <hr className="mt-2" />
+                    Please ensure all requested fields are accurately filled out
+                    before proceeding.
                     <br />
-                    <i class="bi bi-balloon-heart"></i>
-                    <br />
-                    Need to go back? click 'Previous'
+                    <i
+                      className="fa-solid fa-ice-cream mb-2 mt-2"
+                      style={{ color: "#E93287" }}
+                    ></i>
                     <br />
                     <i>
-                      Everything looks good? Wish to continue? Submit Your
-                      Request
+                      <sub>
+                        If you wish to continue, click 'Next' to finish! <br />
+                        Otherwise, click 'Previous' to go back.
+                      </sub>
                     </i>
                   </p>
                 </>
               )}
               {currentStep === 8 && (
                 <>
-                  <h3 class="text-center mb-2">
-                    {" "}
-                   Thanks .......
+                  <h3 class="text-center mt-2">
+                    Thank you for your submission!
                   </h3>
                   <p class="text-center font-big">
-                    <hr />
-                    {/* <i class="bi bi-balloon-heart"></i> */}
+                    <hr className="mt-2" />
+                    Our team has received your request and is excited to add
+                    some flavor to your event. Our vendors are ready to impress!
                     <br />
-                      <p>Be sure to monitor your email for updates from our vendor</p>
+                    <i
+                      className="fa-solid fa-ice-cream mb-2 mt-2"
+                      style={{ color: "#E93287" }}
+                    ></i>
+                    <br />
+                    You'll receive a customized proposal based on your
+                    information soon.
+                    <br />
+                    <sub>
+                      <i>Estimated response times are 7-14 business days.</i>
+                    </sub>
                   </p>
                 </>
               )}
@@ -471,26 +483,24 @@ const CateringForm = () => {
                 >
                   {isSubmitting ? "Submitting..." : "Submit Your Request"}
                 </Button>
-                
               )}
-           
             </div>
             <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={10500}
+              open={snackbarOpen}
+              autoHideDuration={10500}
+              onClose={handleCloseSnackbar}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
                 onClose={handleCloseSnackbar}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                severity="info"
               >
-                <MuiAlert
-                  elevation={6}
-                  variant="filled"
-                  onClose={handleCloseSnackbar}
-                  severity="info"
-                >
-                  Thank you for your busines! Look out for an email from our
-                  vendors @WMIC
-                </MuiAlert>
-              </Snackbar>
+                Thank you for your business! Look out for an email from our
+                vendors @ WMIC.
+              </MuiAlert>
+            </Snackbar>
           </Card.Body>
         </Card>
       </div>

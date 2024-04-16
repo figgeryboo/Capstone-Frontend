@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Table, Card } from 'react-bootstrap';
 
 const VendorMetrics = () => {
-	const url = import.meta.env.VITE_LOCAL_HOST;
+	const url = import.meta.env.VITE_URL;
 	const [vendorId, setVendorId] = useState('3');
 	const [yearlyMetrics, setYearlyMetrics] = useState({});
 	const [monthlyMetrics, setMonthlyMetrics] = useState([]);
@@ -74,7 +74,7 @@ const VendorMetrics = () => {
 									<h2 style={{ color: '#FF038A' }}><i className="fa-solid fa-ice-cream me-2"></i>
 $300,000 </h2> 
 									<Card.Text className="text-muted ">
-										<sub>Made through <b>15,00</b> transactions</sub>
+										<sub>Made through <b>15,120</b> transactions</sub>
 									</Card.Text>
 								</Card.Body>
 							</Card>
