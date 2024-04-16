@@ -20,11 +20,12 @@ function LocationTracker() {
   const [polyline, setPolyline] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
   const [seeVendors, setSeeVendors] = useState([]);
+  const [activeVendors, setActiveVendors] = useState([]);
   const url = import.meta.env.VITE_LOCAL_HOST;
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const newWs = new WebSocket("ws://localhost:4444");
+    const newWs = new WebSocket("wss://capstone-backend-vi3e.onrender.com/");
 
     newWs.onopen = () => {
       console.log("WebSocket connected");
@@ -79,13 +80,14 @@ function LocationTracker() {
       });
     });
 
+   
+
     axios.get(`${url}/vendors`).then((res) => {
       setSeeVendors(res.data);
     });
 
     seeVendors.forEach((vendor, index) => {
       if (vendor.coordinates && vendor.coordinates.length > 0) {
-        // console.log(vendor)
         new google.maps.Marker({
           position: {
             lat: vendor.coordinates[0].lat,
@@ -100,6 +102,23 @@ function LocationTracker() {
         });
       }
     });
+
+    activeVendors.forEach((vendor, index) => {
+      if (vendor.coordinates && vendor.coordinates.length > 0) {
+        new google.maps.Marker({
+          position: {
+            lat: vendor.coordinates[0].lat,
+            lng: vendor.coordinates[0].lng,
+          },
+          map: mapRef.current,
+          title: vendor.vendor_name,
+          icon: {
+            url: {src: '/truckIcon.png'}},
+            scaledSize: new google.maps.Size(49, 49),
+          })
+  }})
+     
+    
     const path = receivedLocations.map((location) => ({
       lat: location.latitude,
       lng: location.longitude,
@@ -121,7 +140,6 @@ function LocationTracker() {
       const watchId = navigator.geolocation.watchPosition(function (position) {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-
         setLatitude(lat);
         setLongitude(lng);
         if (ws && ws.readyState === WebSocket.OPEN) {
@@ -140,9 +158,9 @@ function LocationTracker() {
 
   const toggleWatchLocation = () => {
     setWatchingLocation((prev) => !prev);
+    // setSeeVendors(seeVendors) i want to remove the markers when we go offline
   };
 
-  // TODO post to /locations
   const saveRoute = () => {
     if (routeCoordinates.length === 0) {
       console.log("No route to save");
@@ -151,28 +169,61 @@ function LocationTracker() {
     const uid = currentUser.uid;
 
     axios
-      .get(`${url}/vendors/locations/${uid}`)
+      .get(`${url}/vendors/locations`)
       .then((res) => {
-        const existingLocations = res.data.locations || [];
-        const updatedLocations = [...existingLocations, ...routeCoordinates];
+        const vendorLocations = res.data;
 
-        axios
-          .put(`${url}/vendors/locations/${uid}`, {
-            locations: updatedLocations,
-          })
-          .then((res) => {
-            console.log("Route saved:", routeCoordinates);
-            console.log("Response status code:", res.status);
-            console.log(res.data);
-            setSnackbarMessage("Route saved successfully!"); 
-            setOpenSnackbar(true);
-            setRouteCoordinates([]);
-          })
-          .catch((error) => {
-            console.error("Error saving route:", error.response.data);
-            setSnackbarMessage("Failed to save route. Please try again."); 
-            setOpenSnackbar(true);
-          });
+        const existingVendor = vendorLocations.find(
+          (vendor) => vendor.uid === uid
+        );
+        if (!existingVendor) {
+          // If vendor not found, add them
+          axios
+            .post(`${url}/vendors/locations`, {
+              uid: uid,
+              locations: routeCoordinates,
+            })
+            .then((res) => {
+              console.log("Vendor locations added:", res.data);
+            })
+            .catch((error) => {
+              console.error(
+                "Error adding vendor locations:",
+                error.response.data
+              );
+            });
+        } else {
+          const existingLocations = existingVendor.locations || [];
+          // Filter out duplicate coordinates
+          const newCoordinates = routeCoordinates.filter(
+            (coord) =>
+              !existingLocations.some(
+                (loc) => loc.lat === coord.lat && loc.lng === coord.lng
+              )
+          );
+
+          const updatedLocations = [...existingLocations, ...newCoordinates];
+
+          axios
+            .put(`${url}/vendors/locations/${uid}`, {
+              locations: updatedLocations,
+            })
+            .then((res) => {
+              // console.log("Route saved:", routeCoordinates);
+              // console.log("Response status code:", res.status);
+              // console.log("after route save", res.data);
+              setSnackbarMessage("Route saved successfully!");
+              setOpenSnackbar(true);
+              // setRouteCoordinates([]);
+            })
+            .catch((error) => {
+              console.error("Error saving route:", error.response.data);
+              setSnackbarMessage(
+                "Failed to save route! Ooops, that's a mistake on our end. Don't worry. We're on it & will fix that shortly."
+              );
+              setOpenSnackbar(true);
+            });
+        }
       })
       .catch((error) => {
         console.error(
@@ -183,6 +234,33 @@ function LocationTracker() {
         setOpenSnackbar(true);
       });
   };
+
+  useEffect(() => {
+    axios
+      .get(`${url}/firebase/getFirebaseVendors`)
+      .then((response) => {
+        setActiveVendors(response.data);
+
+        response.data.forEach((vendor, index) => {
+          if (vendor.coordinates && vendor.coordinates.length > 0) {
+            new google.maps.Marker({
+              position: {
+                lat: vendor.coordinates[0].lat,
+                lng: vendor.coordinates[0].lng,
+              },
+              map,
+              title: vendor.vendor_name,
+              icon: {
+                url: vendorMarker,
+                scaledSize: new google.maps.Size(29, 29),
+              },
+            });
+          }
+        });
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
 
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
@@ -219,7 +297,7 @@ function LocationTracker() {
           }}
           onClick={toggleWatchLocation}
         >
-          {watchingLocation ? "Stop Route" : "Start Route"}
+          {watchingLocation ? "🟢 online" : "🔴 offline"}
         </Button>
       </div>
       <Button
