@@ -74,7 +74,7 @@ const VendorMetrics = () => {
 									<h2 style={{ color: '#FF038A' }}><i className="fa-solid fa-ice-cream me-2"></i>
 $300,000 </h2> 
 									<Card.Text className="text-muted ">
-										<sub>Made through <b>15,00</b> transactions</sub>
+										<sub>Made through <b>15,120</b> transactions</sub>
 									</Card.Text>
 								</Card.Body>
 							</Card>

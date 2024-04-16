@@ -11,7 +11,7 @@ const VendorRatings = () => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState("");
   const [isVendorSelected, setIsVendorSelected] = useState(false);
-  const api = import.meta.env.URL;
+  const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
     axios

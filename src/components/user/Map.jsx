@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./Map.css";
-import { Button, Card, Collapse } from "react-bootstrap";
+import { Button, Collapse } from "react-bootstrap";
 
 const center = {
   lat: 40.750797,
@@ -63,12 +63,12 @@ const Map = () => {
           });
 
           const infoWindowContent = `
-          <div style="max-width: 600px; display: flex; flex-direction: column; align-items: center;">
-            <h3 style="margin-bottom: 3px;"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${vendor.vendor_name}</h3>
+          <div style="max-width: 600px; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${vendor.vendor_name}</h3>
             <hr style="width: 100%; margin-top: 4px; margin-bottom: 10px;">
-            <h5 style="margin-top: 2px;"><b>Rating:</b> ${vendor.rating_average} <i class="bi bi-star-fill"></i></h5>
+            <h5 style="margin-left: 10px;"><b>Rating:</b> ${vendor.rating_average} <i class="bi bi-star-fill"></i></h5>
             <p style="margin-top: 5px;"><b>Payment Types:</b> ${vendor.payment_types}</p>
-            <p style="margin-top: 5px;"><b>Dietary Offering:</b> ${vendor.dietary_offering}</p>
+            <p style=""><b>Dietary Offering:</b> ${vendor.dietary_offering}</p>
             <button style="margin-top: auto; padding: 4px 10px; background-color: #ea3689; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="handleVendorClick(${vendor.vendor_id})">See Vendor Menu</button>
           </div>
         `;
@@ -238,7 +238,7 @@ const Map = () => {
           </div>
           <Collapse in={menuExpanded}>
           <div id="menu-content" className="menu-content" style={{ maxHeight: "200px", overflowY: "auto" }}>
-
+          <sub><b>Accepts {selectedVendorDetails.payment_types} </b></sub>
               <ul>
                 {selectedVendorDetails.menu.map((item, index) => (
                   <li key={index}>

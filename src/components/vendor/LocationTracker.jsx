@@ -5,8 +5,12 @@ import vendorMarker from "/vendorscone.png";
 import "../../App.css";
 import axios from "axios";
 import { useAuth } from "../../contexts/authContext";
+import { Snackbar } from "@mui/material";
+
 
 function LocationTracker() {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const [ws, setWs] = useState(null);
   const [wsState, setWsState] = useState("disconnected");
   const [latitude, setLatitude] = useState(null);
@@ -15,12 +19,14 @@ function LocationTracker() {
   const [watchingLocation, setWatchingLocation] = useState(false);
   const [polyline, setPolyline] = useState(null);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
-  const [seeVendors, setSeeVendors]  = useState([])
+  const [seeVendors, setSeeVendors] = useState([]);
   const url = import.meta.env.VITE_URL;
+  const websocketURL = import.meta.env.VITE_WEBSOCKET_URL;
+
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const newWs = new WebSocket("wss://capstone-backend-vi3e.onrender.com");
+    const newWs = new WebSocket(websocketURL);
 
     newWs.onopen = () => {
       console.log("WebSocket connected");
@@ -59,9 +65,10 @@ function LocationTracker() {
   useEffect(() => {
     map = new google.maps.Map(document.getElementById("vendormap"), {
       center: { lat: 40.750797, lng: -73.989578 },
-      zoom: 12,
+      zoom: 13,
       disableDefaultUI: true,
     });
+
     receivedLocations.forEach((location, index) => {
       new google.maps.Marker({
         position: { lat: location.latitude, lng: location.longitude },
@@ -69,7 +76,7 @@ function LocationTracker() {
         title: `Location ${index + 1}`,
         icon: {
           url: userMarker,
-          scaledSize: new google.maps.Size(45, 45),
+          scaledSize: new google.maps.Size(47, 47),
         },
       });
 
@@ -91,7 +98,7 @@ function LocationTracker() {
         title: vendor.vendor_name,
         icon: {
           url: vendorMarker,
-          scaledSize: new google.maps.Size(45, 45),
+          scaledSize: new google.maps.Size(49, 49),
         },
       });
     }
@@ -110,7 +117,7 @@ function LocationTracker() {
     });
     newPolyline.setMap(map);
     setPolyline(newPolyline);
-  }, [receivedLocations]);
+  }, [receivedLocations, location]);
 
   useEffect(() => {
     if (watchingLocation) {
@@ -138,7 +145,6 @@ function LocationTracker() {
     setWatchingLocation((prev) => !prev);
   };
 
-  // TODO post to /locations
   const saveRoute = () => {
     if (routeCoordinates.length === 0) {
       console.log("No route to save");
@@ -160,11 +166,14 @@ function LocationTracker() {
             console.log("Route saved:", routeCoordinates);
             console.log("Response status code:", res.status);
             console.log(res.data);
-            // Clear routeCoordinates after successfully saving
+            setSnackbarMessage("Route saved successfully!"); 
+            setOpenSnackbar(true);
             setRouteCoordinates([]);
           })
           .catch((error) => {
             console.error("Error saving route:", error.response.data);
+            setSnackbarMessage("Failed to save route. Please try again."); 
+            setOpenSnackbar(true);
           });
       })
       .catch((error) => {
@@ -172,12 +181,25 @@ function LocationTracker() {
           "Error fetching existing locations:",
           error.response.data
         );
+        setSnackbarMessage("Failed to save route. Please try again.");
+        setOpenSnackbar(true);
       });
   };
 
   return (
     <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
-      <div id="vendormap" style={{ height: "100vh", width: "100vw", border: "3px solid #59E0C8"}}></div>
+    <div
+    id="vendormap"
+    style={{ height: "100vh", width: "100vw", border: "3px solid #59E0C8" }}
+  ></div>
+  <div>
+    <Snackbar
+      open={openSnackbar}
+      autoHideDuration={5500}
+      onClose={() => setOpenSnackbar(false)}
+      message={snackbarMessage}
+    />
+  </div>
       <div
         style={{
           position: "absolute",

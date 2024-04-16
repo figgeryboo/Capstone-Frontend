@@ -21,8 +21,6 @@ import CateringRequests from './vendor/CateringRequests';
 import PaymentForm from './pages/PaymentForm';
 import VendorMetrics from './vendor/VendorMetrics';
 
-
-
 function App() {
   return (
     <Router>
@@ -58,7 +56,6 @@ function App() {
 
 function FooterWithConditionalRendering() {
   const location = useLocation();
-
   const vendorPaths = [
     '/vendormapview',
     '/vendordashboard',
@@ -67,7 +64,6 @@ function FooterWithConditionalRendering() {
   ];
 
   const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));
-
   const excludeFooterPaths = ['/', '/userlogin', '/usersignup', '/vendorlogin', '/vendorsignup'];
   const shouldRenderFooter = !excludeFooterPaths.includes(location.pathname);
 
