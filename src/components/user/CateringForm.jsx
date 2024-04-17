@@ -22,6 +22,7 @@ const CateringForm = () => {
 		menu_items: '',
 		event_size: '',
 		dietary_options: '',
+		needUtensils: '',
 		special_instructions: '',
 		confirmed: false,
 	});
@@ -305,6 +306,7 @@ const CateringForm = () => {
 												type="checkbox"
 												label="Non-Dairy"
 												onChange={handleChange}
+												value={formData.dietary_options}
 											/>
 										</Form.Group>
 										<Form.Group className="mb-4" controlId="needUtensils">
@@ -316,7 +318,7 @@ const CateringForm = () => {
 												label="Yes"
 												name="needUtensils"
 												onChange={handleChange}
-												alue="true"
+												value="true"
 												checked={formData.needUtensils === 'true'}
 											/>
 											<Form.Check
