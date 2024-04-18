@@ -20,6 +20,7 @@ function LocationTracker() {
 	const [routeCoordinates, setRouteCoordinates] = useState([]);
 	const [seeVendors, setSeeVendors] = useState([]);
 	const [activeVendors, setActiveVendors] = useState([]);
+	const [liveVendors, setLiveVendors] = useState([]);
 	const url = import.meta.env.VITE_URL;
 	const websocketURL = import.meta.env.VITE_WEBSOCKET_URL;
 
@@ -59,12 +60,17 @@ function LocationTracker() {
 		};
 	}, []);
 
+	const center = {
+		lat: 40.750797,
+		lng: -73.989578,
+	  };
+	  
 	// map instance
 	let map;
 
 	useEffect(() => {
 		map = new google.maps.Map(document.getElementById('vendormap'), {
-			center: { lat: 40.750797, lng: -73.989578 },
+			center: center,
 			zoom: 13,
 			disableDefaultUI: true,
 		});
@@ -142,8 +148,8 @@ function LocationTracker() {
 				const lat = position.coords.latitude;
 				const lng = position.coords.longitude;
 
-				setLatitude(lat);
-				setLongitude(lng);
+				// setLatitude(lat);
+				// setLongitude(lng);
 				if (ws && ws.readyState === WebSocket.OPEN) {
 					const data = { latitude: lat, longitude: lng };
 					ws.send(JSON.stringify(data));
