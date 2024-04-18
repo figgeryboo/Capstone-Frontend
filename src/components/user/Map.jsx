@@ -216,7 +216,7 @@ const Map = () => {
           style={{
             position: "absolute",
             width: "30%",
-            height: "30vh",
+            height: "45vh",
             background: "#ffffff",
             padding: "15px",
             border: "2px solid #59E0C8",
@@ -257,8 +257,8 @@ const Map = () => {
                 {selectedVendorDetails.menu.map((item, index) => (
                   <li key={index}>
                     <sub>
-                      <i className="fa-solid fa-ice-cream"></i> {item.name} -{" "}
-                      <b>${item.price}</b>
+                      <i className="fa-solid fa-ice-cream"></i> <b>{item.name} -{" "}</b>
+                      <b><i>${item.price}</i></b>
                     </sub>
                   </li>
                 ))}
