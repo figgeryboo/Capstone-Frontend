@@ -39,7 +39,7 @@ const CateringRequests = () => {
 			const combinedData = eventsData.map((event) => ({
 				...event,
 				customer_name:
-					customersData[event.customer_id]?.customer_name || 'Unknown Customer',
+					customersData[event.customer_id]?.customer_name || 'Private Company',
 			}));
 			const unconfirmedData = combinedData.filter((event) => !event.confirmed);
 			let sortedData;
@@ -291,7 +291,7 @@ const CateringRequests = () => {
 										</p>
 										<p>
 											<span style={{ fontSize: '12px' }}>Dietary Options:</span>{' '}
-											{request.dietary_options}
+											{request.dietary_options  ? "Non Dairy/Vegan" : "Dairy"}
 										</p>
 										<p>
 											<span style={{ fontSize: '12px' }}>
