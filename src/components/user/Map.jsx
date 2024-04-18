@@ -61,14 +61,16 @@ const Map = () => {
               anchor: new google.maps.Point(20, 20),
             },
           });
+          console.log(typeof vendor.payment_types, vendor.payment_types);
 
           const infoWindowContent = `
           <div style="max-width: 600px; display: flex; flex-direction: column;">
             <h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${vendor.vendor_name}</h3>
             <hr style="width: 100%; margin-top: 4px; margin-bottom: 10px;">
-            <h5 style="margin-left: 10px;"><b>Rating:</b> ${vendor.rating_average} <i class="bi bi-star-fill"></i></h5>
-            <p style="margin-top: 5px;"><b>Payment Types:</b> ${vendor.payment_types}</p>
-            <p style=""><b>Dietary Offering:</b> ${vendor.dietary_offering}</p>
+            <h5 style="margin-left: 3px;"><b>Rating:</b> ${vendor.rating_average} <i class="bi bi-star-fill"></i></h5>
+            <p style="margin-top: 5px;"><b>Accepts:</b> ${vendor.payment_types.join(' ')}</p>
+            <p style=""><b>Offers:</b> ${vendor.dietary_offering}</p>
+            <p style=""><b>Accessible ♿️:</b> ${vendor.accessible ? "Yes" : "No"}</p>
             <button style="margin-top: auto; padding: 4px 10px; background-color: #ea3689; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="handleVendorClick(${vendor.vendor_id})">See Vendor Menu</button>
           </div>
         `;
@@ -168,7 +170,6 @@ const Map = () => {
           }
         );
       } else {
-        setUserMarker(null); // Remove the user marker from the map
         setIsUserLocationEnabled(false);
       }
     };
@@ -215,7 +216,7 @@ const Map = () => {
           style={{
             position: "absolute",
             width: "30%",
-            height: "30vh",
+            height: "45vh",
             background: "#ffffff",
             padding: "15px",
             border: "2px solid #59E0C8",
@@ -238,13 +239,26 @@ const Map = () => {
           </div>
           <Collapse in={menuExpanded}>
           <div id="menu-content" className="menu-content" style={{ maxHeight: "200px", overflowY: "auto" }}>
-          <sub><b>Accepts {selectedVendorDetails.payment_types} </b></sub>
+          <sub><b>Accepts {selectedVendorDetails.payment_types.map(emoji => {
+    switch (emoji) {
+      case '💲':
+        return 'Cash';
+      case '💳':
+        return 'Card';
+      case '₿':
+        return 'Bitcoin';
+      case '🧾':
+        return 'Online Ordering';
+      default:
+        return emoji; // Return the emoji itself if no match
+    }
+  }).join(', ')} </b></sub>
               <ul>
                 {selectedVendorDetails.menu.map((item, index) => (
                   <li key={index}>
                     <sub>
-                      <i className="fa-solid fa-ice-cream"></i> {item.name} -{" "}
-                      <b>${item.price}</b>
+                      <i className="fa-solid fa-ice-cream"></i> <b>{item.name} -{" "}</b>
+                      <b><i>${item.price}</i></b>
                     </sub>
                   </li>
                 ))}
