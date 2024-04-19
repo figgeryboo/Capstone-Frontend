@@ -31,7 +31,7 @@ const VendorDashboard = () => {
 									<br />
 								</Link>
 								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
-									Chat Support
+									See My Reviews
 								</Button>
 								<VendorSignOut />
 							</div>
