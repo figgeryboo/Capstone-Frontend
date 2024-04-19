@@ -226,7 +226,7 @@ const Map = () => {
 					style={{
 						position: 'absolute',
 						width: '40%',
-						height: '45vh',
+						height: '50vh',
 						background: '#ffffff',
 						padding: '15px',
 						border: '2px solid #59E0C8',
