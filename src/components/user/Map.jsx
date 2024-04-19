@@ -199,6 +199,7 @@ const Map = () => {
 					height: '100vh',
 					border: '2px solid #59E0C8',
 					borderRadius: '10px',
+          overflowY: 'auto',
 				}}
 			></div>
 
