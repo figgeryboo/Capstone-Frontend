@@ -18,127 +18,258 @@ const Map = () => {
 	const [infoWindows, setInfoWindows] = useState({});
 	const [menuExpanded, setMenuExpanded] = useState(false);
 	const [userMarker, setUserMarker] = useState(null);
+	const [watchId, setWatchId] = useState(null);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get(`${url}/vendors`);
-				const vendors = response.data;
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		try {
+	// 			const response = await axios.get(`${url}/vendors`);
+	// 			const vendors = response.data;
 
-				const map = new google.maps.Map(
-					document.getElementById('map-container'),
-					{
-						zoom: 14,
-						center: center,
-						mapId: import.meta.env.VITE_GOOGLE_MAPID,
-						disableDefaultUI: true,
-					}
-				);
+	// 			const map = new google.maps.Map(
+	// 				document.getElementById('map-container'),
+	// 				{
+	// 					zoom: 14,
+	// 					center: center,
+	// 					mapId: import.meta.env.VITE_GOOGLE_MAPID,
+	// 					disableDefaultUI: true,
+	// 				}
+	// 			);
 
-				vendors.forEach((vendor) => {
-					const pathCoordinates = vendor.coordinates.map((coord) => ({
-						lat: coord.lat,
-						lng: coord.lng,
-					}));
+	// 			vendors.forEach((vendor) => {
+	// 				const pathCoordinates = vendor.coordinates.map((coord) => ({
+	// 					lat: coord.lat,
+	// 					lng: coord.lng,
+	// 				}));
 
-					const polyline = new google.maps.Polyline({
-						path: pathCoordinates,
+	// 				const polyline = new google.maps.Polyline({
+	// 					path: pathCoordinates,
+	// 					geodesic: true,
+	// 					strokeColor: '#0870c4',
+	// 					strokeOpacity: 1.0,
+	// 					strokeWeight: 3,
+	// 				});
+
+	// 				polyline.setMap(map);
+
+	// 				let index = 0;
+	// 				const marker = new google.maps.Marker({
+	// 					position: pathCoordinates[index],
+	// 					map: map,
+	// 					icon: {
+	// 						url: '/truckIcon.png',
+	// 						scaledSize: new google.maps.Size(50, 50),
+	// 						anchor: new google.maps.Point(20, 20),
+	// 					},
+	// 				});
+	// 				console.log(typeof vendor.payment_types, vendor.payment_types);
+
+	// 				const infoWindowContent = `
+    //       <div style="max-width: 600px; display: flex; flex-direction: column;">
+    //         <h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${
+	// 						vendor.vendor_name
+	// 					}</h3>
+    //         <hr style="width: 100%; margin-top: 4px; margin-bottom: 10px;">
+    //         <h5 style="margin-left: 3px;"><b>Rating:</b> ${
+	// 						vendor.rating_average
+	// 					} <i class="bi bi-star-fill"></i></h5>
+    //         <p style="margin-top: 5px;"><b>Accepts:</b> ${vendor.payment_types.join(
+	// 						' '
+	// 					)}</p>
+    //         <p style=""><b>Offers:</b> ${vendor.dietary_offering}</p>
+    //         <p style=""><b>Accessible ♿️:</b> ${
+	// 						vendor.accessible ? 'Yes' : 'No'
+	// 					}</p>
+    //         <button style="margin-top: auto; padding: 4px 10px; background-color: #ea3689; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="handleVendorClick(${
+	// 						vendor.vendor_id
+	// 					})">See Vendor Menu</button>
+    //       </div>
+    //     `;
+
+	// 				const infoWindow = new google.maps.InfoWindow({
+	// 					content: infoWindowContent,
+	// 					maxWidth: 180,
+	// 					ariaLabel: 'vendor details in black text on white background',
+	// 				});
+
+	// 				infoWindows[vendor.vendor_id] = infoWindow;
+
+	// 				marker.addListener('click', () => {
+	// 					Object.values(infoWindows).forEach((iw) => iw.close());
+	// 					infoWindow.open(map, marker);
+	// 				});
+
+	// 				google.maps.event.addListener(infoWindow, 'closeclick', () => {
+	// 					setShowExpandedDetails(false);
+	// 					setSelectedVendor(null);
+	// 					setSelectedVendorDetails(null);
+	// 				});
+
+	// 				let traveledPath = [];
+
+	// 				const animateMarker = () => {
+	// 					if (index > 0) {
+	// 						traveledPath.push(pathCoordinates[index - 1]);
+	// 						const traveledPolyline = new google.maps.Polyline({
+	// 							path: traveledPath,
+	// 							geodesic: true,
+	// 							strokeColor: '#59E0C8',
+	// 							strokeOpacity: 1.0,
+	// 							strokeWeight: 3,
+	// 						});
+	// 						traveledPolyline.setMap(map);
+	// 					}
+	// 					marker.setPosition(pathCoordinates[index]);
+	// 					index = (index + 1) % pathCoordinates.length;
+
+	// 					if (index === 0) {
+	// 						return;
+	// 					}
+	// 					setTimeout(animateMarker, 3730);
+	// 				};
+	// 				animateMarker();
+	// 			});
+	// 			mapRef.current = map;
+	// 			setInfoWindows(infoWindows);
+	// 		} catch (error) {
+	// 			console.error('Error fetching vendor data:', error);
+	// 			alert('Vendor data currently unavailable. Refresh to try again.');
+	// 		}
+	// 	};
+
+	// 	fetchData();
+	// }, []);
+
+	const fetchData = async () => {
+		try {
+			const response = await axios.get(`${url}/vendors`);
+			const vendors = response.data;
+			return vendors;
+		} catch (error) {
+			console.error('Error fetching vendor data:', error);
+			alert('Vendor data currently unavailable. Refresh to try again.');
+			return null;
+		}
+	};
+
+	const createMap = (center) => {
+		const map = new google.maps.Map(document.getElementById('map-container'), {
+			zoom: 14,
+			center: center,
+			mapId: import.meta.env.VITE_GOOGLE_MAPID,
+			disableDefaultUI: true,
+		});
+		return map;
+	};
+
+	const renderVendors = (vendors, map) => {
+		const infoWindows = {};
+		vendors.forEach((vendor) => {
+			const pathCoordinates = vendor.coordinates.map((coord) => ({
+				lat: coord.lat,
+				lng: coord.lng,
+			}));
+	
+			const polyline = new google.maps.Polyline({
+				path: pathCoordinates,
+				geodesic: true,
+				strokeColor: '#0870c4',
+				strokeOpacity: 1.0,
+				strokeWeight: 3,
+			});
+	
+			polyline.setMap(map);
+	
+			let index = 0;
+			const marker = new google.maps.Marker({
+				position: pathCoordinates[index],
+				map: map,
+				icon: {
+					url: '/truckIcon.png',
+					scaledSize: new google.maps.Size(50, 50),
+					anchor: new google.maps.Point(20, 20),
+				},
+			});
+	
+			const infoWindowContent = `
+			  <div style="max-width: 600px; display: flex; flex-direction: column;">
+				<h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${
+					vendor.vendor_name
+				}</h3>
+				<hr style="width: 100%; margin-top: 4px; margin-bottom: 10px;">
+				<h5 style="margin-left: 3px;"><b>Rating:</b> ${
+					vendor.rating_average
+				} <i class="bi bi-star-fill"></i></h5>
+				<p style="margin-top: 5px;"><b>Accepts:</b> ${vendor.payment_types.join(' ')}</p>
+				<p style=""><b>Offers:</b> ${vendor.dietary_offering}</p>
+				<p style=""><b>Accessible ♿️:</b> ${vendor.accessible ? 'Yes' : 'No'}</p>
+				<button style="margin-top: auto; padding: 4px 10px; background-color: #ea3689; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="handleVendorClick(${
+					vendor.vendor_id
+				})">See Vendor Menu</button>
+			  </div>
+			`;
+	
+			const infoWindow = new google.maps.InfoWindow({
+				content: infoWindowContent,
+				maxWidth: 180,
+				ariaLabel: 'vendor details in black text on white background',
+			});
+	
+			infoWindows[vendor.vendor_id] = infoWindow;
+	
+			marker.addListener('click', () => {
+				Object.values(infoWindows).forEach((iw) => iw.close());
+				infoWindow.open(map, marker);
+			});
+	
+			google.maps.event.addListener(infoWindow, 'closeclick', () => {
+				setShowExpandedDetails(false);
+				setSelectedVendor(null);
+				setSelectedVendorDetails(null);
+			});
+	
+			let traveledPath = [];
+	
+			const animateMarker = () => {
+				if (index > 0) {
+					traveledPath.push(pathCoordinates[index - 1]);
+					const traveledPolyline = new google.maps.Polyline({
+						path: traveledPath,
 						geodesic: true,
-						strokeColor: '#0870c4',
+						strokeColor: '#59E0C8',
 						strokeOpacity: 1.0,
 						strokeWeight: 3,
 					});
-
-					polyline.setMap(map);
-
-					let index = 0;
-					const marker = new google.maps.Marker({
-						position: pathCoordinates[index],
-						map: map,
-						icon: {
-							url: '/truckIcon.png',
-							scaledSize: new google.maps.Size(50, 50),
-							anchor: new google.maps.Point(20, 20),
-						},
-					});
-					console.log(typeof vendor.payment_types, vendor.payment_types);
-
-					const infoWindowContent = `
-          <div style="max-width: 600px; display: flex; flex-direction: column;">
-            <h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${
-							vendor.vendor_name
-						}</h3>
-            <hr style="width: 100%; margin-top: 4px; margin-bottom: 10px;">
-            <h5 style="margin-left: 3px;"><b>Rating:</b> ${
-							vendor.rating_average
-						} <i class="bi bi-star-fill"></i></h5>
-            <p style="margin-top: 5px;"><b>Accepts:</b> ${vendor.payment_types.join(
-							' '
-						)}</p>
-            <p style=""><b>Offers:</b> ${vendor.dietary_offering}</p>
-            <p style=""><b>Accessible ♿️:</b> ${
-							vendor.accessible ? 'Yes' : 'No'
-						}</p>
-            <button style="margin-top: auto; padding: 4px 10px; background-color: #ea3689; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="handleVendorClick(${
-							vendor.vendor_id
-						})">See Vendor Menu</button>
-          </div>
-        `;
-
-					const infoWindow = new google.maps.InfoWindow({
-						content: infoWindowContent,
-						maxWidth: 180,
-						ariaLabel: 'vendor details in black text on white background',
-					});
-
-					infoWindows[vendor.vendor_id] = infoWindow;
-
-					marker.addListener('click', () => {
-						Object.values(infoWindows).forEach((iw) => iw.close());
-						infoWindow.open(map, marker);
-					});
-
-					google.maps.event.addListener(infoWindow, 'closeclick', () => {
-						setShowExpandedDetails(false);
-						setSelectedVendor(null);
-						setSelectedVendorDetails(null);
-					});
-
-					let traveledPath = [];
-
-					const animateMarker = () => {
-						if (index > 0) {
-							traveledPath.push(pathCoordinates[index - 1]);
-							const traveledPolyline = new google.maps.Polyline({
-								path: traveledPath,
-								geodesic: true,
-								strokeColor: '#59E0C8',
-								strokeOpacity: 1.0,
-								strokeWeight: 3,
-							});
-							traveledPolyline.setMap(map);
-						}
-						marker.setPosition(pathCoordinates[index]);
-						index = (index + 1) % pathCoordinates.length;
-
-						if (index === 0) {
-							return;
-						}
-						setTimeout(animateMarker, 3730);
-					};
-					animateMarker();
-				});
+					traveledPolyline.setMap(map);
+				}
+				marker.setPosition(pathCoordinates[index]);
+				index = (index + 1) % pathCoordinates.length;
+	
+				if (index === 0) {
+					return;
+				}
+				setTimeout(animateMarker, 3730);
+			};
+			animateMarker();
+		});
+		return infoWindows;
+	};
+	
+	useEffect(() => {
+		const fetchDataAndRender = async () => {
+			const vendors = await fetchData();
+			if (vendors) {
+				const map = createMap(center);
+				const infoWindows = renderVendors(vendors, map);
 				mapRef.current = map;
 				setInfoWindows(infoWindows);
-			} catch (error) {
-				console.error('Error fetching vendor data:', error);
-				alert('Vendor data currently unavailable. Refresh to try again.');
 			}
 		};
-
-		fetchData();
+	
+		fetchDataAndRender();
 	}, []);
 
+	
 	window.handleVendorClick = async (vendorId) => {
 		try {
 			setSelectedVendor(vendorId);
@@ -151,25 +282,60 @@ const Map = () => {
 		}
 	};
 
+	// const handleToggleUserLocation = () => {
+	// 	if (!isUserLocationEnabled) {
+	// 		navigator.geolocation.getCurrentPosition(
+	// 			(position) => {
+	// 				const userLocation = {
+	// 					lat: position.coords.latitude,
+	// 					lng: position.coords.longitude,
+	// 				};
+
+	// 				const userMarker = new google.maps.Marker({
+	// 					position: userLocation,
+	// 					map: mapRef.current,
+	// 					icon: {
+	// 						url: '/image.gif',
+	// 						scaledSize: new google.maps.Size(80, 80),
+	// 						anchor: new google.maps.Point(40, 40),
+	// 					},
+	// 				});
+
+	// 				setUserMarker(userMarker);
+	// 				console.log(userMarker)
+	// 				console.log('position', position)
+	// 				setIsUserLocationEnabled(true);
+	// 				mapRef.current.setCenter(userLocation);
+	// 			},
+	// 			(error) => {
+	// 				console.error('Error getting user location:', error);
+	// 				alert('Error getting user location. Please try again.');
+	// 			}
+	// 		);
+	// 	} else {
+	// 		setIsUserLocationEnabled(false);
+	// 	}
+	// };
+
 	const handleToggleUserLocation = () => {
 		if (!isUserLocationEnabled) {
-			navigator.geolocation.getCurrentPosition(
+			const watchId = navigator.geolocation.watchPosition(
 				(position) => {
 					const userLocation = {
 						lat: position.coords.latitude,
 						lng: position.coords.longitude,
 					};
-
+	
 					const userMarker = new google.maps.Marker({
 						position: userLocation,
 						map: mapRef.current,
 						icon: {
 							url: '/image.gif',
-							scaledSize: new google.maps.Size(50, 50),
-							anchor: new google.maps.Point(20, 20),
+							scaledSize: new google.maps.Size(62, 62),
+							anchor: new google.maps.Point(30, 30),
 						},
 					});
-
+	
 					setUserMarker(userMarker);
 					setIsUserLocationEnabled(true);
 					mapRef.current.setCenter(userLocation);
@@ -179,11 +345,15 @@ const Map = () => {
 					alert('Error getting user location. Please try again.');
 				}
 			);
+	
+			setWatchId(watchId); // Assuming you have a state variable to store the watchId
 		} else {
+			navigator.geolocation.clearWatch(watchId); // Assuming you have a state variable to store the watchId
 			setIsUserLocationEnabled(false);
 		}
 	};
 
+	
 	const handleCloseDetails = () => {
 		setShowExpandedDetails(false);
 		setSelectedVendor(null);
