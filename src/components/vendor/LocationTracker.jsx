@@ -12,8 +12,8 @@ function LocationTracker() {
 	const [snackbarMessage, setSnackbarMessage] = useState('');
 	const [ws, setWs] = useState(null);
 	const [wsState, setWsState] = useState('disconnected');
-	const [latitude, setLatitude] = useState(null);
-	const [longitude, setLongitude] = useState(null);
+	// const [latitude, setLatitude] = useState(null);
+	// const [longitude, setLongitude] = useState(null);
 	const [receivedLocations, setReceivedLocations] = useState([]);
 	const [watchingLocation, setWatchingLocation] = useState(false);
 	const [polyline, setPolyline] = useState(null);
@@ -86,6 +86,11 @@ function LocationTracker() {
 				},
 			});
 		});
+		const lastLocation = receivedLocations[receivedLocations.length - 1];
+		if (lastLocation) {
+			map.setCenter({ lat: lastLocation.latitude, lng: lastLocation.longitude });
+		}
+	
 
 		axios.get(`${url}/vendors`).then((res) => {
 			setSeeVendors(res.data);
@@ -147,7 +152,7 @@ function LocationTracker() {
 			const watchId = navigator.geolocation.watchPosition(function (position) {
 				const lat = position.coords.latitude;
 				const lng = position.coords.longitude;
-
+				center: (lat,lng)
 				// setLatitude(lat);
 				// setLongitude(lng);
 				if (ws && ws.readyState === WebSocket.OPEN) {
