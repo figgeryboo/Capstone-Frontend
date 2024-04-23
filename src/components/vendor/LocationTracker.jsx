@@ -100,7 +100,7 @@ function LocationTracker() {
 						lng: vendor.coordinates[0].lng,
 					},
 					map,
-					title: vendor.vendor_name,
+					title: `${vendor.vendor_name} 0 `,
 					icon: {
 						url: vendorMarker,
 						scaledSize: new google.maps.Size(49, 49),
