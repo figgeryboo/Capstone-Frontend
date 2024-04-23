@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Table, Card } from 'react-bootstrap';
+import logo from '/altcolors5.png'
 
 const VendorMetrics = () => {
 	const url = import.meta.env.VITE_URL;
@@ -81,6 +82,11 @@ $300,000 </h2>
 						</div>
 						<hr />
 						<div>
+        <h3	 className="metrics-error justify-content-center mt-5 d-flex">Advanced Metric View Coming Soon</h3>
+		<img src='public/altcolors5.png' style={{ width: '100vw', display: 'inline-block' }}
+></img>
+      </div>
+						{/* <div>
 							<div className="d-flex gap-3 mb-3 justify-content-center">
 								<label>
 									<input
@@ -192,6 +198,7 @@ $300,000 </h2>
 										</thead>
 										<tbody>
 											{monthlyMetrics.map((monthData, index) => {
+												console.log(monthData)
 												const weeksData = [];
 												for (
 													let i = 0;
@@ -257,7 +264,7 @@ $300,000 </h2>
 									</table>
 								</div>
 							)}
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
