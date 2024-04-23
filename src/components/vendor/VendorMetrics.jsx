@@ -83,7 +83,7 @@ $300,000 </h2>
 						<hr />
 						<div>
         <h3	 className="metrics-error justify-content-center mt-5 d-flex">Advanced Metric View Coming Soon</h3>
-		<img src='/altcolors5.png' style={{ width: '100vw', display: 'inline-block' }}
+		<img src={logo} style={{ width: '100vw', display: 'inline-block' }}
 ></img>
       </div>
 						{/* <div>
