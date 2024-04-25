@@ -237,7 +237,7 @@ const Map = () => {
 	
 				const animateMarker = () => {
 
-					const randomizer = Math.random() < 0.5
+					const randomizer = Math.random() < 0.7
 					if (randomizer) {
 					if (index > 0) {
 						traveledPath.push(pathCoordinates[index - 1]);
@@ -262,36 +262,36 @@ const Map = () => {
 				animateMarker();
 			});
 
-			vendorLocations.forEach((vendor) => {
-				vendor.locations.forEach((location) => {
-				  const marker = new google.maps.Marker({
-					position: { lat: location.lat, lng: location.lng },
-					map: map,
-					icon: {
-					  url: '/image.gif',
-					  scaledSize: new google.maps.Size(60, 60),
-					  anchor: new google.maps.Point(30, 30),
-					},
-				  });
+			// vendorLocations.forEach((vendor) => {
+			// 	vendor.locations.forEach((location) => {
+			// 	  const marker = new google.maps.Marker({
+			// 		position: { lat: location.lat, lng: location.lng },
+			// 		map: map,
+			// 		icon: {
+			// 		  url: '/image.gif',
+			// 		  scaledSize: new google.maps.Size(60, 60),
+			// 		  anchor: new google.maps.Point(30, 30),
+			// 		},
+			// 	  });
 			  
-				  const infoWindow = new google.maps.InfoWindow({
-					content: 'Vendor Location',
-					maxWidth: 180,
-					ariaLabel: 'vendor location marker',
-				  });
+			// 	  const infoWindow = new google.maps.InfoWindow({
+			// 		content: 'Vendor Location',
+			// 		maxWidth: 180,
+			// 		ariaLabel: 'vendor location marker',
+			// 	  });
 			  
-				  marker.addListener('click', () => {
-					Object.values(infoWindows).forEach((iw) => iw.close());
-					infoWindow.open(map, marker);
-				  });
+			// 	  marker.addListener('click', () => {
+			// 		Object.values(infoWindows).forEach((iw) => iw.close());
+			// 		infoWindow.open(map, marker);
+			// 	  });
 			  
-				  google.maps.event.addListener(infoWindow, 'closeclick', () => {
-					setShowExpandedDetails(false);
-					setSelectedVendor(null);
-					setSelectedVendorDetails(null);
-				  });
-				});
-			  });
+			// 	  google.maps.event.addListener(infoWindow, 'closeclick', () => {
+			// 		setShowExpandedDetails(false);
+			// 		setSelectedVendor(null);
+			// 		setSelectedVendorDetails(null);
+			// 	  });
+			// 	});
+			//   });
 			  
 	
 			mapRef.current = map;
