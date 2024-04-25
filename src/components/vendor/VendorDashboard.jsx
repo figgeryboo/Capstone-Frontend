@@ -12,10 +12,10 @@ const VendorDashboard = () => {
 				<Card>
 					<Card.Body>
 						<h3 className="text-center mb-3"> <i id="menu-image" className="bi bi-person-bounding-box"></i>
-							Welcome Gabe! {/* Welcome{' '}
+							 Welcome{' '}
 							{currentUser.displayName
 								? currentUser.displayName
-								: currentUser.email} */}
+								: currentUser.email}
 						</h3>
 						<div className="d-grid gap-2">
 							<Link to="/vendormapview">

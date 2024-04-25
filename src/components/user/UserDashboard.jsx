@@ -13,10 +13,10 @@ const UserDashboard = () => {
 				<Card>
 					<Card.Body>
 						<h3 className="text-center mb-4"> <i id="menu-image" className="bi bi-person-bounding-box"></i>
-						Welcome Dez! {/* Welcome {' '}
+						 Welcome {' '}
 							{currentUser.displayName
 								? currentUser.displayName
-								: currentUser.email}! */}
+								: currentUser.email}!
 						</h3>
 						<div className="d-grid gap-2">
 							<Link to="/usersettings">
