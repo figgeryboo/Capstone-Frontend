@@ -23,7 +23,7 @@ export const doCreateUserWithEmailAndPassword = async (email, password) => {
     const user = userCredential.user;
     console.log("user:", user);
 
-    await axios.post("http://localhost:4444/firebase/sendUserToPostgres", {
+    await axios.post("https://capstone-backend-vi3e.onrender.com/firebase/sendUserToPostgres", {
       uid: user.uid,
       email: user.email,
     });
@@ -64,7 +64,7 @@ export const doCreateVendorWithEmailAndPassword = async (
   
     });
     
-    await axios.post("http://localhost:4444/firebase/sendAllVendorsToPostgres", {
+    await axios.post("https://capstone-backend-vi3e.onrender.com/firebase/sendAllVendorsToPostgres", {
       uid: vendor.uid,
       email: vendor.email,
       displayName: vendor.displayName
