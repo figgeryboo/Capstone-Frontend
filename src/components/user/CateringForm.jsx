@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Form, Card, Button, Row, Col } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import axios from "axios";
 
 const CateringForm = () => {
@@ -25,6 +27,7 @@ const CateringForm = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deposit, setDeposit] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [menu, setMenu] = useState([]);
 
   const handleNextStep = () => {
@@ -37,10 +40,24 @@ const CateringForm = () => {
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: type === "checkbox" ? checked : value,
-    }));
+    if (id === "menu_items") {
+      if (checked) {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          menu_items: [...prevFormData.menu_items, value],
+        }));
+      } else {
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          menu_items: prevFormData.menu_items.filter((item) => item !== value),
+        }));
+      }
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [id]: type === "checkbox" ? checked : value,
+      }));
+    }
     if (id === "budget" && !isNaN(value) && value !== "") {
       const depositValue = parseFloat(value) * 0.3;
       setDeposit(depositValue.toFixed(2));
@@ -55,25 +72,24 @@ const CateringForm = () => {
         return;
       }
 
-	  const autocomplete = new window.google.maps.places.Autocomplete(
-		input,
-		{ types: ['geocode'] }
-	  );
-	  autocomplete.addListener('place_changed', () => {
-		const place = autocomplete.getPlace();
-		if (!place.geometry) {
-		  console.error('No address selected');
-		  return;
-		}
-		const address = place.formatted_address;
-		setFormData((prevFormData) => ({
-		  ...prevFormData,
-		  delivery_location: address,
-		}));
-	  });
-	}
+      const autocomplete = new window.google.maps.places.Autocomplete(input, {
+        types: ["geocode"],
+      });
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) {
+          console.error("No address selected");
+          return;
+        }
+        const address = place.formatted_address;
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          delivery_location: address,
+        }));
+      });
+    }
   }, [currentStep]);
-  
+
   useEffect(() => {
     const menuFetch = async () => {
       try {
@@ -98,12 +114,21 @@ const CateringForm = () => {
     menuFetch();
   }, []);
 
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
   const submitCateringForm = async () => {
     try {
       console.log("Submitting form data:", formData);
       const response = await axios.post(`${api}/events`, formData);
       console.log(response.data);
-      setFormData(response.data);
+
+      setFormData(formData);
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Error submitting form:", error);
     } finally {
@@ -153,6 +178,7 @@ const CateringForm = () => {
                         placeholder="John Doe"
                         required
                         onChange={handleChange}
+                        value={formData.customer_name}
                       />
                     </Form.Group>
 
@@ -163,6 +189,7 @@ const CateringForm = () => {
                         placeholder="example@example.com"
                         required
                         onChange={handleChange}
+                        value={formData.customer_email}
                       />
                     </Form.Group>
 
@@ -174,6 +201,7 @@ const CateringForm = () => {
                         maxLength="10"
                         required
                         onChange={handleChange}
+                        value={formData.contact_info}
                       />
                     </Form.Group>
                   </Form>
@@ -193,6 +221,7 @@ const CateringForm = () => {
                             required
                             min={getMinDate()}
                             onChange={handleChange}
+                            value={formData.event_date}
                           />
                           <sub>
                             <p className=" mt-2 text-muted">
@@ -208,6 +237,7 @@ const CateringForm = () => {
                             type="time"
                             required
                             onChange={handleChange}
+                            value={formData.event_time}
                           />
                         </Form.Group>
                       </Col>
@@ -223,6 +253,7 @@ const CateringForm = () => {
                         placeholder="Ex: 222 Maiden Lane StonyBook, AZ 70834"
                         required
                         onChange={handleChange}
+                        value={formData.delivery_location}
                       />
                     </Form.Group>
 
@@ -235,6 +266,7 @@ const CateringForm = () => {
                         max="50"
                         required
                         onChange={handleChange}
+                        value={formData.event_size}
                       />
                     </Form.Group>
                   </Form>
@@ -252,6 +284,7 @@ const CateringForm = () => {
                         placeholder="Budget"
                         required
                         onChange={handleChange}
+                        value={formData.budget}
                       />
                       {deposit && (
                         <div style={{ color: "green" }}>
@@ -266,6 +299,7 @@ const CateringForm = () => {
                         type="checkbox"
                         label="Dairy"
                         onChange={handleChange}
+                        value={formData.dietary_options}
                       />
                       <Form.Check
                         type="checkbox"
@@ -282,8 +316,17 @@ const CateringForm = () => {
                         label="Yes"
                         name="needUtensils"
                         onChange={handleChange}
+                        alue="true"
+                        checked={formData.needUtensils === "true"}
                       />
-                      <Form.Check type="radio" label="No" name="needUtensils" />
+                      <Form.Check
+                        type="radio"
+                        label="No"
+                        name="needUtensils"
+                        onChange={handleChange}
+                        value="false"
+                        checked={formData.needUtensils === "false"}
+                      />
                     </Form.Group>
                   </Form>
                 </>
@@ -362,18 +405,44 @@ const CateringForm = () => {
                 </>
               )}
               {/* Step 7: Confirmation of Submission */}
+
               {currentStep === 7 && (
                 <>
-                  <h3 class="text-center mb-2">
-                    {" "}
+                  <h3 class="text-center mt-2"> You're almost there!</h3>
+                  <p class="text-center">
+                    <b>Does everything look good so far?</b>
+                    <hr className="mt-2" />
+                    Please ensure all requested fields are accurately filled out
+                    before proceeding.
+                    <br />
+                    <i
+                      className="fa-solid fa-ice-cream mb-2 mt-2"
+                      style={{ color: "#E93287" }}
+                    ></i>
+                    <br />
+                    <i>
+                      <sub>
+                        If you wish to continue, click 'Next' to finish! <br />
+                        Otherwise, click 'Previous' to go back.
+                      </sub>
+                    </i>
+                  </p>
+                </>
+              )}
+              {currentStep === 8 && (
+                <>
+                  <h3 class="text-center mt-2">
                     Thank you for your submission!
                   </h3>
                   <p class="text-center font-big">
-                    <hr />
+                    <hr className="mt-2" />
                     Our team has received your request and is excited to add
                     some flavor to your event. Our vendors are ready to impress!
                     <br />
-                    <i class="bi bi-balloon-heart"></i>
+                    <i
+                      className="fa-solid fa-ice-cream mb-2 mt-2"
+                      style={{ color: "#E93287" }}
+                    ></i>
                     <br />
                     You'll receive a customized proposal based on your
                     information soon.
@@ -385,7 +454,7 @@ const CateringForm = () => {
                 </>
               )}
               {/* Navigation buttons */}
-              {currentStep !== 1 && (
+              {currentStep !== 1 && currentStep !== 8 && (
                 <Button
                   onClick={handlePrevStep}
                   className="mx-2"
@@ -395,7 +464,7 @@ const CateringForm = () => {
                   Previous
                 </Button>
               )}
-              {currentStep !== 7 ? (
+              {currentStep !== 8 ? (
                 <Button
                   onClick={handleNextStep}
                   className="mx-2"
@@ -416,6 +485,22 @@ const CateringForm = () => {
                 </Button>
               )}
             </div>
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={10500}
+              onClose={handleCloseSnackbar}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <MuiAlert
+                elevation={6}
+                variant="filled"
+                onClose={handleCloseSnackbar}
+                severity="info"
+              >
+                Thank you for your business! Look out for an email from our
+                vendors @ WMIC.
+              </MuiAlert>
+            </Snackbar>
           </Card.Body>
         </Card>
       </div>

@@ -11,7 +11,7 @@ const VendorRatings = () => {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState("");
   const [isVendorSelected, setIsVendorSelected] = useState(false);
-  const api = import.meta.env.URL;
+  const api = import.meta.env.VITE_URL;
 
   useEffect(() => {
     axios
@@ -70,10 +70,10 @@ const VendorRatings = () => {
 
   const handleReviewSubmit = (event) => {
     event.preventDefault();
-    const userId = Math.floor(Math.random() * 7) + 1;
+    // const userId = Math.floor(Math.random() * 7) + 1;
     axios
       .post(`${api}/reviews/vendor/${vendorId}`, {
-        userId,
+        userId: 1,
         vendorId,
         reviewText,
         rating: parseInt(rating),

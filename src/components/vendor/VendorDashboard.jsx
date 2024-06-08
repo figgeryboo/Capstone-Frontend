@@ -12,7 +12,7 @@ const VendorDashboard = () => {
 				<Card>
 					<Card.Body>
 						<h3 className="text-center mb-3"> <i id="menu-image" className="bi bi-person-bounding-box"></i>
-							Welcome{' '}
+							 Welcome{' '}
 							{currentUser.displayName
 								? currentUser.displayName
 								: currentUser.email}
@@ -30,9 +30,15 @@ const VendorDashboard = () => {
 									</Button>
 									<br />
 								</Link>
-								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
-									Chat Support
+								<Button className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
+									See My Reviews
 								</Button>
+								<Link to="/vendorsupport">
+
+								<Button className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
+									Vendor Support
+								</Button>
+								</Link>
 								<VendorSignOut />
 							</div>
 						</div>

@@ -10,7 +10,7 @@ import {
   // updatePassword,
   // sendEmailVerification,
 } from "firebase/auth";
-import axios  from "axios";
+import axios from "axios";
 
 export const doCreateUserWithEmailAndPassword = async (email, password) => {
   // return createUserWithEmailAndPassword(auth, email, password);
@@ -23,15 +23,18 @@ export const doCreateUserWithEmailAndPassword = async (email, password) => {
     const user = userCredential.user;
     console.log("user:", user);
 
-    await axios.post("http://localhost:4444/firebase/sendUserToPostgres", {
-      uid: user.uid,
-      email: user.email,
-    });
+    await axios.post(
+      "https://capstone-backend-vi3e.onrender.com/firebase/sendUserToPostgres",
+      {
+        uid: user.uid,
+        email: user.email,
+      }
+    );
 
     await firestore.collection("users").doc(user.uid).set({
       email: user.email,
       displayName: user.displayName,
-      token: token,
+      // token: token,
     });
 
     return user;
@@ -50,34 +53,39 @@ export const doCreateVendorWithEmailAndPassword = async (
   vendorData
 ) => {
   try {
-    const 
-    vendorCredential = await createUserWithEmailAndPassword(
+    const vendorCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    const vendor = vendorCredential.user;
-    console.log("Posting vendor data:", {
-      uid: vendor.uid,
-      email: vendor.email,
-      displayName: vendor.displayName
-  
-    });
-    
-    await axios.post("http://localhost:4444/firebase/sendAllVendorsToPostgres", {
-      uid: vendor.uid,
-      email: vendor.email,
-      displayName: vendor.displayName
-     
-    }).catch(error => {
-      console.error("Error posting vendor data:", error);
-      throw error;
-    });
+
+    await axios
+      .post(
+        "https://capstone-backend-vi3e.onrender.com/firebase/sendAllVendorsToPostgres",
+        {
+          uid: vendor.uid,
+          email: vendor.email,
+          displayName: vendor.displayName,
+        }
+      )
+      .catch((error) => {
+        console.error("Error posting vendor data:", error);
+        throw error;
+      });
+
+    // const vendor = vendorCredential.user;
+    // console.log("Posting vendor data:", {
+    //   uid: vendor.uid,
+    //   email: vendor.email,
+    //   displayName: vendor.displayName
+
+    // });
+
     // Update user profile (display name, etc.)
     await firestore.collection("vendors").doc(vendor.uid).set({
       email: vendor.email,
       displayName: vendor.displayName,
-      token: token,
+      // token: token,
     });
     await updateProfile(vendor, { displayName: vendorData.vendorName });
 
@@ -122,6 +130,25 @@ export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
   const user = result.user;
+
+  const collection = role === "vendor" ? "vendors" : "customers";
+  await firestore.collection(collection).doc(user.uid).set({
+    email: user.email,
+    displayName: user.displayName,
+  });
+
+  await axios.post(
+    `https://capstone-backend-vi3e.onrender.com/firebase/send${
+      role === "vendor" ? "AllVendors" : "AllUsers"
+    }ToPostgres`,
+    {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+    }
+  );
+
+  return user;
 };
 
 export const doSignOut = () => {

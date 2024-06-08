@@ -32,3 +32,7 @@ dist-ssr
 src/components/WebSocketClient.jsx
 
 notes.txt
+
+src/components/user/mapRefactor.jsx
+
+tasks.txt
