@@ -30,9 +30,15 @@ const VendorDashboard = () => {
 									</Button>
 									<br />
 								</Link>
-								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
+								<Button className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
 									See My Reviews
 								</Button>
+								<Link to="/vendorsupport">
+
+								<Button className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
+									Vendor Support
+								</Button>
+								</Link>
 								<VendorSignOut />
 							</div>
 						</div>
