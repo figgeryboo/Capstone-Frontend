@@ -29,7 +29,7 @@ const UserDashboard = () => {
 									Event Requests
 								</Button>
 							</Link>
-							<Link to="/usersupport">
+							<Link to="/feedback">
 								<Button
 									className="w-100"
 									variant="primary"

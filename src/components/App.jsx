@@ -20,6 +20,7 @@ import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
 import PaymentForm from './pages/PaymentForm';
 import VendorMetrics from './vendor/VendorMetrics';
+import Support from './pages/Support';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />
+              <Route path="/feedback" element={<Support />} />
               <Route path="*" element={<Error404 />} />
             </Routes>
 		  <FooterWithConditionalRendering />

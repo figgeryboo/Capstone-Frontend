@@ -158,6 +158,7 @@ const CateringRequests = () => {
 			});
 		}
 	}, [showMap, requests]);
+
 	return (
 		<div
 			className="catering_container"
@@ -215,7 +216,10 @@ const CateringRequests = () => {
 						gap: '11px',
 					}}
 				>
-					{requests.map((request, index) => (
+					{requests.length === 0 ? (
+						<h3> No Requests </h3>
+					) : (
+					requests.map((request, index) => (
 						<Card
 							key={request.order_id}
 							style={{ width: '90%', maxWidth: '500px' }}
@@ -349,7 +353,7 @@ const CateringRequests = () => {
 								</div>
 							</Collapse>
 						</Card>
-					))}
+					)))}
 					<Snackbar
 						open={snackbarOpen}
 						autoHideDuration={10000}
