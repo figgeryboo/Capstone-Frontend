@@ -29,7 +29,7 @@ const UserDashboard = () => {
 									Event Requests
 								</Button>
 							</Link>
-							<Link to="/feedback">
+							{/* <Link to="/feedback"> */}
 								<Button
 									className="w-100"
 									variant="primary"
@@ -40,7 +40,7 @@ const UserDashboard = () => {
 								>
 									Support
 								</Button>
-							</Link>
+							{/* </Link> */}
 							<UserSignOut />
 						</div>
 					</Card.Body>
