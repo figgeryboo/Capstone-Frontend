@@ -8,6 +8,10 @@ const center = {
 	lng: -73.989578,
 };
 
+
+
+const currentHour = new Date().getHours();
+
 const Map = () => {
 	const mapRef = useRef(null);
 	const url = import.meta.env.VITE_URL;
@@ -20,6 +24,7 @@ const Map = () => {
 	const [menuExpanded, setMenuExpanded] = useState(false);
 	const [userMarker, setUserMarker] = useState(null);
 
+	
 	useEffect(() => {
 	// 	const fetchData = async () => {
 	// 		try {
@@ -144,6 +149,7 @@ const Map = () => {
 	// 		}
 	// 	};
 
+	
 	const fetchData = async () => {
 		try {
 			const vendorsResponse = await axios.get(`${url}/vendors`);
@@ -165,6 +171,7 @@ const Map = () => {
 		
 	
 			vendors.forEach((vendor) => {
+				
 				const pathCoordinates = vendor.coordinates.map((coord) => ({
 					lat: coord.lat,
 					lng: coord.lng,
@@ -181,15 +188,18 @@ const Map = () => {
 				polyline.setMap(map);
 	
 				let index = 0;
-				const marker = new google.maps.Marker({
-					position: pathCoordinates[index],
-					map: map,
-					icon: {
-						url: '/truckIcon.png',
-						scaledSize: new google.maps.Size(50, 50),
-						anchor: new google.maps.Point(20, 20),
-					},
-				});
+				// TODO: make these nonexistent after closing time
+				
+				// const marker = new google.maps.Marker({
+				// 	position: pathCoordinates[index],
+				// 	map: map,
+				// 	icon: {
+				// 		url: '/truckIcon.png',
+				// 		scaledSize: new google.maps.Size(50, 50),
+				// 		anchor: new google.maps.Point(20, 20),
+				// 	},
+				// });
+
 	
 				const infoWindowContent = `
 				<div style="max-width: 600px; display: flex; flex-direction: column;">
@@ -298,11 +308,12 @@ const Map = () => {
 			setInfoWindows(infoWindows);
 		} catch (error) {
 			console.error('Error fetching vendor data:', error);
-			alert('Vendor data currently unavailable. Refresh to try again.');
+			alert('No vendors available. Refresh or try again at a later time.');
 		}
 	};
 	
-		fetchData();
+      fetchData();
+
 	}, []);
 
 	
