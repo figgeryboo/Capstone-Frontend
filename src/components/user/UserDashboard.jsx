@@ -31,7 +31,7 @@ const UserDashboard = () => {
 							</Link>
 							<Link to="/feedback">
 								<Button
-								className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
+								className="w-100" variant="primary" size="lg" active style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
 								 
 								{/* // 	className="w-100"
 								// 	variant="primary"
