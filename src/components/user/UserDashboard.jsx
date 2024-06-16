@@ -29,18 +29,20 @@ const UserDashboard = () => {
 									Event Requests
 								</Button>
 							</Link>
-							{/* <Link to="/feedback"> */}
+							<Link to="/feedback">
 								<Button
-									className="w-100"
-									variant="primary"
-									type="link"
-									size="lg"
-									disabled
-									style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
-								>
+								className="w-100" variant="primary" size="lg" disabled style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
+								 
+								{/* // 	className="w-100"
+								// 	variant="primary"
+								// 	type="link"
+								// 	size="lg"
+								// 	disable
+								// 	style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
+								 */}
 									Support
 								</Button>
-							{/* </Link> */}
+							</Link>
 							<UserSignOut />
 						</div>
 					</Card.Body>

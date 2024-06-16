@@ -46,7 +46,7 @@ function App() {
               <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />
-              <Route path="/feedback" element={<Support />} />
+              {/* <Route path="/feedback" element={<Support />} /> */}
               <Route path="*" element={<Error404 />} />
             </Routes>
 		  <FooterWithConditionalRendering />
