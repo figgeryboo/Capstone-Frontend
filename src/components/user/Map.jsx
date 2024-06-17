@@ -168,7 +168,6 @@ const Map = () => {
 				}
 			);
 
-		
 	
 			vendors.forEach((vendor) => {
 				
@@ -269,7 +268,7 @@ const Map = () => {
 				}
 					setTimeout(animateMarker, 3730);
 				};
-				// animateMarker();
+				animateMarker();
 			});
 
 			// vendorLocations.forEach((vendor) => {
