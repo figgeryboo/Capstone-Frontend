@@ -32,14 +32,6 @@ const UserDashboard = () => {
 							<Link to="/usersupport">
 								<Button
 								className="w-100" variant="primary" size="lg" active style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
-								 
-								{/* // 	className="w-100"
-								// 	variant="primary"
-								// 	type="link"
-								// 	size="lg"
-								// 	disable
-								// 	style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
-								 */}
 									Support
 								</Button>
 							</Link>

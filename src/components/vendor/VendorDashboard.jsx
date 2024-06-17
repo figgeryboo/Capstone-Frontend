@@ -41,6 +41,7 @@ const VendorDashboard = () => {
 								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
 									Support
 								</Button>
+								<br />
 								</Link>
 								<VendorSignOut />
 							</div>
