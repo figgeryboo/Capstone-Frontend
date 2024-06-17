@@ -29,7 +29,7 @@ const UserDashboard = () => {
 									Event Requests
 								</Button>
 							</Link>
-							<Link to="/feedback">
+							<Link to="/usersupport">
 								<Button
 								className="w-100" variant="primary" size="lg" active style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}>
 								 

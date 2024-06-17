@@ -20,7 +20,8 @@ import HeaderWithConditionalRendering from './pages/Header';
 import CateringRequests from './vendor/CateringRequests';
 import PaymentForm from './pages/PaymentForm';
 import VendorMetrics from './vendor/VendorMetrics';
-import Support from './pages/Support';
+import UserSupport from './user/UserSupport';
+import VendorSupport from './vendor/VendorSupport';
 
 function App() {
   return (
@@ -46,7 +47,8 @@ function App() {
               <Route path="/vendorcatering" element={<CateringRequests />} />
               <Route path="/usercatering" element={<CateringForm />} />
               <Route path="/userratings" element={<UserReviewsFeed />} />
-              <Route path="/feedback" element={<Support />} />
+              <Route path="/usersupport" element={<UserSupport />} />
+              <Route path="/vendorsupport" element={<VendorSupport />} />
               <Route path="*" element={<Error404 />} />
             </Routes>
 		  <FooterWithConditionalRendering />
@@ -63,6 +65,7 @@ function FooterWithConditionalRendering() {
     '/vendordashboard',
     '/vendorcatering',
     '/vendormetrics',
+    'vendorsupport'
   ];
 
   const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));
