@@ -37,11 +37,11 @@ const VendorDashboard = () => {
 								</Button>
 								</Link>
 
-								{/* <Link to='/feedback'> */}
+								<Link to='/feedback'>
 								<Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: "#59E0C8", borderColor: "#59E0C8", color: "black"}}>
 									Support
 								</Button>
-								{/* </Link> */}
+								</Link>
 								<VendorSignOut />
 							</div>
 						</div>
