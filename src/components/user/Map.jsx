@@ -188,7 +188,6 @@ const isWithinBusinessHours = () => {
 					strokeWeight: 3,
 				});
 	
-				if (isWithinBusinessHours()) {
 					let index = 0;
 					const marker = new google.maps.Marker({
 					  position: pathCoordinates[index],
@@ -271,7 +270,6 @@ const isWithinBusinessHours = () => {
 					setTimeout(animateMarker, 3730);
 				};
 				animateMarker();
-			}
 			});
 
 			// vendorLocations.forEach((vendor) => {
@@ -313,9 +311,9 @@ const isWithinBusinessHours = () => {
 			alert('No vendors available. Refresh or try again at a later time.');
 		}
 	};
+fetchData()
 	
-      fetchData();
-	  isWithinBusinessHours();
+    //   fetchData();
 	}, []);
 
 	
@@ -390,7 +388,6 @@ const isWithinBusinessHours = () => {
           overflowY: 'auto',
 				}}
 			></div>
-
 			<div>
 				<Button
 					className="btn btn-md"
