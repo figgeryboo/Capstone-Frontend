@@ -2,15 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './Map.css';
 import { Button, Collapse } from 'react-bootstrap';
-import {Snackbar } from '@mui/material';
+import {Alert, Snackbar } from '@mui/material';
 
 const center = {
 	lat: 40.750797,
 	lng: -73.989578,
 };
-
-
-
 
 const Map = () => {
 	const mapRef = useRef(null);
@@ -24,11 +21,14 @@ const Map = () => {
 	const [infoWindows, setInfoWindows] = useState({});
 	const [menuExpanded, setMenuExpanded] = useState(false);
 	const [userMarker, setUserMarker] = useState(null);
+const [snackbarOpen, setSnackbarOpen] = useState(false)
 
-	const isWithinBusinessHours = () => {
-		const currentHour = new Date().getHours();
-		setTrucksOffline(currentHour >= 12 && currentHour < 21); 
-	  };
+const isWithinBusinessHours = () => {
+    const currentHour = new Date().getHours();
+    const withinHours = currentHour >= 12 && currentHour < 21;
+    setTrucksOffline(!withinHours);
+    setSnackbarOpen(!withinHours); 
+  };
 
 	useEffect(() => {
 	// 	const fetchData = async () => {
@@ -315,7 +315,7 @@ const Map = () => {
 	};
 	
       fetchData();
-
+	  isWithinBusinessHours();
 	}, []);
 
 	
@@ -374,9 +374,9 @@ const Map = () => {
 		setSelectedVendor(null);
 		setSelectedVendorDetails(null);
 	};
-	// const handleSnackbarClose = () => {
-	// 	setSnackbarOpen(false);
-	// };
+	const handleSnackbarClose = () => {
+		setSnackbarOpen(false);
+	};
 	return (
 		<div style={{ display: 'flex', position: 'relative' }}>
 
@@ -481,6 +481,16 @@ const Map = () => {
 					</Collapse>
 				</div>
 			)}
+			      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={7300}
+        onClose={handleSnackbarClose}
+		action={
+			<Alert severity="info">🍦 Trucks are offline. Please check back during business hours (12 PM - 9 PM)</Alert>
+		  }
+		anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        // message="Trucks are offline. Please check back during business hours (12 PM - 9 PM)."
+      />
 		</div>
 	);
 };
