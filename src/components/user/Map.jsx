@@ -2,19 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './Map.css';
 import { Button, Collapse } from 'react-bootstrap';
+import {Alert, Snackbar } from '@mui/material';
 
 const center = {
 	lat: 40.750797,
 	lng: -73.989578,
 };
 
-
-
-const currentHour = new Date().getHours();
-
 const Map = () => {
 	const mapRef = useRef(null);
 	const url = import.meta.env.VITE_URL;
+	const [trucksOffline, setTrucksOffline] = useState(false);
 	const [selectedVendor, setSelectedVendor] = useState(null);
 	const [liveVendors, setLiveVendors] = useState(null);
 	const [isUserLocationEnabled, setIsUserLocationEnabled] = useState(false);
@@ -23,8 +21,15 @@ const Map = () => {
 	const [infoWindows, setInfoWindows] = useState({});
 	const [menuExpanded, setMenuExpanded] = useState(false);
 	const [userMarker, setUserMarker] = useState(null);
+const [snackbarOpen, setSnackbarOpen] = useState(false)
 
-	
+const isWithinBusinessHours = () => {
+    const currentHour = new Date().getHours();
+    const withinHours = currentHour >= 12 && currentHour < 21;
+    setTrucksOffline(!withinHours);
+    setSnackbarOpen(!withinHours); 
+  };
+
 	useEffect(() => {
 	// 	const fetchData = async () => {
 	// 		try {
@@ -168,7 +173,6 @@ const Map = () => {
 				}
 			);
 
-	
 			vendors.forEach((vendor) => {
 				
 				const pathCoordinates = vendor.coordinates.map((coord) => ({
@@ -184,22 +188,20 @@ const Map = () => {
 					strokeWeight: 3,
 				});
 	
+				if (isWithinBusinessHours()) {
+					let index = 0;
+					const marker = new google.maps.Marker({
+					  position: pathCoordinates[index],
+					  map: map,
+					  icon: {
+						url: '/truckIcon.png',
+						scaledSize: new google.maps.Size(50, 50),
+						anchor: new google.maps.Point(20, 20),
+					  },
+					});
 				polyline.setMap(map);
-	
-				let index = 0;
-				// TODO: make these nonexistent after closing time
-				
-				// const marker = new google.maps.Marker({
-				// 	position: pathCoordinates[index],
-				// 	map: map,
-				// 	icon: {
-				// 		url: '/truckIcon.png',
-				// 		scaledSize: new google.maps.Size(50, 50),
-				// 		anchor: new google.maps.Point(20, 20),
-				// 	},
-				// });
 
-	
+
 				const infoWindowContent = `
 				<div style="max-width: 600px; display: flex; flex-direction: column;">
 					<h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${
@@ -269,6 +271,7 @@ const Map = () => {
 					setTimeout(animateMarker, 3730);
 				};
 				animateMarker();
+			}
 			});
 
 			// vendorLocations.forEach((vendor) => {
@@ -312,7 +315,7 @@ const Map = () => {
 	};
 	
       fetchData();
-
+	  isWithinBusinessHours();
 	}, []);
 
 	
@@ -360,6 +363,9 @@ const Map = () => {
 			);
 		} else {
 			setIsUserLocationEnabled(false);
+			if (userMarker) {
+				userMarker.setMap(null);
+			}
 		}
 	};
 
@@ -368,9 +374,12 @@ const Map = () => {
 		setSelectedVendor(null);
 		setSelectedVendorDetails(null);
 	};
-
+	const handleSnackbarClose = () => {
+		setSnackbarOpen(false);
+	};
 	return (
 		<div style={{ display: 'flex', position: 'relative' }}>
+
 			<div
 				id="map-container"
 				style={{
@@ -472,6 +481,16 @@ const Map = () => {
 					</Collapse>
 				</div>
 			)}
+			      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={7300}
+        onClose={handleSnackbarClose}
+		action={
+			<Alert severity="info">🍦 Trucks are offline. Please check back during business hours (12 PM - 9 PM)</Alert>
+		  }
+		anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        // message="Trucks are offline. Please check back during business hours (12 PM - 9 PM)."
+      />
 		</div>
 	);
 };
