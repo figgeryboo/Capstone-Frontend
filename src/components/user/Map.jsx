@@ -189,15 +189,15 @@ const Map = () => {
 				let index = 0;
 				// TODO: make these nonexistent after closing time
 				
-				const marker = new google.maps.Marker({
-					position: pathCoordinates[index],
-					map: map,
-					icon: {
-						url: '/truckIcon.png',
-						scaledSize: new google.maps.Size(50, 50),
-						anchor: new google.maps.Point(20, 20),
-					},
-				});
+				// const marker = new google.maps.Marker({
+				// 	position: pathCoordinates[index],
+				// 	map: map,
+				// 	icon: {
+				// 		url: '/truckIcon.png',
+				// 		scaledSize: new google.maps.Size(50, 50),
+				// 		anchor: new google.maps.Point(20, 20),
+				// 	},
+				// });
 
 	
 				const infoWindowContent = `
