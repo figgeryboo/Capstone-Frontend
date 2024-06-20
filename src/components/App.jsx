@@ -65,7 +65,7 @@ function FooterWithConditionalRendering() {
     '/vendordashboard',
     '/vendorcatering',
     '/vendormetrics',
-    'vendorsupport'
+    '/vendorsupport'
   ];
 
   const isVendorPath = vendorPaths.some((path) => location.pathname.startsWith(path));
