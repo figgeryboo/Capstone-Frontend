@@ -174,7 +174,7 @@ const isWithinBusinessHours = () => {
 					disableDefaultUI: true,
 				}
 			);
-			if (isWithinBusinessHours()) {
+			// if (isWithinBusinessHours()) {
 
 			vendors.forEach((vendor) => {
 				
@@ -275,7 +275,7 @@ const isWithinBusinessHours = () => {
 				// animateMarker();
 			});
 
-		}
+		// }
 
 			// vendorLocations.forEach((vendor) => {
 			// 	vendor.locations.forEach((location) => {
