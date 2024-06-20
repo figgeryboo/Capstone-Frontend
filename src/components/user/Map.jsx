@@ -269,7 +269,7 @@ const isWithinBusinessHours = () => {
 				}
 					setTimeout(animateMarker, 3730);
 				};
-				animateMarker();
+				// animateMarker();
 			});
 
 			// vendorLocations.forEach((vendor) => {
