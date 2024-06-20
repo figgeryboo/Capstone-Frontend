@@ -55,11 +55,11 @@ const UserSupport = () => {
     } else {
       axios.post(`${url}/feedback/`, form)
         .then((res) => {
-          console.log("Feedback submitted successfully", res);
+          console.log("Feedback submitted", res.data);
           // sendMessage(form.email);
           setOpenSnackbar(true);
         })
-        .catch((err) => console.error("Error submitting feedback", err));
+        .catch((err) => console.error("Error submitting feedback", err.response));
     }
     setForm({
       email: email,
