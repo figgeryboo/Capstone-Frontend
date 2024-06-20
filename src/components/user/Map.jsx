@@ -23,12 +23,12 @@ const Map = () => {
 	const [userMarker, setUserMarker] = useState(null);
 const [snackbarOpen, setSnackbarOpen] = useState(false)
 
-const isWithinBusinessHours = () => {
-    const currentHour = new Date().getHours();
-    const withinHours = currentHour >= 12 && currentHour < 21;
-    setTrucksOffline(!withinHours);
-    setSnackbarOpen(!withinHours); 
-  };
+// const isWithinBusinessHours = () => {
+//     const currentHour = new Date().getHours();
+//     const withinHours = currentHour >= 12 && currentHour < 21;
+//     setTrucksOffline(!withinHours);
+//     setSnackbarOpen(!withinHours); 
+//   };
 
 	useEffect(() => {
 	// 	const fetchData = async () => {
@@ -269,7 +269,7 @@ const isWithinBusinessHours = () => {
 				}
 					setTimeout(animateMarker, 3730);
 				};
-				animateMarker();
+				// animateMarker();
 			});
 
 			// vendorLocations.forEach((vendor) => {
@@ -367,11 +367,11 @@ fetchData()
 		}
 	};
 
-	const handleCloseDetails = () => {
-		setShowExpandedDetails(false);
-		setSelectedVendor(null);
-		setSelectedVendorDetails(null);
-	};
+	// const handleCloseDetails = () => {
+	// 	setShowExpandedDetails(false);
+	// 	setSelectedVendor(null);
+	// 	setSelectedVendorDetails(null);
+	// };
 	const handleSnackbarClose = () => {
 		setSnackbarOpen(false);
 	};
