@@ -9,6 +9,9 @@ const center = {
 	lng: -73.989578,
 };
 
+const currentHour = new Date().getHours();
+
+
 const Map = () => {
 	const mapRef = useRef(null);
 	const url = import.meta.env.VITE_URL;
@@ -23,12 +26,11 @@ const Map = () => {
 	const [userMarker, setUserMarker] = useState(null);
 const [snackbarOpen, setSnackbarOpen] = useState(false)
 
-// const isWithinBusinessHours = () => {
-//     const currentHour = new Date().getHours();
-//     const withinHours = currentHour >= 12 && currentHour < 21;
-//     setTrucksOffline(!withinHours);
-//     setSnackbarOpen(!withinHours); 
-//   };
+const isWithinBusinessHours = () => {
+    const withinHours = currentHour >= 12 && currentHour < 21;
+    setTrucksOffline(!withinHours);
+    setSnackbarOpen(!withinHours); 
+  };
 
 	useEffect(() => {
 	// 	const fetchData = async () => {
@@ -172,6 +174,7 @@ const [snackbarOpen, setSnackbarOpen] = useState(false)
 					disableDefaultUI: true,
 				}
 			);
+			if (isWithinBusinessHours()) {
 
 			vendors.forEach((vendor) => {
 				
@@ -187,7 +190,7 @@ const [snackbarOpen, setSnackbarOpen] = useState(false)
 					strokeOpacity: 1.0,
 					strokeWeight: 3,
 				});
-	
+
 					let index = 0;
 					const marker = new google.maps.Marker({
 					  position: pathCoordinates[index],
@@ -272,6 +275,8 @@ const [snackbarOpen, setSnackbarOpen] = useState(false)
 				// animateMarker();
 			});
 
+		}
+
 			// vendorLocations.forEach((vendor) => {
 			// 	vendor.locations.forEach((location) => {
 			// 	  const marker = new google.maps.Marker({
@@ -311,13 +316,12 @@ const [snackbarOpen, setSnackbarOpen] = useState(false)
 			alert('No vendors available. Refresh or try again at a later time.');
 		}
 	};
-fetchData()
+
 	
-    //   fetchData();
+      fetchData();
 	}, []);
 
 	
-
 	
 	window.handleVendorClick = async (vendorId) => {
 		try {
@@ -483,7 +487,7 @@ fetchData()
         autoHideDuration={7300}
         onClose={handleSnackbarClose}
 		action={
-			<Alert severity="info">🍦 Trucks are offline. Please check back during business hours (12 PM - 9 PM)</Alert>
+			<Alert severity="info">🍦 Trucks are offline. Please check back during business hours</Alert>
 		  }
 		anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         // message="Trucks are offline. Please check back during business hours (12 PM - 9 PM)."
