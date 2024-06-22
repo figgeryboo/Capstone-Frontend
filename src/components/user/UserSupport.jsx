@@ -1,10 +1,10 @@
-import { Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import { useAuth } from "../../contexts/authContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { messaging } from "../../firebase/firebase";
 import { Snackbar } from "@mui/material";
-import MuiAlert from '@mui/material/Alert';
+import MuiAlert from "@mui/material/Alert";
 
 const UserSupport = () => {
   let user = useAuth();
@@ -20,9 +20,8 @@ const UserSupport = () => {
     email: email,
     firebase_uid: uid,
     rating: "",
-    appUseDuration: "",
-    favoriteFeature: "",
-    leastFavoriteFeature: "",
+    favorite_feature: "",
+    least_favorite_feature: "",
     suggestions: "",
   });
 
@@ -46,31 +45,31 @@ const UserSupport = () => {
     });
   };
 
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     const formElement = e.currentTarget;
     if (formElement.checkValidity() === false) {
       e.stopPropagation();
     } else {
-      axios.post(`${url}/feedback/`, form)
+      axios
+        .post(`${url}/feedback/`, form)
         .then((res) => {
           console.log("Feedback submitted", res.data);
           // sendMessage(form.email);
           setOpenSnackbar(true);
         })
-        .catch((err) => console.error("Error submitting feedback", err.response));
+        .catch((err) => console.error("Error submitting feedback", err));
     }
+   
+    setValidated(true);
     setForm({
       email: email,
       firebase_uid: uid,
       rating: "",
-      appUseDuration: "",
-      favoriteFeature: "",
-      leastFavoriteFeature: "",
+      favorite_feature: "",
+      least_favorite_feature: "",
       suggestions: "",
     });
-    setValidated(true);
   };
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./firebase/firebase.js')
@@ -101,41 +100,27 @@ const UserSupport = () => {
   //         console.log("No registration token available. Request permission to generate one.");
   //       }
   //     })
-   
-  // };
 
+  // };
   return (
-    <div
-      className="container mt-5"
-      style={{
-        minWidth: "65vw",
-        maxWidth: "90vw",
-        maxHeight: "85vh",
-      }}
-    >
-      <h2>Feedback Form</h2>
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
+    <div className="container mt-5" style={{ minWidth: "65vw", maxWidth: "90vw", maxHeight: "85vh" }}>
+      <h2>User Feedback Form</h2>
+      <Form noValidate onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
             type="email"
-            className="form-control"
             id="email"
             name="email"
             value={form.email}
             onChange={handleChange}
             required
           />
-          <div className="invalid-feedback">
-            Please enter a valid email address.
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="rating">
-            How would you rate your overall experience using our app?
-          </label>
-          <select
-            className="form-control"
+          <Form.Control.Feedback type="invalid">Please enter a valid email address.</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>How would you rate your overall experience using our app?</Form.Label>
+          <Form.Select
             id="rating"
             name="rating"
             value={form.rating}
@@ -148,63 +133,48 @@ const UserSupport = () => {
             <option value="3">3 - Neutral</option>
             <option value="4">4 - Satisfied</option>
             <option value="5">5 - Very Satisfied</option>
-          </select>
-          <div className="invalid-feedback">Please rate your experience.</div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="favoriteFeature">
-            What is your favorite feature?
-          </label>
-          <input
+          </Form.Select>
+          <Form.Control.Feedback type="invalid">Please rate your experience.</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>What is your favorite feature?</Form.Label>
+          <Form.Control
             type="text"
-            className="form-control"
-            id="favoriteFeature"
-            name="favoriteFeature"
-            value={form.favoriteFeature}
+            id="favorite_feature"
+            name="favorite_feature"
+            value={form.favorite_feature}
             onChange={handleChange}
             required
           />
-          <div className="invalid-feedback">
-            Please enter your favorite feature.
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="appUseDuration">
-            What is your least favorite feature?
-          </label>
-          <input
+          <Form.Control.Feedback type="invalid">Please enter your favorite feature.</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>What is your least favorite feature?</Form.Label>
+          <Form.Control
             type="text"
-            className="form-control"
-            id="leastFavoriteFeature"
-            name="leastFavoriteFeature"
-            value={form.leastFavoriteFeature}
+            id="least_favorite_feature"
+            name="least_favorite_feature"
+            value={form.least_favorite_feature}
             onChange={handleChange}
             required
           />
-          <div className="invalid-feedback">
-            Please enter your least favorite feature.
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="suggestions">
-            Do you have any suggestions for improvement?
-          </label>
-          <textarea
-            className="form-control"
+          <Form.Control.Feedback type="invalid">Please enter your least favorite feature.</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Do you have any suggestions for improvement?</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={5}
             id="suggestions"
             name="suggestions"
-            rows="5"
             value={form.suggestions}
             onChange={handleChange}
             required
-          ></textarea>
-          <div className="invalid-feedback">Please enter your suggestions.</div>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
+          />
+          <Form.Control.Feedback type="invalid">Please enter your suggestions.</Form.Control.Feedback>
+        </Form.Group>
+        <Button className="w-100" variant="primary" size="lg" active style={{ backgroundColor: '#EA3187', borderColor: '#EA3187' }}
+        type="submit">Submit</Button>
       </Form>
       <Snackbar
         open={openSnackbar}
@@ -221,7 +191,7 @@ const UserSupport = () => {
         </MuiAlert>
       </Snackbar>
     </div>
-  );
+  )
 };
 
 export default UserSupport;
