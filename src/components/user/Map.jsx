@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './Map.css';
 import { Button } from 'react-bootstrap';
-import { Snackbar } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 
 const center = {
   lat: 40.750797,
@@ -263,12 +263,20 @@ const Map = () => {
       )}
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6800}
+        autoHideDuration={8000}
         onClose={handleSnackbarClose}
 		anchorOrigin={{vertical: "top", horizontal: "center"}}
-		sx={{ backgroundColor: '#527f0e', color: '#73b312', borderRadius: '15px' }}
-        message="Trucks are currently offline. Please check back between 12pm and 9pm tomorrow."
-      />
+		>
+		<Alert
+		onClose={handleSnackbarClose}
+		severity="info"
+		variant="filled"
+
+	  >
+       Trucks are currently offline. Check back between 12pm and 9pm tomorrow or browse 
+
+      </Alert>
+	  </Snackbar>
     </div>
   );
 };
