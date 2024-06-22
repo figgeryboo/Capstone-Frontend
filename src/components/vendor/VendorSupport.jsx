@@ -105,7 +105,7 @@ const UserSupport = () => {
   return (
     <div className="container mt-5" style={{ minWidth: "65vw", maxWidth: "90vw", maxHeight: "85vh" }}>
       <h2>Vendor Feedback Form</h2>
-      <Form noValidate onSubmit={handleSubmit}>
+      <Form noValidate onSubmit={handleSubmit} style={{height: "80vh"}}>
         <Form.Group className="mb-3">
           <Form.Label>Email</Form.Label>
           <Form.Control
