@@ -88,7 +88,7 @@ function LocationTracker() {
 		});
 
 		axios.get(`${url}/vendors`).then((res) => {
-			setSeeVendors(res.data);
+			// setSeeVendors(res.data);
 		});
 
 		seeVendors.forEach((vendor, index) => {
