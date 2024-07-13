@@ -23,7 +23,7 @@ const Map = () => {
 
   const isWithinBusinessHours = () => {
     const currentHour = new Date().getHours();
-    return currentHour >= 20 && currentHour < 21;
+    return currentHour >= 9 && currentHour < 21;
   };
 
   useEffect(() => {
@@ -273,8 +273,8 @@ const Map = () => {
 		variant="filled"
 
 	  >
-       Trucks are currently offline. <br></br>Check back between opening hours tomorrow or browse the app
-
+       {/* Trucks are currently offline. <br></br>Check back between opening hours tomorrow or browse the app */}
+We're currently experiencing technical difficulties. Thank you for your patience <br></br>We hope to be up and running soon!
       </Alert>
 	  </Snackbar>
     </div>
