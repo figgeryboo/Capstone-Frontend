@@ -23,7 +23,7 @@ const Map = () => {
 
   const isWithinBusinessHours = () => {
     const currentHour = new Date().getHours();
-    return currentHour >= 20 && currentHour < 21;
+    return currentHour >= 9 && currentHour < 21;
   };
 
   useEffect(() => {
