@@ -273,7 +273,7 @@ const Map = () => {
 		variant="filled"
 
 	  >
-       Trucks are currently offline. <br></br>Check back between opening hours tomorrow or browse the app
+       Trucks are currently offline <br></br>Feel free to browse the app or check back tomorrow during business hours
 {/* We're currently experiencing technical difficulties. Thank you for your patience <br></br>We hope to be up and running soon! */}
       </Alert>
 	  </Snackbar>
