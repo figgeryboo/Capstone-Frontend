@@ -54,7 +54,7 @@ const UserSupport = () => {
       axios
         .post(`${url}/feedback/`, form)
         .then((res) => {
-          console.log("Feedback submitted", res.data);
+          // console.log("Feedback submitted", res.data);
           // sendMessage(form.email);
           setOpenSnackbar(true);
         })
@@ -103,7 +103,7 @@ const UserSupport = () => {
 
   // };
   return (
-    <div className="container mt-5" style={{ minWidth: "65vw", maxWidth: "90vw", maxHeight: "80vh" }}>
+    <div className="w-100" style={{ maxWidth: "400px" }}>
       <h2>User Feedback Form</h2>
       <Form noValidate onSubmit={handleSubmit} style={{height: "80vh"}}>
         <Form.Group className="mb-3">
