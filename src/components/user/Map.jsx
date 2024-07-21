@@ -26,6 +26,36 @@ const Map = () => {
     return currentHour >= 9 && currentHour < 21;
   };
 
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  const isVendorOpen = (hours, day) => {
+    const now = new Date();
+    const currentDay = daysOfWeek[now.getDay()];
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+
+    const todayHours = hours.find((h) => h.day === day);
+    if (!todayHours) return false;
+
+    const openTime =
+      parseInt(todayHours.open.split(":")[0]) * 60 +
+      parseInt(todayHours.open.split(":")[1]);
+    const closeTime =
+      parseInt(todayHours.close.split(":")[0]) * 60 +
+      parseInt(todayHours.close.split(":")[1]);
+
+    return (
+      currentDay === day && currentTime >= openTime && currentTime <= closeTime
+    );
+  };
+
   useEffect(() => {
     const map = new google.maps.Map(document.getElementById("map-container"), {
       zoom: 14,
@@ -75,8 +105,19 @@ const Map = () => {
 
           polyline.setMap(map);
 
+          const daysOfWeek = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+          ];
+          let currentDay = daysOfWeek[new Date().getDay()];
+
           const infoWindowContent = `
-            <div style="max-width: 600px; display: flex; flex-direction: column;">
+            <div style="max-width: 640px; display: flex; flex-direction: column;">
               <h3 style="margin-bottom: 3px; margin-left:3px"><i class="bi bi-person-bounding-box" style="color: #ea3689"></i>  ${
                 vendor.vendor_name
               }</h3>
@@ -88,7 +129,25 @@ const Map = () => {
                 " "
               )}</p>
               <p style=""><b>Offers:</b> ${vendor.dietary_offering}</p>
-              <p style=""><b>Hours:</b> 12pm - 9pm</p>
+              <p style=""> ${vendor.business_hours
+                .map(
+                  (hour) => `
+                      <b style="${
+                        currentDay === hour.day
+                          ? "font-weight: bold; background-color: rgba(234, 49, 135, 0.418)"
+                          : ""
+                      }">${hour.day}:</b> ${hour.open} - ${hour.close} ${
+                    currentDay === hour.day
+                      ? isVendorOpen(vendor.business_hours, hour.day)
+                        ? '<span style="color: green; font-style: italic;">(Open Now)</span>'
+                        : '<span style="color: red; font-style: italic;">(Closed)</span>'
+                      : ""
+                  }
+                    `
+                )
+                .join("<br>")}
+                  </p>
+
               <p style=""><b>Accessible ♿️:</b> ${
                 vendor.accessible ? "Yes" : "No"
               }</p>
@@ -243,8 +302,8 @@ const Map = () => {
           >
             <sub>
               <b>
-                
-                  Accepts:{" "}<i>
+                Accepts:{" "}
+                <i>
                   {selectedVendorDetails.payment_types
                     .map((emoji) => {
                       switch (emoji) {
@@ -254,14 +313,15 @@ const Map = () => {
                           return "Card";
                         case "₿":
                           return "Bitcoin";
-                          case "🧾":
-                            return "Online"; 
+                        case "🧾":
+                          return "Online";
                         default:
                           return emoji;
                       }
                     })
                     .join(", ")}{" "}
-                 </i> payments
+                </i>{" "}
+                payments
               </b>
             </sub>
             <ul style={{ paddingLeft: "15px" }}>
@@ -283,7 +343,7 @@ const Map = () => {
         <Alert onClose={handleSnackbarClose} severity="info" variant="filled">
           Trucks are currently offline <br></br>Feel free to browse the app or
           check back tomorrow during business hours
-         {/* For troubleshooting purposes */}
+          {/* For troubleshooting purposes */}
           {/* We're currently experiencing technical difficulties. Thank you for your patience <br></br>We hope to be up and running soon! */}
         </Alert>
       </Snackbar>
