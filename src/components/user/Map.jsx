@@ -77,6 +77,44 @@ const Map = () => {
         const vendorsResponse = await axios.get(`${url}/vendors`);
         const vendors = vendorsResponse.data;
 
+        // fetched data for testing new vendors
+    //     axios
+    // .get(`${url}/vendors/locations`)
+    // .then((res) => {
+    //     const vendorLocations = res.data;
+
+    //     vendorLocations.forEach((vendor) => {
+    //         vendor.locations.forEach((location) => {
+    //             const marker = new google.maps.Marker({
+    //                 position: { lat: location.lat, lng: location.lng },
+    //                 map: map,
+    //                 icon: {
+    //                     url: '/image.gif',
+    //                     scaledSize: new google.maps.Size(60, 60),
+    //                     anchor: new google.maps.Point(30, 30),
+    //                 },
+    //             });
+
+    //             const infoWindow = new google.maps.InfoWindow({
+    //                 content: 'Vendor Location',
+    //                 maxWidth: 180,
+    //                 ariaLabel: 'vendor location marker',
+    //             });
+
+    //             marker.addListener('click', () => {
+    //                 Object.values(infoWindows).forEach((iw) => iw.close());
+    //                 infoWindow.open(map, marker);
+    //             });
+
+    //             google.maps.event.addListener(infoWindow, 'closeclick', () => {
+    //                 // setShowExpandedDetails(false);
+    //                 setSelectedVendor(null);
+    //                 setSelectedVendorDetails(null);
+    //             });
+    //         });
+    //     });
+    // });
+
         const infoWindows = {};
 
         vendors.forEach((vendor) => {
