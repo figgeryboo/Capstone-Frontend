@@ -152,7 +152,7 @@ const CateringForm = () => {
               {/* Step 1: Catering Intro Page */}
               {currentStep === 1 && (
                 <>
-                  <h3 className="text-center mb-2">Catering Request</h3>
+                  <h3 className="text-center mb-2">Catering Form</h3>
                   <p className="text-center mb-2">
                     <b>Excited to add some flavor to your event? </b>
                     <hr />
