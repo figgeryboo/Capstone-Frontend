@@ -103,7 +103,7 @@ const UserSupport = () => {
 
   // };
   return (
-    <div className="w-100" style={{ maxWidth: "400px" }}>
+    <div className="w-100">
       <h2>User Feedback Form</h2>
       <Form noValidate onSubmit={handleSubmit} style={{height: "80vh"}}>
         <Form.Group className="mb-3">
