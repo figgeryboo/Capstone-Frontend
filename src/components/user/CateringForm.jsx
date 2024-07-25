@@ -145,7 +145,7 @@ const CateringForm = () => {
 
   return (
     <>
-      <div className="w-100" style={{ maxWidth: "400px" }}>
+      <div className="w-100" style={{ maxWidth: "440px" }}>
         <Card>
           <Card.Body>
             <div className="d-grid gap-2">
@@ -154,15 +154,12 @@ const CateringForm = () => {
                 <>
                   <h3 className="text-center mb-2">Catering Form</h3>
                   <p className="text-center mb-2">
-                    <b>Excited to add some flavor to your event? </b>
+                    <i>Want to add some deliciousness to your future event?</i>
                     <hr />
-                    Our vendors are ready to impress!
-                    <br />
-                    Fill in all the requested information to get started & we'll
-                    whip up a customized proposal just for you.
-                  </p>
+                    Our vendors are ready to lend a hand.
+                    Please provide <br/>the necessary details below to ensure we can craft the perfect ice cream experience for your event.</p>
                   <sub className="text-center mt-2">
-                    <i>Estimated response times are 7-14 business days.</i>
+                    <i>Estimated response time is 7 business days.</i>
                   </sub>
                   <br />
                 </>
@@ -171,9 +168,10 @@ const CateringForm = () => {
               {currentStep === 2 && (
                 <>
                   <h3 className="text-center mb-2">Coordinator Details</h3>
+                  <i>Ensure your contact details are correct so we can reach out to confirm your request and discuss any additional details</i>
                   <Form>
                     <Form.Group className="mb-4" controlId="customer_name">
-                      <Form.Label>Coordinator Name</Form.Label>
+                      <Form.Label> <b>Coordinator Name</b> </Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="John Doe"
@@ -184,7 +182,7 @@ const CateringForm = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="customer_email">
-                      <Form.Label>Coordinator Email</Form.Label>
+                      <Form.Label><b>Coordinator Email</b></Form.Label>
                       <Form.Control
                         type="email"
                         placeholder="example@example.com"
@@ -195,7 +193,7 @@ const CateringForm = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="contact_info">
-                      <Form.Label>Coordinator Phone</Form.Label>
+                      <Form.Label><b>Coordinator Phone</b></Form.Label>
                       <Form.Control
                         type="tel"
                         placeholder="1234567890"
@@ -216,7 +214,7 @@ const CateringForm = () => {
                     <Row>
                       <Col>
                         <Form.Group className="mb-4" controlId="event_date">
-                          <Form.Label>Event Date</Form.Label>
+                          <Form.Label><b>Event Date</b></Form.Label>
                           <Form.Control
                             type="date"
                             required
@@ -233,7 +231,7 @@ const CateringForm = () => {
                       </Col>
                       <Col>
                         <Form.Group className="mb-4" controlId="event_time">
-                          <Form.Label>Event Time</Form.Label>
+                          <Form.Label><b>Event Time</b></Form.Label>
                           <Form.Control
                             type="time"
                             required
@@ -248,7 +246,7 @@ const CateringForm = () => {
                       className="mt-2 mb-4"
                       controlId="delivery_location"
                     >
-                      <Form.Label>Event Address</Form.Label>
+                      <Form.Label><b>Event Address</b></Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Ex: 222 Maiden Lane StonyBook, AZ 70834"
@@ -259,7 +257,7 @@ const CateringForm = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="event_size">
-                      <Form.Label>Event Size</Form.Label>
+                      <Form.Label><b>Event Size</b></Form.Label>
                       <Form.Control
                         type="number"
                         placeholder="20"
@@ -279,10 +277,10 @@ const CateringForm = () => {
                   <h3 className="text-center mb-2">Group Details</h3>
                   <Form>
                     <Form.Group className="mb-4" controlId="budget">
-                      <Form.Label>Max Budget USD</Form.Label>
+                      <Form.Label><b>Max Budget</b></Form.Label>
                       <Form.Control
                         type="text"
-                        placeholder="Budget"
+                        placeholder="Budget in USD"
                         required
                         onChange={handleChange}
                         value={formData.budget}
@@ -295,7 +293,7 @@ const CateringForm = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-4" controlId="dietary_options">
-                      <Form.Label>Dietary Options</Form.Label>
+                      <Form.Label><b>Dietary Options</b></Form.Label>
                       <Form.Check
                         type="checkbox"
                         label="Dairy"
@@ -310,7 +308,7 @@ const CateringForm = () => {
                     </Form.Group>
                     <Form.Group className="mb-4" controlId="needUtensils">
                       <Form.Label>
-                        Will You Need Additional Utensils?
+                      <b>Will You Need Additional Utensils?</b>
                       </Form.Label>
                       <Form.Check
                         type="radio"
@@ -379,7 +377,7 @@ const CateringForm = () => {
                   <h3 className="text-center mb-2">Final Steps</h3>
                   <Form>
                     <Form.Group className="mb-4" controlId="howDidYouHear">
-                      <Form.Label>How Did You Hear About Us?</Form.Label>
+                      <Form.Label><b>How Did You Hear About Us?</b></Form.Label>
                       <Form.Control as="select">
                         <option value="">Select</option>
                         <option value="friend">Friend</option>
@@ -393,7 +391,7 @@ const CateringForm = () => {
                       className="mb-4"
                       controlId="special_instructions"
                     >
-                      <Form.Label>Additional Comments:</Form.Label>
+                      <Form.Label><b>Additional Comments:</b></Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={3}
