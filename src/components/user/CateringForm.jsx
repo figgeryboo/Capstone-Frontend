@@ -8,12 +8,13 @@ import axios from "axios";
 const CateringForm = () => {
   const api = import.meta.env.VITE_URL;
   const { currentUser } = useAuth();
+  const email = currentUser.email
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     customer_id: currentUser.uid,
     customer_name: "",
-    customer_email: "",
+    customer_email: email,
     contact_info: "",
     event_date: "",
     event_time: "",
@@ -278,7 +279,7 @@ const CateringForm = () => {
                   <h3 className="text-center mb-2">Group Details</h3>
                   <Form>
                     <Form.Group className="mb-4" controlId="budget">
-                      <Form.Label>Max Budget </Form.Label>
+                      <Form.Label>Max Budget USD</Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="Budget"
@@ -316,7 +317,7 @@ const CateringForm = () => {
                         label="Yes"
                         name="needUtensils"
                         onChange={handleChange}
-                        alue="true"
+                        value="true"
                         checked={formData.needUtensils === "true"}
                       />
                       <Form.Check
@@ -408,8 +409,8 @@ const CateringForm = () => {
 
               {currentStep === 7 && (
                 <>
-                  <h3 class="text-center mt-2"> You're almost there!</h3>
-                  <p class="text-center">
+                  <h3 className="text-center mt-2"> You're almost there!</h3>
+                  <p className="text-center">
                     <b>Does everything look good so far?</b>
                     <hr className="mt-2" />
                     Please ensure all requested fields are accurately filled out
@@ -431,10 +432,10 @@ const CateringForm = () => {
               )}
               {currentStep === 8 && (
                 <>
-                  <h3 class="text-center mt-2">
+                  <h3 className="text-center mt-2">
                     Thank you for your submission!
                   </h3>
-                  <p class="text-center font-big">
+                  <p className="text-center font-big">
                     <hr className="mt-2" />
                     Our team has received your request and is excited to add
                     some flavor to your event. Our vendors are ready to impress!
@@ -444,11 +445,11 @@ const CateringForm = () => {
                       style={{ color: "#E93287" }}
                     ></i>
                     <br />
-                    You'll receive a customized proposal based on your
-                    information soon.
+                    You'll receive a payment request based on your
+                    event criteria shortly.
                     <br />
                     <sub>
-                      <i>Estimated response times are 7-14 business days.</i>
+                      <i>Estimated response times is 7 business days.</i>
                     </sub>
                   </p>
                 </>
@@ -497,7 +498,7 @@ const CateringForm = () => {
                 onClose={handleCloseSnackbar}
                 severity="info"
               >
-                Thank you for your business! Look out for an email from our
+                We appreciate your business! Look out for an email from our
                 vendors @ WMIC.
               </MuiAlert>
             </Snackbar>
