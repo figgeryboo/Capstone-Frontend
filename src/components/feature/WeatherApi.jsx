@@ -112,9 +112,9 @@ const handleWeatherToggle = () => {
           }}
         >
           <section style={{ margin: "2px" }}>
-            <h3>Current Weather in {location}</h3>
-            <p>Temperature: {weather.temp_c}°C</p>
-            <p>Condition: {weather.condition.text}</p>
+            <h3>Current Weather in <span>{location}</span></h3>
+            <p><span>Temperature:</span> {weather.temp_f}°F / {weather.temp_c}°C </p>
+            <p><span>Condition:</span> {weather.condition.text}</p>
           </section>
           <Button
             className="btn btn-md"
