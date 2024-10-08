@@ -22,24 +22,24 @@ const messaging = getMessaging(app)
 const vapidKey = firebaseConfig.vapidKey; 
 // const analytics = getAnalytics(app);
 
-Notification.requestPermission().then((permission) => {
-  if (permission === 'granted') {
-    console.log('Notification permission granted.');
-    // Get the token
-    getToken(messaging, { vapidKey }).then((currentToken) => {
-      if (currentToken) {
-        console.log('Current token for client:', currentToken);
-        // Send the token to your server and save it for later use
-      } else {
-        console.log('No registration token available. Request permission to generate one.');
-      }
-    }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-    });
-  } else {
-    console.log('Unable to get permission to notify.');
-  }
-});
+// Notification.requestPermission().then((permission) => {
+//   if (permission === 'granted') {
+//     console.log('Notification permission granted.');
+//     // Get the token
+//     getToken(messaging, { vapidKey }).then((currentToken) => {
+//       if (currentToken) {
+//         console.log('Current token for client:', currentToken);
+//         // Send the token to your server and save it for later use
+//       } else {
+//         console.log('No registration token available. Request permission to generate one.');
+//       }
+//     }).catch((err) => {
+//       console.log('An error occurred while retrieving token. ', err);
+//     });
+//   } else {
+//     console.log('Unable to get permission to notify.');
+//   }
+// });
 
 
 
