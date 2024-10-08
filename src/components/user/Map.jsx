@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Map.css";
 import { Button } from "react-bootstrap";
 import { Alert, Snackbar } from "@mui/material";
+import WeatherApi from "../feature/WeatherApi";
 
 const center = {
   lat: 40.750797,
@@ -288,6 +289,9 @@ const Map = () => {
           overflowY: "auto",
         }}
       ></div>
+      <div className="weather_container" >
+        <WeatherApi />
+      </div>
       <div>
         <Button
           className="btn btn-md"
