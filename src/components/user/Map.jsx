@@ -67,7 +67,7 @@ const Map = () => {
 
     mapRef.current = map;
 
-    if (!isWithinBusinessHours()) {
+    if (!isWithinBusinessHours() || isWithinBusinessHours()) {
       setTrucksOffline(true);
       setSnackbarOpen(true);
       return;
@@ -223,7 +223,7 @@ const Map = () => {
       }
     };
 
-    fetchData();
+    // fetchData();
   }, []);
 
   window.handleVendorClick = async (vendorId) => {
@@ -384,7 +384,12 @@ const Map = () => {
       >
         <Alert onClose={handleSnackbarClose} severity="info" variant="filled">
           Trucks are currently offline <br></br>Feel free to browse the app or
-          check back tomorrow during business hours
+          check back at a later time 
+          <img
+        src="/WMICLOGO.png"
+        alt="Custom"
+        style={{ width: '50px', marginRight: '10px' }}
+      />
           {/* For troubleshooting purposes */}
           {/* We're currently experiencing technical difficulties. Thank you for your patience <br></br>We hope to be up and running soon! */}
         </Alert>
