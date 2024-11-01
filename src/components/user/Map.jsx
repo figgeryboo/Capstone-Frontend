@@ -67,7 +67,7 @@ const Map = () => {
 
     mapRef.current = map;
 
-    if (!isWithinBusinessHours() || isWithinBusinessHours()) {
+    if (!isWithinBusinessHours()) {
       setTrucksOffline(true);
       setSnackbarOpen(true);
       return;
