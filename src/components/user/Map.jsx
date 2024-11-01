@@ -223,7 +223,7 @@ const Map = () => {
       }
     };
 
-    // fetchData();
+    fetchData();
   }, []);
 
   window.handleVendorClick = async (vendorId) => {
