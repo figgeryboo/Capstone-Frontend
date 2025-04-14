@@ -74,7 +74,7 @@ const handleWeatherToggle = () => {
         top: "75px",
         left: "9px",
         zIndex: 1,
-        width: "220px",
+        width: "40vw",
       }}
     >
       <input
@@ -83,7 +83,7 @@ const handleWeatherToggle = () => {
         onChange={handleLocationChange}
         placeholder="Enter location"
         style={{
-          width: "100%",
+          width: "37vw",
           padding: "7px",
           borderRadius: "5px",
           backgroundColor: '#bcf5ef',
@@ -96,7 +96,7 @@ const handleWeatherToggle = () => {
         style={{
           backgroundColor: "rgb(234, 49, 135)",
           borderColor: "rgb(234, 49, 135)",
-          width: "100%",
+          width: "37vw",
         }}
         onClick={handleWeatherToggle}
       >

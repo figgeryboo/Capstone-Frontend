@@ -2,17 +2,29 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/
 
 const ReportInaccurateLocationModal = ({ open, onClose }) => {
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Report Inaccurate Location</DialogTitle>
+ 
+    <Dialog open={open} onClose={onClose}     >
+      <DialogTitle style={{  maxHeight: "200px", overflowY: "auto"
+      }}>Thank you for your patience & feedback!</DialogTitle>
       <DialogContent>
-        <p>We're working on a reporting feature! Thank you for your patience.</p>
+        <p>We're working on our reporting feature to provide up more efficient data!</p>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose}  variant="outline-secondary"
+              size="sm"
+              style={{
+                backgroundColor: "rgb(234, 49, 135)",
+                borderColor: "rgb(234, 49, 135)",
+                color: "#fff",
+                width: "100%",
+                
+              }}
+              >
           Close
         </Button>
       </DialogActions>
     </Dialog>
+
   );
 };
 
