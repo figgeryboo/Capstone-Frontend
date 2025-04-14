@@ -4,6 +4,7 @@ import "./Map.css";
 import { Button } from "react-bootstrap";
 import { Alert, Snackbar } from "@mui/material";
 import WeatherApi from "../feature/WeatherApi";
+import ReportInaccurateLocationModal from "../feature/ReportInaccurateLocationModal";
 
 const center = {
   lat: 40.750797,
@@ -21,11 +22,14 @@ const Map = () => {
   const [userMarker, setUserMarker] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isUserLocationEnabled, setIsUserLocationEnabled] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportedVendorId, setReportedVendorId] = useState(null);
 
   const isWithinBusinessHours = () => {
     const currentHour = new Date().getHours();
-    return currentHour >= 9 && currentHour < 21;
+    return currentHour >= 6 && currentHour < 21;
   };
+
 
   const daysOfWeek = [
     "Sunday",
@@ -57,6 +61,15 @@ const Map = () => {
     );
   };
 
+  const openReportModal = (vendorId) => {
+    setReportedVendorId(vendorId);
+    setIsReportModalOpen(true);
+  };
+
+  const closeReportModal = () => {
+    setIsReportModalOpen(false);
+  };
+
   useEffect(() => {
     const map = new google.maps.Map(document.getElementById("map-container"), {
       zoom: 14,
@@ -67,7 +80,7 @@ const Map = () => {
 
     mapRef.current = map;
 
-    if (!isWithinBusinessHours() || isWithinBusinessHours()) {
+    if (!isWithinBusinessHours()) {
       setTrucksOffline(true);
       setSnackbarOpen(true);
       return;
@@ -79,42 +92,42 @@ const Map = () => {
         const vendors = vendorsResponse.data;
 
         // fetched data for testing new vendors
-    //     axios
-    // .get(`${url}/vendors/locations`)
-    // .then((res) => {
-    //     const vendorLocations = res.data;
+        //     axios
+        // .get(`${url}/vendors/locations`)
+        // .then((res) => {
+        //     const vendorLocations = res.data;
 
-    //     vendorLocations.forEach((vendor) => {
-    //         vendor.locations.forEach((location) => {
-    //             const marker = new google.maps.Marker({
-    //                 position: { lat: location.lat, lng: location.lng },
-    //                 map: map,
-    //                 icon: {
-    //                     url: '/image.gif',
-    //                     scaledSize: new google.maps.Size(60, 60),
-    //                     anchor: new google.maps.Point(30, 30),
-    //                 },
-    //             });
+        //     vendorLocations.forEach((vendor) => {
+        //         vendor.locations.forEach((location) => {
+        //             const marker = new google.maps.Marker({
+        //                 position: { lat: location.lat, lng: location.lng },
+        //                 map: map,
+        //                 icon: {
+        //                     url: '/image.gif',
+        //                     scaledSize: new google.maps.Size(60, 60),
+        //                     anchor: new google.maps.Point(30, 30),
+        //                 },
+        //             });
 
-    //             const infoWindow = new google.maps.InfoWindow({
-    //                 content: 'Vendor Location',
-    //                 maxWidth: 180,
-    //                 ariaLabel: 'vendor location marker',
-    //             });
+        //             const infoWindow = new google.maps.InfoWindow({
+        //                 content: 'Vendor Location',
+        //                 maxWidth: 180,
+        //                 ariaLabel: 'vendor location marker',
+        //             });
 
-    //             marker.addListener('click', () => {
-    //                 Object.values(infoWindows).forEach((iw) => iw.close());
-    //                 infoWindow.open(map, marker);
-    //             });
+        //             marker.addListener('click', () => {
+        //                 Object.values(infoWindows).forEach((iw) => iw.close());
+        //                 infoWindow.open(map, marker);
+        //             });
 
-    //             google.maps.event.addListener(infoWindow, 'closeclick', () => {
-    //                 // setShowExpandedDetails(false);
-    //                 setSelectedVendor(null);
-    //                 setSelectedVendorDetails(null);
-    //             });
-    //         });
-    //     });
-    // });
+        //             google.maps.event.addListener(infoWindow, 'closeclick', () => {
+        //                 // setShowExpandedDetails(false);
+        //                 setSelectedVendor(null);
+        //                 setSelectedVendorDetails(null);
+        //             });
+        //         });
+        //     });
+        // });
 
         const infoWindows = {};
 
@@ -194,7 +207,8 @@ const Map = () => {
                 vendor.vendor_id
               })">See Vendor Menu</button>
             </div>
-          `;
+        <button style="margin-top: auto; padding: 2px 5px; background-color: #ea3689; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="handleReportClick(${vendor.vendor_id})">Report Inaccurate Location</button>
+`;
 
           const infoWindow = new google.maps.InfoWindow({
             content: infoWindowContent,
@@ -235,6 +249,10 @@ const Map = () => {
     } catch (error) {
       console.error("Error fetching vendor data:", error);
     }
+  };
+
+  window.handleReportClick = (vendorId) => {
+    openReportModal(vendorId);
   };
 
   const handleToggleUserLocation = () => {
@@ -289,7 +307,7 @@ const Map = () => {
           overflowY: "auto",
         }}
       ></div>
-      <div className="weather_container" >
+      <div className="weather_container">
         <WeatherApi />
       </div>
       <div>
@@ -376,6 +394,13 @@ const Map = () => {
           </div>
         </div>
       )}
+     
+     {isReportModalOpen && (
+        <ReportInaccurateLocationModal 
+        open={isReportModalOpen}
+        onClose={closeReportModal} />
+      )}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={8000}
@@ -384,12 +409,12 @@ const Map = () => {
       >
         <Alert onClose={handleSnackbarClose} severity="info" variant="filled">
           Trucks are currently offline <br></br>Feel free to browse the app or
-          check back at a later time 
+          check back at a later time
           <img
-        src="/WMICLOGO.png"
-        alt="Custom"
-        style={{ width: '50px', marginRight: '10px' }}
-      />
+            src="/WMICLOGO.png"
+            alt="Custom"
+            style={{ width: "50px", marginRight: "10px" }}
+          />
           {/* For troubleshooting purposes */}
           {/* We're currently experiencing technical difficulties. Thank you for your patience <br></br>We hope to be up and running soon! */}
         </Alert>
