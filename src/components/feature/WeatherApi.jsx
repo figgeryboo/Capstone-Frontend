@@ -23,14 +23,14 @@ const WeatherApi = () => {
 
       setWeather(response.data.current);
       setError("");
-      setIsWeatherVisible(true)
+      setIsWeatherVisible(true);
     } catch (err) {
       setError("Could not fetch weather data. Please try again.");
       console.error("Error fetching weather data:", err);
     }
   };
 
-const handleWeatherToggle = () => {
+  const handleWeatherToggle = () => {
     if (!isWeatherVisible) {
       fetchWeather();
     } else {
@@ -48,7 +48,7 @@ const handleWeatherToggle = () => {
       // open weather app if mobile device
       window.open(`weather://?q=${locationQuery}`, "_blank");
     } else {
-        // desktop opens link
+      // desktop opens link
       window.open(
         `https://www.accuweather.com/en/search-locations?query=${locationQuery}`,
         "_blank"
@@ -74,7 +74,8 @@ const handleWeatherToggle = () => {
         top: "75px",
         left: "9px",
         zIndex: 1,
-        width: "40vw",
+        width: "fit-content",
+        maxWidth: "40vw",
       }}
     >
       <input
@@ -86,7 +87,7 @@ const handleWeatherToggle = () => {
           width: "37vw",
           padding: "7px",
           borderRadius: "5px",
-          backgroundColor: '#bcf5ef',
+          backgroundColor: "#bcf5ef",
           border: "1px solid rgb(234, 49, 135)",
           marginBottom: "7px",
         }}
@@ -100,8 +101,8 @@ const handleWeatherToggle = () => {
         }}
         onClick={handleWeatherToggle}
       >
-       {isWeatherVisible ? "Close Weather Info" : "Check Weather"}
-       </Button>
+        {isWeatherVisible ? "Close Weather Info" : "Check Weather"}
+      </Button>
       {isWeatherVisible && weather && (
         <div
           style={{
@@ -112,10 +113,16 @@ const handleWeatherToggle = () => {
             boxSizing: "border-box",
           }}
         >
-          <section style={{ margin: "2px",  textAlign: "center" }}>
-            <h3>Current Weather in <span>{location}</span></h3>
-            <p><span>Temperature:</span> {weather.temp_f}°F / {weather.temp_c}°C </p>
-            <p><span>Condition:</span> {weather.condition.text}</p>
+          <section style={{ margin: "2px", textAlign: "center" }}>
+            <h3>
+              Current Weather in <span>{location}</span>
+            </h3>
+            <p>
+              <span>Temperature:</span> {weather.temp_f}°F / {weather.temp_c}°C{" "}
+            </p>
+            <p>
+              <span>Condition:</span> {weather.condition.text}
+            </p>
           </section>
           <Button
             className="btn btn-md"
