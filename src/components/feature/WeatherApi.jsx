@@ -67,9 +67,10 @@ const handleWeatherToggle = () => {
         flexDirection: "column",
         alignItems: "flex-start",
         backgroundColor: "rgba(234, 49, 135, 0.1)",
-        padding: "15px",
+        padding: "5px",
         borderRadius: "10px",
         position: "absolute",
+        lineHeight: "1",
         top: "75px",
         left: "9px",
         zIndex: 1,
@@ -108,10 +109,10 @@ const handleWeatherToggle = () => {
             padding: "7px",
             borderRadius: "5px",
             width: "100%",
-            boxSizing: "border-box"
+            boxSizing: "border-box",
           }}
         >
-          <section style={{ margin: "2px" }}>
+          <section style={{ margin: "2px",  textAlign: "center" }}>
             <h3>Current Weather in <span>{location}</span></h3>
             <p><span>Temperature:</span> {weather.temp_f}°F / {weather.temp_c}°C </p>
             <p><span>Condition:</span> {weather.condition.text}</p>
