@@ -1,13 +1,22 @@
-import React from 'react';
-import './Landing.css';
-import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import "./Landing.css";
+// import { Link } from "react-router-dom";
+// import { Button } from "react-bootstrap";
 
 export default function Landing() {
-	return (
-		<>
-			<div className="w-100" style={{ maxWidth: '400px' }}>
-				<div className="landing">
+  return (
+    <>
+      <div className="w-100 mt-2 text-center" style={{ maxWidth: "400px" }}>
+        <div>
+          <div>
+            <h1>🚧 Site Unavailable 🫠</h1>
+            <p style={{ maxWidth: "100vw" }}>
+              Where's My Ice Cream? is temporarily unavailable.
+              <br />
+              Please check back soon.
+            </p>
+          </div>
+        </div>
+        {/* <div className="landing">
 					<img
 						src="./altcolors5.png"
 						className="img-fluid"
@@ -49,8 +58,8 @@ export default function Landing() {
 						</Button>
 					</Link>
 					</div>
-				</div>
-			</div>
-		</>
-	);
+				</div> */}
+      </div>
+    </>
+  );
 }
